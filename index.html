@@ -23,8 +23,8 @@ fetch("data/library.json").then(r=>r.json()).then(lib=>{
   const ctrl=document.getElementById("ctrl"),
         out=document.getElementById("out"),
         sel={};
-  for(const [_,m] of Object.entries(lib.library)){
-    for(const [sub,s] of Object.entries(m.subdimensions)){
+  for(const [_,m] of Object.entries(lib.library)){ 
+    for(const [sub,s] of Object.entries(m.subdimensions)){ 
       const d=document.createElement("select");
       d.innerHTML=`<option value=\"\">${sub}</option>`+
         s.values.map(v=>`<option>${v}</option>`).join("");
