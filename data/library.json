@@ -1,546 +1,1207 @@
 {
-  "modellname": "Prompt-Taxonomie",
-  "beschreibung": "Ein Prompt wird als taxonomisch gegliederte Struktur mit Hauptdimensionen, Subdimensionen und konkreten Ausprägungen modelliert.",
   "meta": {
-    "version": "1.0.0",
+    "project": "Prompt-Bibliothek",
+    "version": "2.0.0",
     "author": "dein-name",
-    "created": "2026-03-31T00:00:00Z",
-    "locale": "de-DE"
+    "created": "2026-03-31T12:00:00Z",
+    "locale": "de-DE",
+    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit Hauptdimensionen, Subdimensionen, Slots, Templates, Constraints und Beispielinstanzen."
   },
-  "hauptdimensionen": [
-    {
+  "library": {
+    "ZIEL": {
       "id": "A",
-      "name": "Ziel",
-      "frage": "Wozu dient der Prompt? Was soll erreicht werden?",
-      "subdimensionen": [
-        {
+      "label": "Ziel",
+      "description": "Wozu dient der Prompt? Was soll erreicht werden?",
+      "subdimensions": {
+        "ZIEL_TYP": {
           "id": "A1",
-          "name": "Zieltyp",
-          "werte": [
-            "informieren",
-            "erklaeren",
-            "zusammenfassen",
-            "analysieren",
-            "vergleichen",
-            "bewerten",
-            "priorisieren",
-            "entscheiden_helfen",
-            "ideen_generieren",
-            "umformulieren",
-            "strukturieren",
-            "planen",
-            "reflektieren",
-            "ueberzeugen",
-            "simulieren"
+          "label": "Zieltyp",
+          "slot": "ZIEL_TYP",
+          "required": true,
+          "values": [
+            {
+              "key": "informieren",
+              "label": "Informieren",
+              "description": "Wissen oder Fakten vermitteln."
+            },
+            {
+              "key": "erklaeren",
+              "label": "Erklären",
+              "description": "Ein Thema verständlich erläutern."
+            },
+            {
+              "key": "zusammenfassen",
+              "label": "Zusammenfassen",
+              "description": "Inhalte verdichten und auf das Wesentliche reduzieren."
+            },
+            {
+              "key": "analysieren",
+              "label": "Analysieren",
+              "description": "Zusammenhänge, Strukturen oder Ursachen untersuchen."
+            },
+            {
+              "key": "vergleichen",
+              "label": "Vergleichen",
+              "description": "Optionen, Positionen oder Varianten gegenüberstellen."
+            },
+            {
+              "key": "bewerten",
+              "label": "Bewerten",
+              "description": "Etwas anhand von Kriterien einschätzen."
+            },
+            {
+              "key": "entscheidung_vorbereiten",
+              "label": "Entscheidung vorbereiten",
+              "description": "Eine Entscheidungsgrundlage erarbeiten."
+            },
+            {
+              "key": "ideen_generieren",
+              "label": "Ideen generieren",
+              "description": "Neue Ansätze oder Optionen entwickeln."
+            },
+            {
+              "key": "umformulieren",
+              "label": "Umformulieren",
+              "description": "Bestehende Inhalte sprachlich neu ausdrücken."
+            },
+            {
+              "key": "planen",
+              "label": "Planen",
+              "description": "Schritte, Maßnahmen oder Vorgehen strukturieren."
+            }
           ]
         },
-        {
+        "ZIEL_TIEFE": {
           "id": "A2",
-          "name": "Zieltiefe",
-          "werte": [
-            "ueberblick",
-            "mittlere_tiefe",
-            "tiefenanalyse"
+          "label": "Zieltiefe",
+          "slot": "ZIEL_TIEFE",
+          "required": false,
+          "values": [
+            {
+              "key": "ueberblick",
+              "label": "Überblick",
+              "description": "Kurze, orientierende Einordnung."
+            },
+            {
+              "key": "mittel",
+              "label": "Mittlere Tiefe",
+              "description": "Solide, aber nicht ausufernde Ausarbeitung."
+            },
+            {
+              "key": "tiefenanalyse",
+              "label": "Tiefenanalyse",
+              "description": "Detaillierte, differenzierte Bearbeitung."
+            }
           ]
         },
-        {
+        "ZIEL_STATUS": {
           "id": "A3",
-          "name": "Zielstatus",
-          "werte": [
-            "explorativ",
-            "vorbereitend",
-            "entscheidungsorientiert",
-            "umsetzungsorientiert"
-          ]
-        },
-        {
-          "id": "A4",
-          "name": "Konkrete_Zielauspraegung",
-          "beispiele": [
-            "eine_entscheidungsgrundlage_erstellen",
-            "drei_handlungsoptionen_entwickeln",
-            "ein_komplexes_thema_verstaendlich_machen"
+          "label": "Zielstatus",
+          "slot": "ZIEL_STATUS",
+          "required": false,
+          "values": [
+            {
+              "key": "explorativ",
+              "label": "Explorativ",
+              "description": "Offenes Erkunden eines Themas."
+            },
+            {
+              "key": "vorbereitend",
+              "label": "Vorbereitend",
+              "description": "Vorarbeit für weitere Schritte."
+            },
+            {
+              "key": "entscheidungsorientiert",
+              "label": "Entscheidungsorientiert",
+              "description": "Auf Entscheidung oder Auswahl ausgerichtet."
+            },
+            {
+              "key": "umsetzungsorientiert",
+              "label": "Umsetzungsorientiert",
+              "description": "Auf praktische Umsetzung ausgerichtet."
+            }
           ]
         }
-      ]
+      }
     },
-    {
+    "AUFGABE": {
       "id": "B",
-      "name": "Aufgabe",
-      "frage": "Was genau soll die KI tun?",
-      "subdimensionen": [
-        {
+      "label": "Aufgabe",
+      "description": "Was genau soll die KI tun?",
+      "subdimensions": {
+        "AUFGABENTYP": {
           "id": "B1",
-          "name": "Aufgabentyp",
-          "werte": [
-            "beantworten",
-            "erlaeutern",
-            "strukturieren",
-            "umschreiben",
-            "verbessern",
-            "verdichten",
-            "erweitern",
-            "klassifizieren",
-            "extrahieren",
-            "bewerten",
-            "entwerfen",
-            "pruefen"
+          "label": "Aufgabentyp",
+          "slot": "AUFGABENTYP",
+          "required": true,
+          "values": [
+            {
+              "key": "beantworten",
+              "label": "Beantworten",
+              "description": "Eine konkrete Frage beantworten."
+            },
+            {
+              "key": "erlaeutern",
+              "label": "Erläutern",
+              "description": "Einen Sachverhalt ausführen und einordnen."
+            },
+            {
+              "key": "strukturieren",
+              "label": "Strukturieren",
+              "description": "Inhalte ordnen und gliedern."
+            },
+            {
+              "key": "umschreiben",
+              "label": "Umschreiben",
+              "description": "Inhalte sprachlich anders formulieren."
+            },
+            {
+              "key": "verbessern",
+              "label": "Verbessern",
+              "description": "Vorhandenen Text oder Entwurf optimieren."
+            },
+            {
+              "key": "klassifizieren",
+              "label": "Klassifizieren",
+              "description": "Einordnen oder kategorisieren."
+            },
+            {
+              "key": "extrahieren",
+              "label": "Extrahieren",
+              "description": "Wesentliche Informationen herausziehen."
+            },
+            {
+              "key": "entwerfen",
+              "label": "Entwerfen",
+              "description": "Einen ersten Entwurf erzeugen."
+            },
+            {
+              "key": "pruefen",
+              "label": "Prüfen",
+              "description": "Auf Qualität, Logik oder Konsistenz kontrollieren."
+            }
           ]
         },
-        {
+        "AUFGABENUMFANG": {
           "id": "B2",
-          "name": "Aufgabenoperation",
-          "werte": [
-            "inhalte_sammeln",
-            "muster_erkennen",
-            "unterschiede_herausarbeiten",
-            "argumente_formulieren",
-            "risiken_benennen",
-            "empfehlungen_ableiten"
-          ]
-        },
-        {
-          "id": "B3",
-          "name": "Aufgabenumfang",
-          "werte": [
-            "einzelschritt",
-            "mehrstufig",
-            "iterativ"
-          ]
-        },
-        {
-          "id": "B4",
-          "name": "Konkrete_Aufgabenauspraegung",
-          "beispiele": [
-            "vergleiche_drei_optionen",
-            "formuliere_meinen_gedanken_klarer",
-            "pruefe_den_text_auf_verstaendlichkeit_und_logik"
+          "label": "Aufgabenumfang",
+          "slot": "AUFGABENUMFANG",
+          "required": false,
+          "values": [
+            {
+              "key": "einzelschritt",
+              "label": "Einzelschritt",
+              "description": "Eine einzelne Operation."
+            },
+            {
+              "key": "mehrstufig",
+              "label": "Mehrstufig",
+              "description": "Mehrere aufeinanderfolgende Schritte."
+            },
+            {
+              "key": "iterativ",
+              "label": "Iterativ",
+              "description": "Schrittweise Verfeinerung in mehreren Runden."
+            }
           ]
         }
-      ]
+      }
     },
-    {
+    "KONTEXT": {
       "id": "C",
-      "name": "Kontext",
-      "frage": "Unter welchen Bedingungen oder in welchem Rahmen soll gearbeitet werden?",
-      "subdimensionen": [
-        {
+      "label": "Kontext",
+      "description": "Unter welchen Bedingungen oder in welchem Rahmen soll gearbeitet werden?",
+      "subdimensions": {
+        "SITUATIONSKONTEXT": {
           "id": "C1",
-          "name": "Sachkontext",
-          "werte": [
-            "thema",
-            "fachgebiet",
-            "problemstellung",
-            "anlass"
+          "label": "Situationskontext",
+          "slot": "SITUATIONSKONTEXT",
+          "required": false,
+          "values": [
+            {
+              "key": "meetingvorbereitung",
+              "label": "Meetingvorbereitung",
+              "description": "Vorbereitung auf Besprechung oder Termin."
+            },
+            {
+              "key": "strategiearbeit",
+              "label": "Strategiearbeit",
+              "description": "Arbeit an strategischen Fragestellungen."
+            },
+            {
+              "key": "lernprozess",
+              "label": "Lernprozess",
+              "description": "Verstehen, Einüben oder Vertiefen."
+            },
+            {
+              "key": "kundengespraech",
+              "label": "Kundengespräch",
+              "description": "Kommunikation mit Kunden oder Stakeholdern."
+            },
+            {
+              "key": "entscheidungsfindung",
+              "label": "Entscheidungsfindung",
+              "description": "Vorbereitung oder Unterstützung einer Entscheidung."
+            }
           ]
         },
-        {
+        "WISSENSKONTEXT": {
           "id": "C2",
-          "name": "Situationskontext",
-          "werte": [
-            "meetingvorbereitung",
-            "bewerbung",
-            "strategiearbeit",
-            "lernprozess",
-            "kundengespraech",
-            "entscheidungsfindung"
+          "label": "Wissenskontext",
+          "slot": "WISSENSKONTEXT",
+          "required": false,
+          "values": [
+            {
+              "key": "anfaenger",
+              "label": "Anfänger",
+              "description": "Kaum Vorwissen vorhanden."
+            },
+            {
+              "key": "fortgeschritten",
+              "label": "Fortgeschritten",
+              "description": "Grundlagen sind vorhanden."
+            },
+            {
+              "key": "experte",
+              "label": "Experte",
+              "description": "Tiefes Fachwissen vorhanden."
+            },
+            {
+              "key": "gemischte_zielgruppe",
+              "label": "Gemischte Zielgruppe",
+              "description": "Unterschiedliche Wissensstände in der Zielgruppe."
+            }
           ]
         },
-        {
+        "RAHMENBEDINGUNG": {
           "id": "C3",
-          "name": "Wissenskontext",
-          "werte": [
-            "anfaenger",
-            "fortgeschritten",
-            "expertisch",
-            "gemischte_zielgruppe"
-          ]
-        },
-        {
-          "id": "C4",
-          "name": "Rahmenbedingungen",
-          "werte": [
-            "zeitdruck",
-            "begrenzte_datenlage",
-            "sensible_kommunikation",
-            "knapper_umfang",
-            "formeller_anlass"
-          ]
-        },
-        {
-          "id": "C5",
-          "name": "Konkrete_Kontextauspraegung",
-          "beispiele": [
-            "fuer_ein_nicht_technisches_management_team",
-            "im_rahmen_eines_internen_workshops",
-            "mit_wenig_vorwissen_auf_leserseite"
+          "label": "Rahmenbedingung",
+          "slot": "RAHMENBEDINGUNG",
+          "required": false,
+          "values": [
+            {
+              "key": "zeitdruck",
+              "label": "Zeitdruck",
+              "description": "Schnelle, fokussierte Antwort bevorzugt."
+            },
+            {
+              "key": "begrenzte_datenlage",
+              "label": "Begrenzte Datenlage",
+              "description": "Mit wenigen Informationen arbeiten."
+            },
+            {
+              "key": "sensible_kommunikation",
+              "label": "Sensible Kommunikation",
+              "description": "Ton und Formulierung besonders sorgfältig wählen."
+            },
+            {
+              "key": "formeller_anlass",
+              "label": "Formeller Anlass",
+              "description": "Ergebnis soll professionell und formell wirken."
+            }
           ]
         }
-      ]
+      }
     },
-    {
+    "OUTPUT_FORM": {
       "id": "D",
-      "name": "Output_Form",
-      "frage": "In welcher Form soll das Ergebnis erscheinen?",
-      "subdimensionen": [
-        {
+      "label": "Output-Form",
+      "description": "In welcher Form soll das Ergebnis erscheinen?",
+      "subdimensions": {
+        "FORMAT": {
           "id": "D1",
-          "name": "Darstellungsform",
-          "werte": [
-            "fliesstext",
-            "stichpunkte",
-            "tabelle",
-            "matrix",
-            "checkliste",
-            "gliederung",
-            "email",
-            "argumentationslinie",
-            "leitfaden",
-            "zusammenfassung",
-            "entwurf",
-            "fragenkatalog"
+          "label": "Format",
+          "slot": "FORMAT",
+          "required": true,
+          "values": [
+            {
+              "key": "tabelle",
+              "label": "Tabelle",
+              "description": "Tabellarische Darstellung."
+            },
+            {
+              "key": "liste",
+              "label": "Liste",
+              "description": "Aufzählung oder Stichpunkte."
+            },
+            {
+              "key": "fliesstext",
+              "label": "Fließtext",
+              "description": "Durchgehender Text."
+            },
+            {
+              "key": "checkliste",
+              "label": "Checkliste",
+              "description": "Prüf- oder Aufgabenliste."
+            },
+            {
+              "key": "gliederung",
+              "label": "Gliederung",
+              "description": "Hierarchisch gegliederte Struktur."
+            },
+            {
+              "key": "email",
+              "label": "E-Mail",
+              "description": "Nachricht im E-Mail-Format."
+            },
+            {
+              "key": "leitfaden",
+              "label": "Leitfaden",
+              "description": "Anleitung oder strukturierter Ablauf."
+            },
+            {
+              "key": "fragenkatalog",
+              "label": "Fragenkatalog",
+              "description": "Liste relevanter Fragen."
+            }
           ]
         },
-        {
+        "UMFANG": {
           "id": "D2",
-          "name": "Umfang",
-          "werte": [
-            "sehr_kurz",
-            "kurz",
-            "mittel",
-            "ausfuehrlich"
+          "label": "Umfang",
+          "slot": "UMFANG",
+          "required": false,
+          "values": [
+            {
+              "key": "sehr_kurz",
+              "label": "Sehr kurz",
+              "description": "Maximal wenige Zeilen oder Punkte."
+            },
+            {
+              "key": "kurz",
+              "label": "Kurz",
+              "description": "Kompakt und knapp."
+            },
+            {
+              "key": "mittel",
+              "label": "Mittel",
+              "description": "Ausgewogen zwischen Kürze und Tiefe."
+            },
+            {
+              "key": "ausfuehrlich",
+              "label": "Ausführlich",
+              "description": "Detaillierte Darstellung."
+            }
           ]
         },
-        {
+        "ERGEBNISORIENTIERUNG": {
           "id": "D3",
-          "name": "Strukturgrad",
-          "werte": [
-            "frei",
-            "klar_gegliedert",
-            "streng_schematisch"
-          ]
-        },
-        {
-          "id": "D4",
-          "name": "Ergebnisorientierung",
-          "werte": [
-            "nur_ergebnis",
-            "ergebnis_plus_begruendung",
-            "ergebnis_plus_alternativen",
-            "ergebnis_plus_naechste_schritte"
-          ]
-        },
-        {
-          "id": "D5",
-          "name": "Konkrete_Output_Auspraegung",
-          "beispiele": [
-            "als_tabelle_mit_vor_und_nachteilen",
-            "in_fuenf_praegnanten_stichpunkten",
-            "als_kurze_professionell_formulierte_email"
+          "label": "Ergebnisorientierung",
+          "slot": "ERGEBNISORIENTIERUNG",
+          "required": false,
+          "values": [
+            {
+              "key": "nur_ergebnis",
+              "label": "Nur Ergebnis",
+              "description": "Direkte Ausgabe ohne ausführliche Herleitung."
+            },
+            {
+              "key": "ergebnis_plus_begruendung",
+              "label": "Ergebnis plus Begründung",
+              "description": "Ergebnis mit kurzer Herleitung."
+            },
+            {
+              "key": "ergebnis_plus_alternativen",
+              "label": "Ergebnis plus Alternativen",
+              "description": "Ergebnis mit Varianten oder Gegenoptionen."
+            },
+            {
+              "key": "ergebnis_plus_naechste_schritte",
+              "label": "Ergebnis plus nächste Schritte",
+              "description": "Ergebnis mit Handlungsempfehlung."
+            }
           ]
         }
-      ]
+      }
     },
-    {
+    "PROZESS": {
       "id": "E",
-      "name": "Prozess_Vorgehensweise",
-      "frage": "Wie soll die KI denken oder vorgehen?",
-      "subdimensionen": [
-        {
+      "label": "Prozess",
+      "description": "Wie soll die KI denken oder vorgehen?",
+      "subdimensions": {
+        "PROZESSLOGIK": {
           "id": "E1",
-          "name": "Prozesslogik",
-          "werte": [
-            "zuerst_analysieren_dann_bewerten",
-            "erst_sammeln_dann_strukturieren",
-            "erst_fragen_klaeren_dann_loesung_entwickeln",
-            "schrittweise_vorgehen",
-            "divergieren_dann_konvergieren"
+          "label": "Prozesslogik",
+          "slot": "PROZESSLOGIK",
+          "required": false,
+          "values": [
+            {
+              "key": "zuerst_analysieren_dann_bewerten",
+              "label": "Zuerst analysieren, dann bewerten",
+              "description": "Erst verstehen, dann beurteilen."
+            },
+            {
+              "key": "erst_sammeln_dann_strukturieren",
+              "label": "Erst sammeln, dann strukturieren",
+              "description": "Zuerst Inhalte zusammentragen, danach ordnen."
+            },
+            {
+              "key": "erst_optionen_dann_empfehlung",
+              "label": "Erst Optionen, dann Empfehlung",
+              "description": "Mehrere Möglichkeiten zeigen und anschließend empfehlen."
+            },
+            {
+              "key": "schrittweise_vorgehen",
+              "label": "Schrittweise vorgehen",
+              "description": "In nachvollziehbaren Etappen arbeiten."
+            }
           ]
         },
-        {
+        "DENKRICHTUNG": {
           "id": "E2",
-          "name": "Denkrichtung",
-          "werte": [
-            "analytisch",
-            "kreativ",
-            "kritisch",
-            "strategisch",
-            "didaktisch",
-            "pragmatisch"
-          ]
-        },
-        {
-          "id": "E3",
-          "name": "Bearbeitungsmodus",
-          "werte": [
-            "schritt_fuer_schritt",
-            "vergleichend",
-            "hypothesenbasiert",
-            "problemorientiert",
-            "loesungsorientiert"
-          ]
-        },
-        {
-          "id": "E4",
-          "name": "Konkrete_Prozessauspraegung",
-          "beispiele": [
-            "analysiere_zuerst_die_ausgangslage_und_leite_daraus_empfehlungen_ab",
-            "gehe_schritt_fuer_schritt_vor",
-            "zeige_zuerst_optionen_dann_eine_empfehlung"
+          "label": "Denkrichtung",
+          "slot": "DENKRICHTUNG",
+          "required": false,
+          "values": [
+            {
+              "key": "analytisch",
+              "label": "Analytisch",
+              "description": "Strukturiert, logisch, differenzierend."
+            },
+            {
+              "key": "kreativ",
+              "label": "Kreativ",
+              "description": "Variantenreich, ideenorientiert."
+            },
+            {
+              "key": "kritisch",
+              "label": "Kritisch",
+              "description": "Hinterfragend und prüfend."
+            },
+            {
+              "key": "strategisch",
+              "label": "Strategisch",
+              "description": "Auf Ziele, Hebel und Konsequenzen ausgerichtet."
+            },
+            {
+              "key": "pragmatisch",
+              "label": "Pragmatisch",
+              "description": "Umsetzungsorientiert und praktikabel."
+            }
           ]
         }
-      ]
+      }
     },
-    {
+    "QUALITAETSKRITERIEN": {
       "id": "F",
-      "name": "Qualitaetskriterien",
-      "frage": "Woran wird eine gute Antwort gemessen?",
-      "subdimensionen": [
-        {
+      "label": "Qualitätskriterien",
+      "description": "Woran wird eine gute Antwort gemessen?",
+      "subdimensions": {
+        "SPRACHQUALITAET": {
           "id": "F1",
-          "name": "Sprachqualitaet",
-          "werte": [
-            "klar",
-            "praezise",
-            "einfach",
-            "elegant",
-            "professionell",
-            "sachlich"
+          "label": "Sprachqualität",
+          "slot": "SPRACHQUALITAET",
+          "required": false,
+          "values": [
+            {
+              "key": "klar",
+              "label": "Klar",
+              "description": "Leicht verständlich und eindeutig."
+            },
+            {
+              "key": "praezise",
+              "label": "Präzise",
+              "description": "Sprachlich exakt."
+            },
+            {
+              "key": "einfach",
+              "label": "Einfach",
+              "description": "Ohne unnötige Komplexität."
+            },
+            {
+              "key": "professionell",
+              "label": "Professionell",
+              "description": "Sachlich und angemessen."
+            },
+            {
+              "key": "sachlich",
+              "label": "Sachlich",
+              "description": "Nüchtern und faktenorientiert."
+            }
           ]
         },
-        {
+        "INHALTSQUALITAET": {
           "id": "F2",
-          "name": "Inhaltsqualitaet",
-          "werte": [
-            "vollstaendig",
-            "relevant",
-            "differenziert",
-            "belastbar",
-            "ausgewogen",
-            "praxisnah"
+          "label": "Inhaltsqualität",
+          "slot": "INHALTSQUALITAET",
+          "required": false,
+          "values": [
+            {
+              "key": "vollstaendig",
+              "label": "Vollständig",
+              "description": "Wesentliche Aspekte sind enthalten."
+            },
+            {
+              "key": "relevant",
+              "label": "Relevant",
+              "description": "Auf das Anliegen fokussiert."
+            },
+            {
+              "key": "differenziert",
+              "label": "Differenziert",
+              "description": "Nuancen und Unterschiede werden berücksichtigt."
+            },
+            {
+              "key": "ausgewogen",
+              "label": "Ausgewogen",
+              "description": "Keine einseitige Darstellung."
+            },
+            {
+              "key": "praxisnah",
+              "label": "Praxisnah",
+              "description": "Direkt verwendbar und realistisch."
+            }
           ]
         },
-        {
+        "PRIORISIERUNG": {
           "id": "F3",
-          "name": "Nutzungsqualitaet",
-          "werte": [
-            "sofort_verwendbar",
-            "leicht_verstaendlich",
-            "entscheidungsrelevant",
-            "umsetzungsnah"
-          ]
-        },
-        {
-          "id": "F4",
-          "name": "Priorisierungskriterien",
-          "werte": [
-            "kuerze_vor_tiefe",
-            "tiefe_vor_kuerze",
-            "klarheit_vor_vollstaendigkeit",
-            "praktikabilitaet_vor_theorie"
-          ]
-        },
-        {
-          "id": "F5",
-          "name": "Konkrete_Qualitaetsauspraegung",
-          "beispiele": [
-            "klar_knapp_und_direkt_nutzbar",
-            "differenziert_aber_ohne_unnoetige_komplexitaet",
-            "praxisnah_und_entscheidungsorientiert"
+          "label": "Priorisierung",
+          "slot": "PRIORISIERUNG",
+          "required": false,
+          "values": [
+            {
+              "key": "kuerze_vor_tiefe",
+              "label": "Kürze vor Tiefe",
+              "description": "Knappheit ist wichtiger als Vollständigkeit."
+            },
+            {
+              "key": "tiefe_vor_kuerze",
+              "label": "Tiefe vor Kürze",
+              "description": "Inhaltliche Tiefe ist wichtiger als Kürze."
+            },
+            {
+              "key": "klarheit_vor_vollstaendigkeit",
+              "label": "Klarheit vor Vollständigkeit",
+              "description": "Verständlichkeit hat Vorrang."
+            },
+            {
+              "key": "praktikabilitaet_vor_theorie",
+              "label": "Praktikabilität vor Theorie",
+              "description": "Anwendbarkeit hat Vorrang vor theoretischer Breite."
+            }
           ]
         }
-      ]
+      }
     },
-    {
+    "ROLLE": {
       "id": "G",
-      "name": "Rollenperspektive",
-      "frage": "Aus welcher Rolle oder Perspektive soll geantwortet werden?",
-      "subdimensionen": [
-        {
+      "label": "Rolle",
+      "description": "Aus welcher Rolle oder Perspektive soll geantwortet werden?",
+      "subdimensions": {
+        "EXPERTENROLLE": {
           "id": "G1",
-          "name": "Expertenrolle",
-          "werte": [
-            "coach",
-            "analyst",
-            "lektor",
-            "strategieberater",
-            "lehrer",
-            "sparringspartner",
-            "moderator"
+          "label": "Expertenrolle",
+          "slot": "EXPERTENROLLE",
+          "required": false,
+          "values": [
+            {
+              "key": "coach",
+              "label": "Coach",
+              "description": "Unterstützend und entwicklungsorientiert."
+            },
+            {
+              "key": "analyst",
+              "label": "Analyst",
+              "description": "Strukturiert und faktenorientiert."
+            },
+            {
+              "key": "strategieberater",
+              "label": "Strategieberater",
+              "description": "Ziel-, Optionen- und entscheidungsorientiert."
+            },
+            {
+              "key": "lektor",
+              "label": "Lektor",
+              "description": "Sprachlich und stilistisch optimierend."
+            },
+            {
+              "key": "lehrer",
+              "label": "Lehrer",
+              "description": "Didaktisch und verständlich erklärend."
+            },
+            {
+              "key": "sparringspartner",
+              "label": "Sparringspartner",
+              "description": "Kritisch mitdenkend und hinterfragend."
+            }
           ]
         },
-        {
+        "PERSPEKTIVTIEFE": {
           "id": "G2",
-          "name": "Funktionsrolle",
-          "werte": [
-            "texter",
-            "planer",
-            "kritiker",
-            "pruefer",
-            "erklaerer"
-          ]
-        },
-        {
-          "id": "G3",
-          "name": "Perspektivtiefe",
-          "werte": [
-            "neutral",
-            "beratend",
-            "hinterfragend",
-            "herausfordernd"
-          ]
-        },
-        {
-          "id": "G4",
-          "name": "Konkrete_Rollenauspraegung",
-          "beispiele": [
-            "antworte_als_strukturierter_strategieberater",
-            "agier_als_verstaendlicher_lehrer",
-            "sei_mein_kritischer_sparringspartner"
+          "label": "Perspektivtiefe",
+          "slot": "PERSPEKTIVTIEFE",
+          "required": false,
+          "values": [
+            {
+              "key": "neutral",
+              "label": "Neutral",
+              "description": "Zurückhaltend und nüchtern."
+            },
+            {
+              "key": "beratend",
+              "label": "Beratend",
+              "description": "Empfehlend und unterstützend."
+            },
+            {
+              "key": "hinterfragend",
+              "label": "Hinterfragend",
+              "description": "Annahmen und Schwachstellen prüfend."
+            },
+            {
+              "key": "herausfordernd",
+              "label": "Herausfordernd",
+              "description": "Deutlich kritisch und fordernd."
+            }
           ]
         }
-      ]
+      }
     },
-    {
+    "GRENZEN": {
       "id": "H",
-      "name": "Grenzen_Ausschluesse",
-      "frage": "Was soll vermieden oder ausgeschlossen werden?",
-      "subdimensionen": [
-        {
+      "label": "Grenzen",
+      "description": "Was soll vermieden oder ausgeschlossen werden?",
+      "subdimensions": {
+        "INHALTLICHE_AUSSCHLUESSE": {
           "id": "H1",
-          "name": "Inhaltliche_Ausschluesse",
-          "werte": [
-            "keine_spekulation",
-            "keine_fachsprache",
-            "keine_wiederholungen",
-            "keine_langen_einleitungen"
+          "label": "Inhaltliche Ausschlüsse",
+          "slot": "INHALTLICHE_AUSSCHLUESSE",
+          "required": false,
+          "multi": true,
+          "values": [
+            {
+              "key": "keine_spekulation",
+              "label": "Keine Spekulation",
+              "description": "Nur begründete Aussagen."
+            },
+            {
+              "key": "keine_fachsprache",
+              "label": "Keine Fachsprache",
+              "description": "Alltagstaugliche Sprache verwenden."
+            },
+            {
+              "key": "keine_wiederholungen",
+              "label": "Keine Wiederholungen",
+              "description": "Dopplungen vermeiden."
+            },
+            {
+              "key": "keine_langen_einleitungen",
+              "label": "Keine langen Einleitungen",
+              "description": "Direkt zum Punkt kommen."
+            }
           ]
         },
-        {
+        "FORMALE_AUSSCHLUESSE": {
           "id": "H2",
-          "name": "Formale_Ausschluesse",
-          "werte": [
-            "keine_tabellen",
-            "keine_listen",
-            "keine_beispiele",
-            "keine_meta_erklaerungen"
-          ]
-        },
-        {
-          "id": "H3",
-          "name": "Stilistische_Ausschluesse",
-          "werte": [
-            "nicht_werblich",
-            "nicht_zu_akademisch",
-            "nicht_zu_locker",
-            "nicht_konfrontativ"
-          ]
-        },
-        {
-          "id": "H4",
-          "name": "Konkrete_Grenzauspraegung",
-          "beispiele": [
-            "ohne_fachjargon",
-            "ohne_lange_vorrede",
-            "keine_allgemeinen_floskeln"
+          "label": "Formale Ausschlüsse",
+          "slot": "FORMALE_AUSSCHLUESSE",
+          "required": false,
+          "multi": true,
+          "values": [
+            {
+              "key": "keine_tabellen",
+              "label": "Keine Tabellen",
+              "description": "Keine tabellarische Darstellung."
+            },
+            {
+              "key": "keine_listen",
+              "label": "Keine Listen",
+              "description": "Keine Aufzählungen verwenden."
+            },
+            {
+              "key": "keine_beispiele",
+              "label": "Keine Beispiele",
+              "description": "Ohne illustrative Beispiele."
+            },
+            {
+              "key": "keine_meta_erklaerungen",
+              "label": "Keine Meta-Erklärungen",
+              "description": "Nicht das Vorgehen selbst erklären."
+            }
           ]
         }
-      ]
+      }
     },
-    {
+    "ADRESSAT": {
       "id": "I",
-      "name": "Adressatenbezug",
-      "frage": "Fuer wen ist das Ergebnis gedacht?",
-      "subdimensionen": [
-        {
+      "label": "Adressat",
+      "description": "Für wen ist das Ergebnis gedacht?",
+      "subdimensions": {
+        "ZIELGRUPPE": {
           "id": "I1",
-          "name": "Zielgruppe",
-          "werte": [
-            "ich_selbst",
-            "team",
-            "fuehrungskraefte",
-            "kunden",
-            "lernende",
-            "oeffentlichkeit"
+          "label": "Zielgruppe",
+          "slot": "ZIELGRUPPE",
+          "required": false,
+          "values": [
+            {
+              "key": "ich_selbst",
+              "label": "Ich selbst",
+              "description": "Ergebnis für die eigene Nutzung."
+            },
+            {
+              "key": "team",
+              "label": "Team",
+              "description": "Ergebnis für interne Zusammenarbeit."
+            },
+            {
+              "key": "fuehrungskraefte",
+              "label": "Führungskräfte",
+              "description": "Management-orientierte Zielgruppe."
+            },
+            {
+              "key": "kunden",
+              "label": "Kunden",
+              "description": "Externe Adressaten."
+            },
+            {
+              "key": "lernende",
+              "label": "Lernende",
+              "description": "Didaktische Zielgruppe."
+            },
+            {
+              "key": "oeffentlichkeit",
+              "label": "Öffentlichkeit",
+              "description": "Breite, allgemeine Zielgruppe."
+            }
           ]
         },
-        {
+        "WISSENSSTAND_ADRESSAT": {
           "id": "I2",
-          "name": "Wissensstand",
-          "werte": [
-            "laien",
-            "semi_professionell",
-            "fachkundig"
-          ]
-        },
-        {
-          "id": "I3",
-          "name": "Erwartungshaltung",
-          "werte": [
-            "schnelle_orientierung",
-            "fundierte_abwaegung",
-            "umsetzbare_empfehlung",
-            "ueberzeugende_darstellung"
-          ]
-        },
-        {
-          "id": "I4",
-          "name": "Konkrete_Adressatenauspraegung",
-          "beispiele": [
-            "fuer_ein_management_ohne_technisches_detailwissen",
-            "fuer_ein_teammeeting",
-            "fuer_einen_kunden_mit_begrenzter_zeit"
+          "label": "Wissensstand Adressat",
+          "slot": "WISSENSSTAND_ADRESSAT",
+          "required": false,
+          "values": [
+            {
+              "key": "laien",
+              "label": "Laien",
+              "description": "Kein oder kaum Fachwissen."
+            },
+            {
+              "key": "semi_professionell",
+              "label": "Semi-professionell",
+              "description": "Begrenztes Fachwissen vorhanden."
+            },
+            {
+              "key": "fachkundig",
+              "label": "Fachkundig",
+              "description": "Mit solidem Fachwissen."
+            }
           ]
         }
-      ]
+      }
+    },
+    "INTERAKTIONSMODUS": {
+      "id": "J",
+      "label": "Interaktionsmodus",
+      "description": "Wie soll die Zusammenarbeit im Chat ablaufen?",
+      "subdimensions": {
+        "MODUS": {
+          "id": "J1",
+          "label": "Modus",
+          "slot": "MODUS",
+          "required": false,
+          "values": [
+            {
+              "key": "einmalige_antwort",
+              "label": "Einmalige Antwort",
+              "description": "Eine abgeschlossene Antwort in einem Schritt."
+            },
+            {
+              "key": "iteratives_verfeinern",
+              "label": "Iteratives Verfeinern",
+              "description": "Erstentwurf und anschließende Verbesserung."
+            },
+            {
+              "key": "rueckfragen_stellen",
+              "label": "Rückfragen stellen",
+              "description": "Vor der Bearbeitung zunächst klären."
+            },
+            {
+              "key": "varianten_entwickeln",
+              "label": "Varianten entwickeln",
+              "description": "Mehrere Alternativen erzeugen."
+            }
+          ]
+        },
+        "STEUERUNGSGRAD": {
+          "id": "J2",
+          "label": "Steuerungsgrad",
+          "slot": "STEUERUNGSGRAD",
+          "required": false,
+          "values": [
+            {
+              "key": "frei",
+              "label": "Frei",
+              "description": "Großer Spielraum für die KI."
+            },
+            {
+              "key": "eng_gefuehrt",
+              "label": "Eng geführt",
+              "description": "Stark vorgegebene Struktur und Regeln."
+            },
+            {
+              "key": "mit_zwischenstaenden",
+              "label": "Mit Zwischenständen",
+              "description": "Bearbeitung in sichtbaren Etappen."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "slot_schema": [
+    {
+      "slot": "ZIEL_TYP",
+      "dimension": "ZIEL",
+      "subdimension": "ZIEL_TYP",
+      "required": true,
+      "multi": false
     },
     {
-      "id": "J",
-      "name": "Interaktionsmodus",
-      "frage": "Wie soll die Zusammenarbeit im Chat ablaufen?",
-      "subdimensionen": [
-        {
-          "id": "J1",
-          "name": "Modus",
-          "werte": [
-            "einmalige_antwort",
-            "iteratives_verfeinern",
-            "rueckfragen_stellen",
-            "varianten_entwickeln",
-            "gemeinsam_schaerfen"
-          ]
-        },
-        {
-          "id": "J2",
-          "name": "Steuerungsgrad",
-          "werte": [
-            "frei",
-            "eng_gefuehrt",
-            "mit_zwischenstaenden"
-          ]
-        },
-        {
-          "id": "J3",
-          "name": "Konkrete_Interaktionsauspraegung",
-          "beispiele": [
-            "gib_zuerst_eine_erstversion_und_danach_drei_varianten",
-            "stelle_mir_erst_klaerende_fragen",
-            "arbeite_iterativ_mit_mir_an_einer_formulierung"
-          ]
-        }
-      ]
+      "slot": "ZIEL_TIEFE",
+      "dimension": "ZIEL",
+      "subdimension": "ZIEL_TIEFE",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "ZIEL_STATUS",
+      "dimension": "ZIEL",
+      "subdimension": "ZIEL_STATUS",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "AUFGABENTYP",
+      "dimension": "AUFGABE",
+      "subdimension": "AUFGABENTYP",
+      "required": true,
+      "multi": false
+    },
+    {
+      "slot": "AUFGABENUMFANG",
+      "dimension": "AUFGABE",
+      "subdimension": "AUFGABENUMFANG",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "SITUATIONSKONTEXT",
+      "dimension": "KONTEXT",
+      "subdimension": "SITUATIONSKONTEXT",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "WISSENSKONTEXT",
+      "dimension": "KONTEXT",
+      "subdimension": "WISSENSKONTEXT",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "RAHMENBEDINGUNG",
+      "dimension": "KONTEXT",
+      "subdimension": "RAHMENBEDINGUNG",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "FORMAT",
+      "dimension": "OUTPUT_FORM",
+      "subdimension": "FORMAT",
+      "required": true,
+      "multi": false
+    },
+    {
+      "slot": "UMFANG",
+      "dimension": "OUTPUT_FORM",
+      "subdimension": "UMFANG",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "ERGEBNISORIENTIERUNG",
+      "dimension": "OUTPUT_FORM",
+      "subdimension": "ERGEBNISORIENTIERUNG",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "PROZESSLOGIK",
+      "dimension": "PROZESS",
+      "subdimension": "PROZESSLOGIK",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "DENKRICHTUNG",
+      "dimension": "PROZESS",
+      "subdimension": "DENKRICHTUNG",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "SPRACHQUALITAET",
+      "dimension": "QUALITAETSKRITERIEN",
+      "subdimension": "SPRACHQUALITAET",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "INHALTSQUALITAET",
+      "dimension": "QUALITAETSKRITERIEN",
+      "subdimension": "INHALTSQUALITAET",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "PRIORISIERUNG",
+      "dimension": "QUALITAETSKRITERIEN",
+      "subdimension": "PRIORISIERUNG",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "EXPERTENROLLE",
+      "dimension": "ROLLE",
+      "subdimension": "EXPERTENROLLE",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "PERSPEKTIVTIEFE",
+      "dimension": "ROLLE",
+      "subdimension": "PERSPEKTIVTIEFE",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "INHALTLICHE_AUSSCHLUESSE",
+      "dimension": "GRENZEN",
+      "subdimension": "INHALTLICHE_AUSSCHLUESSE",
+      "required": false,
+      "multi": true
+    },
+    {
+      "slot": "FORMALE_AUSSCHLUESSE",
+      "dimension": "GRENZEN",
+      "subdimension": "FORMALE_AUSSCHLUESSE",
+      "required": false,
+      "multi": true
+    },
+    {
+      "slot": "ZIELGRUPPE",
+      "dimension": "ADRESSAT",
+      "subdimension": "ZIELGRUPPE",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "WISSENSSTAND_ADRESSAT",
+      "dimension": "ADRESSAT",
+      "subdimension": "WISSENSSTAND_ADRESSAT",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "MODUS",
+      "dimension": "INTERAKTIONSMODUS",
+      "subdimension": "MODUS",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "STEUERUNGSGRAD",
+      "dimension": "INTERAKTIONSMODUS",
+      "subdimension": "STEUERUNGSGRAD",
+      "required": false,
+      "multi": false
     }
   ],
-  "platzhalter_schema": [
-    "ZIEL",
-    "AUFGABE",
-    "KONTEXT",
-    "OUTPUT_FORM",
-    "PROZESS_VORGEHENSWEISE",
-    "QUALITAETSKRITERIEN",
-    "ROLLE",
-    "GRENZEN_AUSSCHLUESSE",
-    "ADRESSATENBEZUG",
-    "INTERAKTIONSMODUS"
+  "templates": [
+    {
+      "id": "default_v1",
+      "label": "Standard-Template",
+      "description": "Allgemeines Prompt-Schema für viele Aufgaben.",
+      "slots_used": [
+        "ZIEL_TYP",
+        "AUFGABENTYP",
+        "FORMAT",
+        "UMFANG",
+        "SITUATIONSKONTEXT",
+        "SPRACHQUALITAET"
+      ],
+      "text": "Bitte [AUFGABENTYP], um [ZIEL_TYP] zu unterstützen. Berücksichtige dabei [SITUATIONSKONTEXT]. Gib das Ergebnis als [FORMAT] in [UMFANG] aus. Achte besonders auf [SPRACHQUALITAET]."
+    },
+    {
+      "id": "decision_table_v1",
+      "label": "Entscheidungsvorbereitung als Tabelle",
+      "description": "Für Vergleiche und Entscheidungsvorbereitung.",
+      "slots_used": [
+        "ZIEL_TYP",
+        "FORMAT",
+        "ERGEBNISORIENTIERUNG",
+        "PROZESSLOGIK",
+        "ZIELGRUPPE"
+      ],
+      "text": "Bitte unterstütze mich dabei, [ZIEL_TYP]. Gehe so vor: [PROZESSLOGIK]. Gib das Ergebnis als [FORMAT] aus. Liefere [ERGEBNISORIENTIERUNG]. Das Ergebnis ist gedacht für [ZIELGRUPPE]."
+    },
+    {
+      "id": "rewrite_v1",
+      "label": "Umformulieren",
+      "description": "Für sprachliche Überarbeitung bestehender Texte.",
+      "slots_used": [
+        "ZIEL_TYP",
+        "AUFGABENTYP",
+        "SPRACHQUALITAET",
+        "INHALTLICHE_AUSSCHLUESSE",
+        "FORMAT"
+      ],
+      "text": "Bitte [AUFGABENTYP], um [ZIEL_TYP]. Formuliere sprachlich [SPRACHQUALITAET]. Vermeide [INHALTLICHE_AUSSCHLUESSE]. Gib das Ergebnis als [FORMAT] aus."
+    }
+  ],
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "recommendation",
+      "if": {
+        "slot": "ZIEL_TYP",
+        "equals": "entscheidung_vorbereiten"
+      },
+      "then": {
+        "recommended_slots": [
+          "FORMAT",
+          "ERGEBNISORIENTIERUNG",
+          "PROZESSLOGIK"
+        ],
+        "recommended_values": {
+          "FORMAT": [
+            "tabelle",
+            "liste"
+          ],
+          "ERGEBNISORIENTIERUNG": [
+            "ergebnis_plus_begruendung",
+            "ergebnis_plus_naechste_schritte"
+          ]
+        }
+      }
+    },
+    {
+      "id": "c2",
+      "type": "recommendation",
+      "if": {
+        "slot": "ZIEL_TYP",
+        "equals": "umformulieren"
+      },
+      "then": {
+        "recommended_slots": [
+          "SPRACHQUALITAET",
+          "INHALTLICHE_AUSSCHLUESSE",
+          "FORMAT"
+        ],
+        "recommended_values": {
+          "FORMAT": [
+            "fliesstext",
+            "liste"
+          ]
+        }
+      }
+    },
+    {
+      "id": "c3",
+      "type": "incompatibility",
+      "if": {
+        "slot": "FORMAT",
+        "equals": "tabelle"
+      },
+      "then_not": {
+        "slot": "FORMALE_AUSSCHLUESSE",
+        "contains": "keine_tabellen"
+      }
+    },
+    {
+      "id": "c4",
+      "type": "incompatibility",
+      "if": {
+        "slot": "FORMAT",
+        "equals": "liste"
+      },
+      "then_not": {
+        "slot": "FORMALE_AUSSCHLUESSE",
+        "contains": "keine_listen"
+      }
+    }
+  ],
+  "example_instances": [
+    {
+      "id": "example_01",
+      "label": "Entscheidungsgrundlage für Teammeeting",
+      "values": {
+        "ZIEL_TYP": "entscheidung_vorbereiten",
+        "ZIEL_TIEFE": "mittel",
+        "ZIEL_STATUS": "entscheidungsorientiert",
+        "AUFGABENTYP": "vergleichen",
+        "AUFGABENUMFANG": "mehrstufig",
+        "SITUATIONSKONTEXT": "meetingvorbereitung",
+        "WISSENSKONTEXT": "gemischte_zielgruppe",
+        "RAHMENBEDINGUNG": "zeitdruck",
+        "FORMAT": "tabelle",
+        "UMFANG": "kurz",
+        "ERGEBNISORIENTIERUNG": "ergebnis_plus_begruendung",
+        "PROZESSLOGIK": "erst_optionen_dann_empfehlung",
+        "DENKRICHTUNG": "strategisch",
+        "SPRACHQUALITAET": "klar",
+        "INHALTSQUALITAET": "praxisnah",
+        "PRIORISIERUNG": "praktikabilitaet_vor_theorie",
+        "EXPERTENROLLE": "strategieberater",
+        "PERSPEKTIVTIEFE": "beratend",
+        "INHALTLICHE_AUSSCHLUESSE": [
+          "keine_fachsprache",
+          "keine_langen_einleitungen"
+        ],
+        "FORMALE_AUSSCHLUESSE": [],
+        "ZIELGRUPPE": "team",
+        "WISSENSSTAND_ADRESSAT": "semi_professionell",
+        "MODUS": "einmalige_antwort",
+        "STEUERUNGSGRAD": "eng_gefuehrt"
+      },
+      "rendered_prompt": "Bitte vergleichen, um entscheidung_vorbereiten zu unterstützen. Berücksichtige dabei meetingvorbereitung. Gib das Ergebnis als tabelle in kurz aus. Achte besonders auf klar."
+    },
+    {
+      "id": "example_02",
+      "label": "Text verständlicher umformulieren",
+      "values": {
+        "ZIEL_TYP": "umformulieren",
+        "ZIEL_TIEFE": "ueberblick",
+        "ZIEL_STATUS": "umsetzungsorientiert",
+        "AUFGABENTYP": "umschreiben",
+        "AUFGABENUMFANG": "einzelschritt",
+        "SITUATIONSKONTEXT": "kundengespraech",
+        "WISSENSKONTEXT": "anfaenger",
+        "RAHMENBEDINGUNG": "sensible_kommunikation",
+        "FORMAT": "fliesstext",
+        "UMFANG": "kurz",
+        "ERGEBNISORIENTIERUNG": "nur_ergebnis",
+        "PROZESSLOGIK": "schrittweise_vorgehen",
+        "DENKRICHTUNG": "pragmatisch",
+        "SPRACHQUALITAET": "einfach",
+        "INHALTSQUALITAET": "relevant",
+        "PRIORISIERUNG": "klarheit_vor_vollstaendigkeit",
+        "EXPERTENROLLE": "lektor",
+        "PERSPEKTIVTIEFE": "beratend",
+        "INHALTLICHE_AUSSCHLUESSE": [
+          "keine_fachsprache",
+          "keine_wiederholungen"
+        ],
+        "FORMALE_AUSSCHLUESSE": [
+          "keine_meta_erklaerungen"
+        ],
+        "ZIELGRUPPE": "kunden",
+        "WISSENSSTAND_ADRESSAT": "laien",
+        "MODUS": "iteratives_verfeinern",
+        "STEUERUNGSGRAD": "mit_zwischenstaenden"
+      },
+      "rendered_prompt": "Bitte umschreiben, um umformulieren zu unterstützen. Berücksichtige dabei kundengespraech. Gib das Ergebnis als fliesstext in kurz aus. Achte besonders auf einfach."
+    }
   ]
 }
