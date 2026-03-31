@@ -179,6 +179,11 @@
               "key": "pruefen",
               "label": "Prüfen",
               "description": "Auf Qualität, Logik oder Konsistenz kontrollieren."
+            },
+            {
+              "key": "vergleichen",
+              "label": "Vergleichen",
+              "description": "Mehrere Optionen oder Varianten gegenüberstellen."
             }
           ]
         },
@@ -849,214 +854,51 @@
     }
   },
   "slot_schema": [
-    {
-      "slot": "ZIEL_TYP",
-      "dimension": "ZIEL",
-      "subdimension": "ZIEL_TYP",
-      "required": true,
-      "multi": false
-    },
-    {
-      "slot": "ZIEL_TIEFE",
-      "dimension": "ZIEL",
-      "subdimension": "ZIEL_TIEFE",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "ZIEL_STATUS",
-      "dimension": "ZIEL",
-      "subdimension": "ZIEL_STATUS",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "AUFGABENTYP",
-      "dimension": "AUFGABE",
-      "subdimension": "AUFGABENTYP",
-      "required": true,
-      "multi": false
-    },
-    {
-      "slot": "AUFGABENUMFANG",
-      "dimension": "AUFGABE",
-      "subdimension": "AUFGABENUMFANG",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "SITUATIONSKONTEXT",
-      "dimension": "KONTEXT",
-      "subdimension": "SITUATIONSKONTEXT",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "WISSENSKONTEXT",
-      "dimension": "KONTEXT",
-      "subdimension": "WISSENSKONTEXT",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "RAHMENBEDINGUNG",
-      "dimension": "KONTEXT",
-      "subdimension": "RAHMENBEDINGUNG",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "FORMAT",
-      "dimension": "OUTPUT_FORM",
-      "subdimension": "FORMAT",
-      "required": true,
-      "multi": false
-    },
-    {
-      "slot": "UMFANG",
-      "dimension": "OUTPUT_FORM",
-      "subdimension": "UMFANG",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "ERGEBNISORIENTIERUNG",
-      "dimension": "OUTPUT_FORM",
-      "subdimension": "ERGEBNISORIENTIERUNG",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "PROZESSLOGIK",
-      "dimension": "PROZESS",
-      "subdimension": "PROZESSLOGIK",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "DENKRICHTUNG",
-      "dimension": "PROZESS",
-      "subdimension": "DENKRICHTUNG",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "SPRACHQUALITAET",
-      "dimension": "QUALITAETSKRITERIEN",
-      "subdimension": "SPRACHQUALITAET",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "INHALTSQUALITAET",
-      "dimension": "QUALITAETSKRITERIEN",
-      "subdimension": "INHALTSQUALITAET",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "PRIORISIERUNG",
-      "dimension": "QUALITAETSKRITERIEN",
-      "subdimension": "PRIORISIERUNG",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "EXPERTENROLLE",
-      "dimension": "ROLLE",
-      "subdimension": "EXPERTENROLLE",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "PERSPEKTIVTIEFE",
-      "dimension": "ROLLE",
-      "subdimension": "PERSPEKTIVTIEFE",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "INHALTLICHE_AUSSCHLUESSE",
-      "dimension": "GRENZEN",
-      "subdimension": "INHALTLICHE_AUSSCHLUESSE",
-      "required": false,
-      "multi": true
-    },
-    {
-      "slot": "FORMALE_AUSSCHLUESSE",
-      "dimension": "GRENZEN",
-      "subdimension": "FORMALE_AUSSCHLUESSE",
-      "required": false,
-      "multi": true
-    },
-    {
-      "slot": "ZIELGRUPPE",
-      "dimension": "ADRESSAT",
-      "subdimension": "ZIELGRUPPE",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "WISSENSSTAND_ADRESSAT",
-      "dimension": "ADRESSAT",
-      "subdimension": "WISSENSSTAND_ADRESSAT",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "MODUS",
-      "dimension": "INTERAKTIONSMODUS",
-      "subdimension": "MODUS",
-      "required": false,
-      "multi": false
-    },
-    {
-      "slot": "STEUERUNGSGRAD",
-      "dimension": "INTERAKTIONSMODUS",
-      "subdimension": "STEUERUNGSGRAD",
-      "required": false,
-      "multi": false
-    }
+    { "slot": "ZIEL_TYP", "dimension": "ZIEL", "subdimension": "ZIEL_TYP", "required": true, "multi": false },
+    { "slot": "ZIEL_TIEFE", "dimension": "ZIEL", "subdimension": "ZIEL_TIEFE", "required": false, "multi": false },
+    { "slot": "ZIEL_STATUS", "dimension": "ZIEL", "subdimension": "ZIEL_STATUS", "required": false, "multi": false },
+    { "slot": "AUFGABENTYP", "dimension": "AUFGABE", "subdimension": "AUFGABENTYP", "required": true, "multi": false },
+    { "slot": "AUFGABENUMFANG", "dimension": "AUFGABE", "subdimension": "AUFGABENUMFANG", "required": false, "multi": false },
+    { "slot": "SITUATIONSKONTEXT", "dimension": "KONTEXT", "subdimension": "SITUATIONSKONTEXT", "required": false, "multi": false },
+    { "slot": "WISSENSKONTEXT", "dimension": "KONTEXT", "subdimension": "WISSENSKONTEXT", "required": false, "multi": false },
+    { "slot": "RAHMENBEDINGUNG", "dimension": "KONTEXT", "subdimension": "RAHMENBEDINGUNG", "required": false, "multi": false },
+    { "slot": "FORMAT", "dimension": "OUTPUT_FORM", "subdimension": "FORMAT", "required": true, "multi": false },
+    { "slot": "UMFANG", "dimension": "OUTPUT_FORM", "subdimension": "UMFANG", "required": false, "multi": false },
+    { "slot": "ERGEBNISORIENTIERUNG", "dimension": "OUTPUT_FORM", "subdimension": "ERGEBNISORIENTIERUNG", "required": false, "multi": false },
+    { "slot": "PROZESSLOGIK", "dimension": "PROZESS", "subdimension": "PROZESSLOGIK", "required": false, "multi": false },
+    { "slot": "DENKRICHTUNG", "dimension": "PROZESS", "subdimension": "DENKRICHTUNG", "required": false, "multi": false },
+    { "slot": "SPRACHQUALITAET", "dimension": "QUALITAETSKRITERIEN", "subdimension": "SPRACHQUALITAET", "required": false, "multi": false },
+    { "slot": "INHALTSQUALITAET", "dimension": "QUALITAETSKRITERIEN", "subdimension": "INHALTSQUALITAET", "required": false, "multi": false },
+    { "slot": "PRIORISIERUNG", "dimension": "QUALITAETSKRITERIEN", "subdimension": "PRIORISIERUNG", "required": false, "multi": false },
+    { "slot": "EXPERTENROLLE", "dimension": "ROLLE", "subdimension": "EXPERTENROLLE", "required": false, "multi": false },
+    { "slot": "PERSPEKTIVTIEFE", "dimension": "ROLLE", "subdimension": "PERSPEKTIVTIEFE", "required": false, "multi": false },
+    { "slot": "INHALTLICHE_AUSSCHLUESSE", "dimension": "GRENZEN", "subdimension": "INHALTLICHE_AUSSCHLUESSE", "required": false, "multi": true },
+    { "slot": "FORMALE_AUSSCHLUESSE", "dimension": "GRENZEN", "subdimension": "FORMALE_AUSSCHLUESSE", "required": false, "multi": true },
+    { "slot": "ZIELGRUPPE", "dimension": "ADRESSAT", "subdimension": "ZIELGRUPPE", "required": false, "multi": false },
+    { "slot": "WISSENSSTAND_ADRESSAT", "dimension": "ADRESSAT", "subdimension": "WISSENSSTAND_ADRESSAT", "required": false, "multi": false },
+    { "slot": "MODUS", "dimension": "INTERAKTIONSMODUS", "subdimension": "MODUS", "required": false, "multi": false },
+    { "slot": "STEUERUNGSGRAD", "dimension": "INTERAKTIONSMODUS", "subdimension": "STEUERUNGSGRAD", "required": false, "multi": false }
   ],
   "templates": [
     {
       "id": "default_v1",
       "label": "Standard-Template",
       "description": "Allgemeines Prompt-Schema für viele Aufgaben.",
-      "slots_used": [
-        "ZIEL_TYP",
-        "AUFGABENTYP",
-        "FORMAT",
-        "UMFANG",
-        "SITUATIONSKONTEXT",
-        "SPRACHQUALITAET"
-      ],
+      "slots_used": ["ZIEL_TYP", "AUFGABENTYP", "FORMAT", "UMFANG", "SITUATIONSKONTEXT", "SPRACHQUALITAET"],
       "text": "Bitte [AUFGABENTYP], um [ZIEL_TYP] zu unterstützen. Berücksichtige dabei [SITUATIONSKONTEXT]. Gib das Ergebnis als [FORMAT] in [UMFANG] aus. Achte besonders auf [SPRACHQUALITAET]."
     },
     {
       "id": "decision_table_v1",
       "label": "Entscheidungsvorbereitung als Tabelle",
       "description": "Für Vergleiche und Entscheidungsvorbereitung.",
-      "slots_used": [
-        "ZIEL_TYP",
-        "FORMAT",
-        "ERGEBNISORIENTIERUNG",
-        "PROZESSLOGIK",
-        "ZIELGRUPPE"
-      ],
+      "slots_used": ["ZIEL_TYP", "FORMAT", "ERGEBNISORIENTIERUNG", "PROZESSLOGIK", "ZIELGRUPPE"],
       "text": "Bitte unterstütze mich dabei, [ZIEL_TYP]. Gehe so vor: [PROZESSLOGIK]. Gib das Ergebnis als [FORMAT] aus. Liefere [ERGEBNISORIENTIERUNG]. Das Ergebnis ist gedacht für [ZIELGRUPPE]."
     },
     {
       "id": "rewrite_v1",
       "label": "Umformulieren",
       "description": "Für sprachliche Überarbeitung bestehender Texte.",
-      "slots_used": [
-        "ZIEL_TYP",
-        "AUFGABENTYP",
-        "SPRACHQUALITAET",
-        "INHALTLICHE_AUSSCHLUESSE",
-        "FORMAT"
-      ],
+      "slots_used": ["ZIEL_TYP", "AUFGABENTYP", "SPRACHQUALITAET", "INHALTLICHE_AUSSCHLUESSE", "FORMAT"],
       "text": "Bitte [AUFGABENTYP], um [ZIEL_TYP]. Formuliere sprachlich [SPRACHQUALITAET]. Vermeide [INHALTLICHE_AUSSCHLUESSE]. Gib das Ergebnis als [FORMAT] aus."
     }
   ],
@@ -1069,20 +911,10 @@
         "equals": "entscheidung_vorbereiten"
       },
       "then": {
-        "recommended_slots": [
-          "FORMAT",
-          "ERGEBNISORIENTIERUNG",
-          "PROZESSLOGIK"
-        ],
+        "recommended_slots": ["FORMAT", "ERGEBNISORIENTIERUNG", "PROZESSLOGIK"],
         "recommended_values": {
-          "FORMAT": [
-            "tabelle",
-            "liste"
-          ],
-          "ERGEBNISORIENTIERUNG": [
-            "ergebnis_plus_begruendung",
-            "ergebnis_plus_naechste_schritte"
-          ]
+          "FORMAT": ["tabelle", "liste"],
+          "ERGEBNISORIENTIERUNG": ["ergebnis_plus_begruendung", "ergebnis_plus_naechste_schritte"]
         }
       }
     },
@@ -1094,16 +926,9 @@
         "equals": "umformulieren"
       },
       "then": {
-        "recommended_slots": [
-          "SPRACHQUALITAET",
-          "INHALTLICHE_AUSSCHLUESSE",
-          "FORMAT"
-        ],
+        "recommended_slots": ["SPRACHQUALITAET", "INHALTLICHE_AUSSCHLUESSE", "FORMAT"],
         "recommended_values": {
-          "FORMAT": [
-            "fliesstext",
-            "liste"
-          ]
+          "FORMAT": ["fliesstext", "liste"]
         }
       }
     },
@@ -1155,17 +980,13 @@
         "PRIORISIERUNG": "praktikabilitaet_vor_theorie",
         "EXPERTENROLLE": "strategieberater",
         "PERSPEKTIVTIEFE": "beratend",
-        "INHALTLICHE_AUSSCHLUESSE": [
-          "keine_fachsprache",
-          "keine_langen_einleitungen"
-        ],
+        "INHALTLICHE_AUSSCHLUESSE": ["keine_fachsprache", "keine_langen_einleitungen"],
         "FORMALE_AUSSCHLUESSE": [],
         "ZIELGRUPPE": "team",
         "WISSENSSTAND_ADRESSAT": "semi_professionell",
         "MODUS": "einmalige_antwort",
         "STEUERUNGSGRAD": "eng_gefuehrt"
-      },
-      "rendered_prompt": "Bitte vergleichen, um entscheidung_vorbereiten zu unterstützen. Berücksichtige dabei meetingvorbereitung. Gib das Ergebnis als tabelle in kurz aus. Achte besonders auf klar."
+      }
     },
     {
       "id": "example_02",
@@ -1189,19 +1010,13 @@
         "PRIORISIERUNG": "klarheit_vor_vollstaendigkeit",
         "EXPERTENROLLE": "lektor",
         "PERSPEKTIVTIEFE": "beratend",
-        "INHALTLICHE_AUSSCHLUESSE": [
-          "keine_fachsprache",
-          "keine_wiederholungen"
-        ],
-        "FORMALE_AUSSCHLUESSE": [
-          "keine_meta_erklaerungen"
-        ],
+        "INHALTLICHE_AUSSCHLUESSE": ["keine_fachsprache", "keine_wiederholungen"],
+        "FORMALE_AUSSCHLUESSE": ["keine_meta_erklaerungen"],
         "ZIELGRUPPE": "kunden",
         "WISSENSSTAND_ADRESSAT": "laien",
         "MODUS": "iteratives_verfeinern",
         "STEUERUNGSGRAD": "mit_zwischenstaenden"
-      },
-      "rendered_prompt": "Bitte umschreiben, um umformulieren zu unterstützen. Berücksichtige dabei kundengespraech. Gib das Ergebnis als fliesstext in kurz aus. Achte besonders auf einfach."
+      }
     }
   ]
 }
