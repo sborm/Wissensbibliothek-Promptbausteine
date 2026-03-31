@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8">
+<title>Wissensbibliothek-Promptbausteine</title>
+<style>
+  body{font-family:sans-serif;margin:1rem}
+  select,button,textarea{width:100%;margin:.4rem 0;padding:.6rem}
+</style>
+<h1>Wissensbibliothek-Promptbausteine</h1>
+<div id="ctrl"></div><textarea id="out" rows="3"></textarea>
+<button onclick="navigator.clipboard.writeText(out.value)">Kopieren</button>
+<script>
+  fetch("data/library.json").then(r=>r.json()).then(j=>{
+    const c=document.getElementById("ctrl"), sel={}, out=document.getElementById("out");
+    for(const [main,m] of Object.entries(j.library)){
+      for(const [sub,s] of Object.entries(m.subdimensions)){
+        const d=document.createElement("select");
+        d.innerHTML=`<option>${sub}</option>`+s.values.map(v=>`<option>${v}</option>`).join("");
+        d.onchange=()=>{sel[sub]=d.value;out.value=Object.entries(sel).filter(([_,v])=>v)
+                                  .map(([k,v])=>`[${k}:${v}]`).join(" ");};
+        c.appendChild(d);
+      }
+    }
+  });
+</script>
