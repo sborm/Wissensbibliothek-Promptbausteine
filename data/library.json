@@ -1,1 +1,546 @@
-{"meta":{"project":"Prompt-Bibliothek","version":"1.0.0","author":"sborm","created":"2026-03-29T12:00:00Z","locale":"de-DE"},"library":{"ZIEL":{"description":"Was soll die KI bewirken?","subdimensions":{"ZIEL_TYP":{"values":["informieren","entscheidung_vorbereiten"]}}},"OUTPUT":{"description":"Form des Ergebnisses","subdimensions":{"FORMAT":{"values":["tabelle","liste","fließtext"]}}}}}
+{
+  "modellname": "Prompt-Taxonomie",
+  "beschreibung": "Ein Prompt wird als taxonomisch gegliederte Struktur mit Hauptdimensionen, Subdimensionen und konkreten Ausprägungen modelliert.",
+  "meta": {
+    "version": "1.0.0",
+    "author": "dein-name",
+    "created": "2026-03-31T00:00:00Z",
+    "locale": "de-DE"
+  },
+  "hauptdimensionen": [
+    {
+      "id": "A",
+      "name": "Ziel",
+      "frage": "Wozu dient der Prompt? Was soll erreicht werden?",
+      "subdimensionen": [
+        {
+          "id": "A1",
+          "name": "Zieltyp",
+          "werte": [
+            "informieren",
+            "erklaeren",
+            "zusammenfassen",
+            "analysieren",
+            "vergleichen",
+            "bewerten",
+            "priorisieren",
+            "entscheiden_helfen",
+            "ideen_generieren",
+            "umformulieren",
+            "strukturieren",
+            "planen",
+            "reflektieren",
+            "ueberzeugen",
+            "simulieren"
+          ]
+        },
+        {
+          "id": "A2",
+          "name": "Zieltiefe",
+          "werte": [
+            "ueberblick",
+            "mittlere_tiefe",
+            "tiefenanalyse"
+          ]
+        },
+        {
+          "id": "A3",
+          "name": "Zielstatus",
+          "werte": [
+            "explorativ",
+            "vorbereitend",
+            "entscheidungsorientiert",
+            "umsetzungsorientiert"
+          ]
+        },
+        {
+          "id": "A4",
+          "name": "Konkrete_Zielauspraegung",
+          "beispiele": [
+            "eine_entscheidungsgrundlage_erstellen",
+            "drei_handlungsoptionen_entwickeln",
+            "ein_komplexes_thema_verstaendlich_machen"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Aufgabe",
+      "frage": "Was genau soll die KI tun?",
+      "subdimensionen": [
+        {
+          "id": "B1",
+          "name": "Aufgabentyp",
+          "werte": [
+            "beantworten",
+            "erlaeutern",
+            "strukturieren",
+            "umschreiben",
+            "verbessern",
+            "verdichten",
+            "erweitern",
+            "klassifizieren",
+            "extrahieren",
+            "bewerten",
+            "entwerfen",
+            "pruefen"
+          ]
+        },
+        {
+          "id": "B2",
+          "name": "Aufgabenoperation",
+          "werte": [
+            "inhalte_sammeln",
+            "muster_erkennen",
+            "unterschiede_herausarbeiten",
+            "argumente_formulieren",
+            "risiken_benennen",
+            "empfehlungen_ableiten"
+          ]
+        },
+        {
+          "id": "B3",
+          "name": "Aufgabenumfang",
+          "werte": [
+            "einzelschritt",
+            "mehrstufig",
+            "iterativ"
+          ]
+        },
+        {
+          "id": "B4",
+          "name": "Konkrete_Aufgabenauspraegung",
+          "beispiele": [
+            "vergleiche_drei_optionen",
+            "formuliere_meinen_gedanken_klarer",
+            "pruefe_den_text_auf_verstaendlichkeit_und_logik"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Kontext",
+      "frage": "Unter welchen Bedingungen oder in welchem Rahmen soll gearbeitet werden?",
+      "subdimensionen": [
+        {
+          "id": "C1",
+          "name": "Sachkontext",
+          "werte": [
+            "thema",
+            "fachgebiet",
+            "problemstellung",
+            "anlass"
+          ]
+        },
+        {
+          "id": "C2",
+          "name": "Situationskontext",
+          "werte": [
+            "meetingvorbereitung",
+            "bewerbung",
+            "strategiearbeit",
+            "lernprozess",
+            "kundengespraech",
+            "entscheidungsfindung"
+          ]
+        },
+        {
+          "id": "C3",
+          "name": "Wissenskontext",
+          "werte": [
+            "anfaenger",
+            "fortgeschritten",
+            "expertisch",
+            "gemischte_zielgruppe"
+          ]
+        },
+        {
+          "id": "C4",
+          "name": "Rahmenbedingungen",
+          "werte": [
+            "zeitdruck",
+            "begrenzte_datenlage",
+            "sensible_kommunikation",
+            "knapper_umfang",
+            "formeller_anlass"
+          ]
+        },
+        {
+          "id": "C5",
+          "name": "Konkrete_Kontextauspraegung",
+          "beispiele": [
+            "fuer_ein_nicht_technisches_management_team",
+            "im_rahmen_eines_internen_workshops",
+            "mit_wenig_vorwissen_auf_leserseite"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Output_Form",
+      "frage": "In welcher Form soll das Ergebnis erscheinen?",
+      "subdimensionen": [
+        {
+          "id": "D1",
+          "name": "Darstellungsform",
+          "werte": [
+            "fliesstext",
+            "stichpunkte",
+            "tabelle",
+            "matrix",
+            "checkliste",
+            "gliederung",
+            "email",
+            "argumentationslinie",
+            "leitfaden",
+            "zusammenfassung",
+            "entwurf",
+            "fragenkatalog"
+          ]
+        },
+        {
+          "id": "D2",
+          "name": "Umfang",
+          "werte": [
+            "sehr_kurz",
+            "kurz",
+            "mittel",
+            "ausfuehrlich"
+          ]
+        },
+        {
+          "id": "D3",
+          "name": "Strukturgrad",
+          "werte": [
+            "frei",
+            "klar_gegliedert",
+            "streng_schematisch"
+          ]
+        },
+        {
+          "id": "D4",
+          "name": "Ergebnisorientierung",
+          "werte": [
+            "nur_ergebnis",
+            "ergebnis_plus_begruendung",
+            "ergebnis_plus_alternativen",
+            "ergebnis_plus_naechste_schritte"
+          ]
+        },
+        {
+          "id": "D5",
+          "name": "Konkrete_Output_Auspraegung",
+          "beispiele": [
+            "als_tabelle_mit_vor_und_nachteilen",
+            "in_fuenf_praegnanten_stichpunkten",
+            "als_kurze_professionell_formulierte_email"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Prozess_Vorgehensweise",
+      "frage": "Wie soll die KI denken oder vorgehen?",
+      "subdimensionen": [
+        {
+          "id": "E1",
+          "name": "Prozesslogik",
+          "werte": [
+            "zuerst_analysieren_dann_bewerten",
+            "erst_sammeln_dann_strukturieren",
+            "erst_fragen_klaeren_dann_loesung_entwickeln",
+            "schrittweise_vorgehen",
+            "divergieren_dann_konvergieren"
+          ]
+        },
+        {
+          "id": "E2",
+          "name": "Denkrichtung",
+          "werte": [
+            "analytisch",
+            "kreativ",
+            "kritisch",
+            "strategisch",
+            "didaktisch",
+            "pragmatisch"
+          ]
+        },
+        {
+          "id": "E3",
+          "name": "Bearbeitungsmodus",
+          "werte": [
+            "schritt_fuer_schritt",
+            "vergleichend",
+            "hypothesenbasiert",
+            "problemorientiert",
+            "loesungsorientiert"
+          ]
+        },
+        {
+          "id": "E4",
+          "name": "Konkrete_Prozessauspraegung",
+          "beispiele": [
+            "analysiere_zuerst_die_ausgangslage_und_leite_daraus_empfehlungen_ab",
+            "gehe_schritt_fuer_schritt_vor",
+            "zeige_zuerst_optionen_dann_eine_empfehlung"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Qualitaetskriterien",
+      "frage": "Woran wird eine gute Antwort gemessen?",
+      "subdimensionen": [
+        {
+          "id": "F1",
+          "name": "Sprachqualitaet",
+          "werte": [
+            "klar",
+            "praezise",
+            "einfach",
+            "elegant",
+            "professionell",
+            "sachlich"
+          ]
+        },
+        {
+          "id": "F2",
+          "name": "Inhaltsqualitaet",
+          "werte": [
+            "vollstaendig",
+            "relevant",
+            "differenziert",
+            "belastbar",
+            "ausgewogen",
+            "praxisnah"
+          ]
+        },
+        {
+          "id": "F3",
+          "name": "Nutzungsqualitaet",
+          "werte": [
+            "sofort_verwendbar",
+            "leicht_verstaendlich",
+            "entscheidungsrelevant",
+            "umsetzungsnah"
+          ]
+        },
+        {
+          "id": "F4",
+          "name": "Priorisierungskriterien",
+          "werte": [
+            "kuerze_vor_tiefe",
+            "tiefe_vor_kuerze",
+            "klarheit_vor_vollstaendigkeit",
+            "praktikabilitaet_vor_theorie"
+          ]
+        },
+        {
+          "id": "F5",
+          "name": "Konkrete_Qualitaetsauspraegung",
+          "beispiele": [
+            "klar_knapp_und_direkt_nutzbar",
+            "differenziert_aber_ohne_unnoetige_komplexitaet",
+            "praxisnah_und_entscheidungsorientiert"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "G",
+      "name": "Rollenperspektive",
+      "frage": "Aus welcher Rolle oder Perspektive soll geantwortet werden?",
+      "subdimensionen": [
+        {
+          "id": "G1",
+          "name": "Expertenrolle",
+          "werte": [
+            "coach",
+            "analyst",
+            "lektor",
+            "strategieberater",
+            "lehrer",
+            "sparringspartner",
+            "moderator"
+          ]
+        },
+        {
+          "id": "G2",
+          "name": "Funktionsrolle",
+          "werte": [
+            "texter",
+            "planer",
+            "kritiker",
+            "pruefer",
+            "erklaerer"
+          ]
+        },
+        {
+          "id": "G3",
+          "name": "Perspektivtiefe",
+          "werte": [
+            "neutral",
+            "beratend",
+            "hinterfragend",
+            "herausfordernd"
+          ]
+        },
+        {
+          "id": "G4",
+          "name": "Konkrete_Rollenauspraegung",
+          "beispiele": [
+            "antworte_als_strukturierter_strategieberater",
+            "agier_als_verstaendlicher_lehrer",
+            "sei_mein_kritischer_sparringspartner"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "H",
+      "name": "Grenzen_Ausschluesse",
+      "frage": "Was soll vermieden oder ausgeschlossen werden?",
+      "subdimensionen": [
+        {
+          "id": "H1",
+          "name": "Inhaltliche_Ausschluesse",
+          "werte": [
+            "keine_spekulation",
+            "keine_fachsprache",
+            "keine_wiederholungen",
+            "keine_langen_einleitungen"
+          ]
+        },
+        {
+          "id": "H2",
+          "name": "Formale_Ausschluesse",
+          "werte": [
+            "keine_tabellen",
+            "keine_listen",
+            "keine_beispiele",
+            "keine_meta_erklaerungen"
+          ]
+        },
+        {
+          "id": "H3",
+          "name": "Stilistische_Ausschluesse",
+          "werte": [
+            "nicht_werblich",
+            "nicht_zu_akademisch",
+            "nicht_zu_locker",
+            "nicht_konfrontativ"
+          ]
+        },
+        {
+          "id": "H4",
+          "name": "Konkrete_Grenzauspraegung",
+          "beispiele": [
+            "ohne_fachjargon",
+            "ohne_lange_vorrede",
+            "keine_allgemeinen_floskeln"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "I",
+      "name": "Adressatenbezug",
+      "frage": "Fuer wen ist das Ergebnis gedacht?",
+      "subdimensionen": [
+        {
+          "id": "I1",
+          "name": "Zielgruppe",
+          "werte": [
+            "ich_selbst",
+            "team",
+            "fuehrungskraefte",
+            "kunden",
+            "lernende",
+            "oeffentlichkeit"
+          ]
+        },
+        {
+          "id": "I2",
+          "name": "Wissensstand",
+          "werte": [
+            "laien",
+            "semi_professionell",
+            "fachkundig"
+          ]
+        },
+        {
+          "id": "I3",
+          "name": "Erwartungshaltung",
+          "werte": [
+            "schnelle_orientierung",
+            "fundierte_abwaegung",
+            "umsetzbare_empfehlung",
+            "ueberzeugende_darstellung"
+          ]
+        },
+        {
+          "id": "I4",
+          "name": "Konkrete_Adressatenauspraegung",
+          "beispiele": [
+            "fuer_ein_management_ohne_technisches_detailwissen",
+            "fuer_ein_teammeeting",
+            "fuer_einen_kunden_mit_begrenzter_zeit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "J",
+      "name": "Interaktionsmodus",
+      "frage": "Wie soll die Zusammenarbeit im Chat ablaufen?",
+      "subdimensionen": [
+        {
+          "id": "J1",
+          "name": "Modus",
+          "werte": [
+            "einmalige_antwort",
+            "iteratives_verfeinern",
+            "rueckfragen_stellen",
+            "varianten_entwickeln",
+            "gemeinsam_schaerfen"
+          ]
+        },
+        {
+          "id": "J2",
+          "name": "Steuerungsgrad",
+          "werte": [
+            "frei",
+            "eng_gefuehrt",
+            "mit_zwischenstaenden"
+          ]
+        },
+        {
+          "id": "J3",
+          "name": "Konkrete_Interaktionsauspraegung",
+          "beispiele": [
+            "gib_zuerst_eine_erstversion_und_danach_drei_varianten",
+            "stelle_mir_erst_klaerende_fragen",
+            "arbeite_iterativ_mit_mir_an_einer_formulierung"
+          ]
+        }
+      ]
+    }
+  ],
+  "platzhalter_schema": [
+    "ZIEL",
+    "AUFGABE",
+    "KONTEXT",
+    "OUTPUT_FORM",
+    "PROZESS_VORGEHENSWEISE",
+    "QUALITAETSKRITERIEN",
+    "ROLLE",
+    "GRENZEN_AUSSCHLUESSE",
+    "ADRESSATENBEZUG",
+    "INTERAKTIONSMODUS"
+  ]
+}
