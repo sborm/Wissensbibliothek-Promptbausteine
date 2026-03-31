@@ -2,40 +2,49 @@
 <title>Wissensbibliothek-Promptbausteine</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body{font-family:sans-serif;margin:1rem}
-select,button,textarea{width:100%;margin:.5rem 0;padding:.7rem;font-size:1rem}
-button{background:#4f46e5;color:#fff;border:0;border-radius:.5rem}
+ body{font-family:sans-serif;margin:1rem}
+ select,button,textarea{width:100%;margin:.5rem 0;padding:.7rem;font-size:1rem}
+ button{background:#4f46e5;color:#fff;border:0;border-radius:.5rem}
 </style>
 
 <h1>Wissensbibliothek-Promptbausteine</h1>
 
 <div id="ctrl"></div>
- 
+
 <label>Live-Prompt</label>
 <textarea id="out" rows="3" readonly></textarea>
 
-<button onclick="navigator.clipboard.writeText(out.value)">
-  Kopieren
-</button>
+<button onclick="navigator.clipboard.writeText(out.value)">Kopieren</button>
 
 <script>
-fetch("data/library.json").then(r=>r.json()).then(lib=>{
-  const ctrl=document.getElementById("ctrl"),
-        out=document.getElementById("out"),
-        sel={};
-  for(const [_,m] of Object.entries(lib.library)){ 
-    for(const [sub,s] of Object.entries(m.subdimensions)){ 
-      const d=document.createElement("select");
-      d.innerHTML=`<option value=\"\">${sub}</option>`+
-        s.values.map(v=>`<option>${v}</option>`).join("");
-      d.onchange=()=>{sel[sub]=d.value; render();};
-      ctrl.appendChild(d);
+fetch("data/library.json")
+  .then(r => r.json())
+  .then(lib => {
+    const ctrl = document.getElementById("ctrl");
+    const out  = document.getElementById("out");
+    const sel  = {};
+
+    /* neue Struktur: lib.hauptdimensionen ist ein Array */
+    (lib.hauptdimensionen || []).forEach(dim => {
+      (dim.subdimensionen || []).forEach(sub => {
+        const key    = sub.name || sub.id;                       // Platzhalter-Name
+        const values = sub.werte || sub.values || sub.beispiele || [];
+        if (!values.length) return;                              // nichts zum Anzeigen
+
+        const d = document.createElement("select");
+        d.innerHTML = `<option value="">${key}</option>` +
+                      values.map(v => `<option>${v}</option>`).join("");
+        d.onchange = () => { sel[key] = d.value; render(); };
+        ctrl.appendChild(d);
+      });
+    });
+
+    function render(){
+      out.value = Object.entries(sel)
+        .filter(([,v]) => v)
+        .map(([k,v]) => `[${k}:${v}]`)
+        .join(" ");
     }
-  }
-  function render(){
-    out.value=Object.entries(sel).filter(([,v])=>v)
-              .map(([k,v])=>`[${k}:${v}]`).join(" ");
-  }
-});
+  });
 </script>
 </html>
