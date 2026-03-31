@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt-Bibliothek UI</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121933;
+      --panel-2: #1a2345;
+      --text: #e9eefc;
+      --muted: #a8b3d1;
+      --accent: #7aa2ff;
+      --accent-2: #9b8cff;
+      --border: #2c3968;
+      --danger: #ff7b7b;
+      --warn: #ffcf70;
+      --ok: #7fe3a1;
+      --shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(122,162,255,0.15), transparent 24%),
+        radial-gradient(circle at top left, rgba(155,140,255,0.12), transparent 20%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .container {
+      width: min(1400px, calc(100% - 32px));
+      margin: 24px auto 40px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-main, .hero-side {
+      padding: 20px;
+    }
+
+    h1, h2, h3, h4 {
+      margin: 0 0 10px;
+      line-height: 1.15;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+    }
+
+    h3 {
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .toolbar, .output-card, .section-card {
+      padding: 16px;
+    }
+
+    .toolbar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    select, input[type="text"], textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      outline: none;
+      transition: border-color .15s ease, transform .15s ease;
+    }
+
+    select:focus, input[type="text"]:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(122,162,255,0.18), rgba(122,162,255,0.08));
+      color: var(--text);
+      border-radius: 12px;
+      padding: 11px 14px;
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      font-weight: 600;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+
+    button.secondary {
+      background: rgba(255,255,255,0.03);
+    }
+
+    button.ghost {
+      background: transparent;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .section-description {
+      color: var(--muted);
+      font-size: 0.93rem;
+      margin-bottom: 14px;
+    }
+
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .slot-card {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.025);
+      border-radius: 14px;
+      padding: 12px;
+      min-height: 100%;
+    }
+
+    .slot-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .slot-title strong {
+      font-size: 0.96rem;
+    }
+
+    .slot-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      font-size: 0.74rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .badge.required {
+      color: var(--warn);
+      border-color: rgba(255,207,112,0.35);
+      background: rgba(255,207,112,0.08);
+    }
+
+    .checkbox-grid {
+      display: grid;
+      gap: 8px;
+      max-height: 220px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+    }
+
+    .checkbox-item input {
+      margin-top: 3px;
+    }
+
+    .checkbox-content {
+      display: grid;
+      gap: 2px;
+    }
+
+    .checkbox-content span {
+      color: var(--text);
+      font-size: 0.93rem;
+    }
+
+    .checkbox-content small {
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .output-card pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      color: var(--text);
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 170px;
+    }
+
+    .status-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .notice {
+      border-radius: 12px;
+      padding: 11px 12px;
+      border: 1px solid transparent;
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .notice.error {
+      color: #ffd7d7;
+      border-color: rgba(255,123,123,0.3);
+      background: rgba(255,123,123,0.08);
+    }
+
+    .notice.warning {
+      color: #ffe9b6;
+      border-color: rgba(255,207,112,0.3);
+      background: rgba(255,207,112,0.08);
+    }
+
+    .notice.success {
+      color: #d6ffe3;
+      border-color: rgba(127,227,161,0.3);
+      background: rgba(127,227,161,0.08);
+    }
+
+    .inline-help {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-top: 14px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1080px) {
+      .hero, .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .toolbar-grid, .slot-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        width: min(100% - 20px, 1400px);
+        margin-top: 12px;
+      }
+
+      .hero-main, .hero-side, .toolbar, .output-card, .section-card {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="hero-main card">
+        <h1>Prompt-Bibliothek UI</h1>
+        <p>
+          Klicke Prompt-Bausteine zusammen, lade Beispielinstanzen aus <code>data/library.json</code>,
+          beachte Constraints und rendere daraus direkt einen vollständigen Prompt.
+        </p>
+        <div class="meta">
+          <div class="pill">Lokale UI</div>
+          <div class="pill">Ohne Backend</div>
+          <div class="pill">Single Source of Truth: <code>library.json</code></div>
+        </div>
+      </div>
+      <div class="hero-side card">
+        <h2>Status</h2>
+        <div id="repoMeta" class="status-list">
+          <div class="notice warning">Bibliothek wird geladen …</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <div class="stack">
+        <section class="card toolbar">
+          <div class="section-header">
+            <div>
+              <h2>Steuerung</h2>
+              <p class="section-description">Modus wählen, Beispiel laden, Werte zurücksetzen oder den Prompt kopieren.</p>
+            </div>
+          </div>
+
+          <div class="toolbar-grid">
+            <div class="field">
+              <label for="modeSelect">Render-Modus</label>
+              <select id="modeSelect">
+                <option value="structured">Structured</option>
+                <option value="template">Template</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="templateSelect">Template</label>
+              <select id="templateSelect">
+                <option value="">— bitte wählen —</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="instanceSelect">Beispielinstanz</label>
+              <select id="instanceSelect">
+                <option value="">— bitte wählen —</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="searchInput">Filter</label>
+              <input id="searchInput" type="text" placeholder="z. B. Ziel, Format, Rolle" />
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button id="loadInstanceBtn" type="button">Beispiel laden</button>
+            <button id="clearBtn" class="secondary" type="button">Alles zurücksetzen</button>
+            <button id="copyPromptBtn" class="secondary" type="button">Prompt kopieren</button>
+            <button id="copySlotsBtn" class="secondary" type="button">Slots kopieren</button>
+          </div>
+
+          <div class="inline-help">
+            Template-Modus rendert den gewählten Template-Text aus <code>library.json</code>. Structured-Modus erzeugt einen vollständigen strukturierten Prompt aus deinen aktuellen Slots.
+          </div>
+        </section>
+
+        <div id="sectionsContainer" class="stack"></div>
+      </div>
+
+      <div class="stack">
+        <section class="card output-card">
+          <div class="section-header">
+            <div>
+              <h2>Aktuelle Slots</h2>
+              <p class="section-description">Maschinenlesbare Repräsentation deiner Auswahl.</p>
+            </div>
+          </div>
+          <pre id="slotsOutput">Noch keine Auswahl.</pre>
+        </section>
+
+        <section class="card output-card">
+          <div class="section-header">
+            <div>
+              <h2>Gerenderter Prompt</h2>
+              <p class="section-description">Direkt nutzbarer Prompt aus den ausgewählten Bausteinen.</p>
+            </div>
+          </div>
+          <pre id="promptOutput">Noch kein Prompt gerendert.</pre>
+        </section>
+
+        <section class="card output-card">
+          <div class="section-header">
+            <div>
+              <h2>Validierung & Hinweise</h2>
+              <p class="section-description">Pflichtfelder, Empfehlungen und Inkompatibilitäten.</p>
+            </div>
+          </div>
+          <div id="statusOutput" class="status-list">
+            <div class="notice warning">Noch keine Prüfung durchgeführt.</div>
+          </div>
+          <div class="footer-note">
+            Bei Inkompatibilitäten wird kein stillschweigender Fallback gesetzt. Du siehst stattdessen eine klare Fehlermeldung.
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      libraryData: null,
+      slotIndex: {},
+      dimensionOrder: [],
+      templateIndex: {},
+      exampleIndex: {},
+      assignments: {}
+    };
+
+    const elements = {
+      repoMeta: document.getElementById("repoMeta"),
+      modeSelect: document.getElementById("modeSelect"),
+      templateSelect: document.getElementById("templateSelect"),
+      instanceSelect: document.getElementById("instanceSelect"),
+      searchInput: document.getElementById("searchInput"),
+      loadInstanceBtn: document.getElementById("loadInstanceBtn"),
+      clearBtn: document.getElementById("clearBtn"),
+      copyPromptBtn: document.getElementById("copyPromptBtn"),
+      copySlotsBtn: document.getElementById("copySlotsBtn"),
+      sectionsContainer: document.getElementById("sectionsContainer"),
+      slotsOutput: document.getElementById("slotsOutput"),
+      promptOutput: document.getElementById("promptOutput"),
+      statusOutput: document.getElementById("statusOutput")
+    };
+
+    function humanizeKey(value) {
+      return String(value).replaceAll("_", " ");
+    }
+
+    function lowerFirst(text) {
+      return text ? text.charAt(0).toLowerCase() + text.slice(1) : text;
+    }
+
+    function escapeRegExp(value) {
+      return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function setRepoMetaNotices(items) {
+      elements.repoMeta.innerHTML = "";
+      items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = `notice ${item.type}`;
+        div.textContent = item.text;
+        elements.repoMeta.appendChild(div);
+      });
+    }
+
+    async function loadLibrary() {
+      try {
+        const response = await fetch("../data/library.json", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        state.libraryData = data;
+        buildIndexes(data);
+        populateToolbar();
+        renderSections();
+        updateOutputs();
+
+        const meta = data.meta || {};
+        setRepoMetaNotices([
+          { type: "success", text: `Bibliothek geladen: ${meta.project || "Prompt-Bibliothek"}` },
+          { type: "success", text: `Version: ${meta.version || "unbekannt"} · Locale: ${meta.locale || "unbekannt"}` }
+        ]);
+      } catch (error) {
+        console.error(error);
+        setRepoMetaNotices([
+          { type: "error", text: "Bibliothek konnte nicht geladen werden." },
+          { type: "warning", text: "Starte die UI über einen lokalen Server, z. B. mit: python -m http.server 8000" }
+        ]);
+        elements.promptOutput.textContent = "Fehler beim Laden von ../data/library.json";
+      }
+    }
+
+    function buildIndexes(data) {
+      state.slotIndex = {};
+      state.dimensionOrder = [];
+      state.templateIndex = {};
+      state.exampleIndex = {};
+
+      const library = data.library || {};
+      Object.entries(library).forEach(([dimensionKey, dimensionObj]) => {
+        const dimInfo = {
+          dimensionKey,
+          dimensionLabel: dimensionObj.label || dimensionKey,
+          dimensionDescription: dimensionObj.description || "",
+          slots: []
+        };
+
+        const subdimensions = dimensionObj.subdimensions || {};
+        Object.entries(subdimensions).forEach(([subKey, subObj]) => {
+          const slot = subObj.slot || subKey;
+          const allowedValues = {};
+          (subObj.values || []).forEach(valueObj => {
+            allowedValues[valueObj.key] = {
+              label: valueObj.label || valueObj.key,
+              description: valueObj.description || ""
+            };
+          });
+
+          state.slotIndex[slot] = {
+            slot,
+            dimensionKey,
+            dimensionLabel: dimInfo.dimensionLabel,
+            subdimensionKey: subKey,
+            subdimensionLabel: subObj.label || subKey,
+            required: Boolean(subObj.required),
+            multi: Boolean(subObj.multi),
+            allowedValues
+          };
+
+          dimInfo.slots.push(slot);
+        });
+
+        state.dimensionOrder.push(dimInfo);
+      });
+
+      (data.templates || []).forEach(template => {
+        state.templateIndex[template.id] = template;
+      });
+
+      (data.example_instances || []).forEach(example => {
+        state.exampleIndex[example.id] = example;
+      });
+    }
+
+    function populateToolbar() {
+      elements.templateSelect.innerHTML = '<option value="">— bitte wählen —</option>';
+      Object.values(state.templateIndex).forEach(template => {
+        const option = document.createElement("option");
+        option.value = template.id;
+        option.textContent = `${template.id} — ${template.label || template.id}`;
+        elements.templateSelect.appendChild(option);
+      });
+
+      elements.instanceSelect.innerHTML = '<option value="">— bitte wählen —</option>';
+      Object.values(state.exampleIndex).forEach(example => {
+        const option = document.createElement("option");
+        option.value = example.id;
+        option.textContent = `${example.id} — ${example.label || example.id}`;
+        elements.instanceSelect.appendChild(option);
+      });
+
+      updateTemplateVisibility();
+    }
+
+    function updateTemplateVisibility() {
+      const isTemplateMode = elements.modeSelect.value === "template";
+      elements.templateSelect.disabled = !isTemplateMode;
+    }
+
+    function renderSections() {
+      const query = elements.searchInput.value.trim().toLowerCase();
+      elements.sectionsContainer.innerHTML = "";
+
+      state.dimensionOrder.forEach(dimension => {
+        const matchingSlots = dimension.slots.filter(slot => {
+          const meta = state.slotIndex[slot];
+          const haystack = [
+            dimension.dimensionLabel,
+            dimension.dimensionDescription,
+            meta.subdimensionLabel,
+            slot,
+            ...Object.keys(meta.allowedValues),
+            ...Object.values(meta.allowedValues).map(v => v.label),
+            ...Object.values(meta.allowedValues).map(v => v.description)
+          ]
+            .join(" ")
+            .toLowerCase();
+
+          return !query || haystack.includes(query);
+        });
+
+        if (!matchingSlots.length) return;
+
+        const section = document.createElement("section");
+        section.className = "card section-card";
+
+        const header = document.createElement("div");
+        header.className = "section-header";
+        header.innerHTML = `
+          <div>
+            <h2>${dimension.dimensionLabel}</h2>
+            <p class="section-description">${dimension.dimensionDescription || ""}</p>
+          </div>
+        `;
+        section.appendChild(header);
+
+        const grid = document.createElement("div");
+        grid.className = "slot-grid";
+
+        matchingSlots.forEach(slot => {
+          const meta = state.slotIndex[slot];
+          const slotCard = document.createElement("div");
+          slotCard.className = "slot-card";
+
+          const title = document.createElement("div");
+          title.className = "slot-title";
+
+          const titleLeft = document.createElement("div");
+          titleLeft.innerHTML = `<strong>${meta.subdimensionLabel}</strong>`;
+          title.appendChild(titleLeft);
+
+          const badge = document.createElement("div");
+          badge.className = `badge ${meta.required ? "required" : ""}`;
+          badge.textContent = meta.required ? "Pflicht" : (meta.multi ? "Multi" : "Optional");
+          title.appendChild(badge);
+
+          const sub = document.createElement("div");
+          sub.className = "slot-sub";
+          sub.textContent = `${slot}${meta.multi ? " · mehrere Werte möglich" : ""}`;
+
+          slotCard.appendChild(title);
+          slotCard.appendChild(sub);
+
+          if (meta.multi) {
+            const checkboxGrid = document.createElement("div");
+            checkboxGrid.className = "checkbox-grid";
+
+            Object.entries(meta.allowedValues).forEach(([valueKey, valueObj]) => {
+              const label = document.createElement("label");
+              label.className = "checkbox-item";
+
+              const checkbox = document.createElement("input");
+              checkbox.type = "checkbox";
+              checkbox.value = valueKey;
+              checkbox.checked = Array.isArray(state.assignments[slot]) && state.assignments[slot].includes(valueKey);
+
+              checkbox.addEventListener("change", () => {
+                const current = Array.isArray(state.assignments[slot]) ? [...state.assignments[slot]] : [];
+                if (checkbox.checked) {
+                  if (!current.includes(valueKey)) current.push(valueKey);
+                } else {
+                  const idx = current.indexOf(valueKey);
+                  if (idx >= 0) current.splice(idx, 1);
+                }
+                if (current.length) {
+                  state.assignments[slot] = current;
+                } else {
+                  delete state.assignments[slot];
+                }
+                updateOutputs();
+              });
+
+              const content = document.createElement("div");
+              content.className = "checkbox-content";
+              content.innerHTML = `<span>${valueObj.label}</span><small>${valueObj.description || ""}</small>`;
+
+              label.appendChild(checkbox);
+              label.appendChild(content);
+              checkboxGrid.appendChild(label);
+            });
+
+            slotCard.appendChild(checkboxGrid);
+          } else {
+            const select = document.createElement("select");
+            const emptyOption = document.createElement("option");
+            emptyOption.value = "";
+            emptyOption.textContent = "— bitte wählen —";
+            select.appendChild(emptyOption);
+
+            Object.entries(meta.allowedValues).forEach(([valueKey, valueObj]) => {
+              const option = document.createElement("option");
+              option.value = valueKey;
+              option.textContent = `${valueObj.label}`;
+              select.appendChild(option);
+            });
+
+            select.value = typeof state.assignments[slot] === "string" ? state.assignments[slot] : "";
+            select.addEventListener("change", () => {
+              if (select.value) {
+                state.assignments[slot] = select.value;
+              } else {
+                delete state.assignments[slot];
+              }
+              updateOutputs();
+            });
+
+            slotCard.appendChild(select);
+
+            const currentValue = typeof state.assignments[slot] === "string" ? state.assignments[slot] : "";
+            if (currentValue && meta.allowedValues[currentValue]?.description) {
+              const help = document.createElement("div");
+              help.className = "inline-help";
+              help.textContent = meta.allowedValues[currentValue].description;
+              slotCard.appendChild(help);
+            }
+          }
+
+          grid.appendChild(slotCard);
+        });
+
+        section.appendChild(grid);
+        elements.sectionsContainer.appendChild(section);
+      });
+    }
+
+    function getValueLabel(slot, value) {
+      const meta = state.slotIndex[slot];
+      if (!meta) return String(value);
+
+      const entry = meta.allowedValues[value];
+      return entry ? entry.label : humanizeKey(value);
+    }
+
+    function valueToTemplateText(slot, value) {
+      if (Array.isArray(value)) {
+        return value.map(item => {
+          const label = getValueLabel(slot, item);
+          return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(item);
+        }).join(", ");
+      }
+
+      const label = getValueLabel(slot, value);
+      return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(value);
+    }
+
+    function renderStructuredPrompt() {
+      const lines = ["Erstelle eine Antwort anhand der folgenden Vorgaben:"];
+
+      state.dimensionOrder.forEach(dimension => {
+        const slotLines = [];
+
+        dimension.slots.forEach(slot => {
+          if (!(slot in state.assignments)) return;
+          const meta = state.slotIndex[slot];
+          const rawValue = state.assignments[slot];
+
+          const valueText = Array.isArray(rawValue)
+            ? rawValue.map(item => getValueLabel(slot, item)).join(", ")
+            : getValueLabel(slot, rawValue);
+
+          slotLines.push(`- ${meta.subdimensionLabel}: ${valueText}`);
+        });
+
+        if (slotLines.length) {
+          lines.push("");
+          lines.push(`${dimension.dimensionLabel}:`);
+          lines.push(...slotLines);
+        }
+      });
+
+      return lines.join("\n").trim();
+    }
+
+    function renderTemplatePrompt() {
+      const templateId = elements.templateSelect.value;
+      if (!templateId) {
+        throw new Error("Im Template-Modus muss ein Template gewählt werden.");
+      }
+
+      const template = state.templateIndex[templateId];
+      if (!template) {
+        throw new Error(`Unbekanntes Template: ${templateId}`);
+      }
+
+      const missing = (template.slots_used || []).filter(slot => !(slot in state.assignments));
+      if (missing.length) {
+        throw new Error(`Für Template '${templateId}' fehlen Werte für: ${missing.join(", ")}`);
+      }
+
+      let text = template.text || "";
+      (template.slots_used || []).forEach(slot => {
+        const rawValue = state.assignments[slot];
+        const replacement = valueToTemplateText(slot, rawValue);
+        const pattern = new RegExp(`\\[${escapeRegExp(slot)}\\]`, "g");
+        text = text.replace(pattern, replacement);
+      });
+
+      const unresolved = text.match(/\[[A-Z0-9_]+\]/g);
+      if (unresolved) {
+        throw new Error(`Template enthält noch unaufgelöste Platzhalter: ${[...new Set(unresolved)].join(", ")}`);
+      }
+
+      return text.trim();
+    }
+
+    function renderSlotsNotation() {
+      const lines = [];
+
+      state.dimensionOrder.forEach(dimension => {
+        dimension.slots.forEach(slot => {
+          if (!(slot in state.assignments)) return;
+          const rawValue = state.assignments[slot];
+          if (Array.isArray(rawValue)) {
+            lines.push(`[${slot}:${rawValue.join(",")}]`);
+          } else {
+            lines.push(`[${slot}:${rawValue}]`);
+          }
+        });
+      });
+
+      return lines.length ? lines.join("\n") : "Noch keine Auswahl.";
+    }
+
+    function validateAssignments() {
+      const notices = [];
+      const requiredMissing = Object.values(state.slotIndex)
+        .filter(meta => meta.required)
+        .filter(meta => !(meta.slot in state.assignments))
+        .map(meta => `${meta.subdimensionLabel} (${meta.slot})`);
+
+      if (requiredMissing.length) {
+        notices.push({
+          type: "warning",
+          text: `Fehlende Pflichtfelder: ${requiredMissing.join(", ")}`
+        });
+      } else {
+        notices.push({
+          type: "success",
+          text: "Alle Pflichtfelder sind gesetzt."
+        });
+      }
+
+      const constraints = state.libraryData?.constraints || [];
+      constraints.forEach(constraint => {
+        const cond = constraint.if || {};
+        const assigned = state.assignments[cond.slot];
+        const matches = assigned === cond.equals;
+
+        if (constraint.type === "incompatibility" && matches) {
+          const targetSlot = constraint.then_not?.slot;
+          const forbiddenValue = constraint.then_not?.contains;
+          const targetAssigned = state.assignments[targetSlot];
+
+          if (Array.isArray(targetAssigned) && targetAssigned.includes(forbiddenValue)) {
+            notices.push({
+              type: "error",
+              text: `Inkompatibel: ${cond.slot}=${cond.equals} widerspricht ${targetSlot} enthält ${forbiddenValue}.`
+            });
+          }
+        }
+
+        if (constraint.type === "recommendation" && matches) {
+          const recommendedSlots = constraint.then?.recommended_slots || [];
+          const missingRecommended = recommendedSlots.filter(slot => !(slot in state.assignments));
+          if (missingRecommended.length) {
+            notices.push({
+              type: "warning",
+              text: `Empfehlung bei ${cond.slot}=${cond.equals}: ergänze idealerweise ${missingRecommended.join(", ")}.`
+            });
+          }
+
+          const recommendedValues = constraint.then?.recommended_values || {};
+          Object.entries(recommendedValues).forEach(([slot, values]) => {
+            const current = state.assignments[slot];
+            if (typeof current === "string" && !values.includes(current)) {
+              notices.push({
+                type: "warning",
+                text: `Empfehlung bei ${cond.slot}=${cond.equals}: für ${slot} sind eher ${values.join(", ")} sinnvoll.`
+              });
+            }
+          });
+        }
+      });
+
+      return notices;
+    }
+
+    function updateOutputs() {
+      renderSections();
+      elements.slotsOutput.textContent = renderSlotsNotation();
+
+      const notices = validateAssignments();
+      elements.statusOutput.innerHTML = "";
+
+      let prompt = "Noch kein Prompt gerendert.";
+
+      try {
+        prompt = elements.modeSelect.value === "template"
+          ? renderTemplatePrompt()
+          : renderStructuredPrompt();
+      } catch (error) {
+        notices.unshift({
+          type: "error",
+          text: error.message
+        });
+      }
+
+      elements.promptOutput.textContent = prompt;
+
+      notices.forEach(item => {
+        const div = document.createElement("div");
+        div.className = `notice ${item.type}`;
+        div.textContent = item.text;
+        elements.statusOutput.appendChild(div);
+      });
+
+      if (!notices.length) {
+        const div = document.createElement("div");
+        div.className = "notice success";
+        div.textContent = "Keine Hinweise.";
+        elements.statusOutput.appendChild(div);
+      }
+
+      persistAssignments();
+    }
+
+    function loadInstance(instanceId) {
+      if (!instanceId || !state.exampleIndex[instanceId]) return;
+      const example = state.exampleIndex[instanceId];
+      state.assignments = JSON.parse(JSON.stringify(example.values || {}));
+      updateOutputs();
+    }
+
+    function clearAssignments() {
+      state.assignments = {};
+      updateOutputs();
+    }
+
+    async function copyText(text, successMessage) {
+      try {
+        await navigator.clipboard.writeText(text);
+        const div = document.createElement("div");
+        div.className = "notice success";
+        div.textContent = successMessage;
+        elements.statusOutput.prepend(div);
+      } catch (error) {
+        const div = document.createElement("div");
+        div.className = "notice error";
+        div.textContent = "Kopieren fehlgeschlagen.";
+        elements.statusOutput.prepend(div);
+      }
+    }
+
+    function persistAssignments() {
+      try {
+        localStorage.setItem("prompt-library-ui.assignments", JSON.stringify(state.assignments));
+        localStorage.setItem("prompt-library-ui.mode", elements.modeSelect.value);
+        localStorage.setItem("prompt-library-ui.template", elements.templateSelect.value);
+      } catch (_) {}
+    }
+
+    function restoreAssignments() {
+      try {
+        const rawAssignments = localStorage.getItem("prompt-library-ui.assignments");
+        const rawMode = localStorage.getItem("prompt-library-ui.mode");
+        const rawTemplate = localStorage.getItem("prompt-library-ui.template");
+
+        if (rawAssignments) {
+          state.assignments = JSON.parse(rawAssignments);
+        }
+        if (rawMode) {
+          elements.modeSelect.value = rawMode;
+        }
+        if (rawTemplate) {
+          elements.templateSelect.value = rawTemplate;
+        }
+      } catch (_) {}
+    }
+
+    elements.modeSelect.addEventListener("change", () => {
+      updateTemplateVisibility();
+      updateOutputs();
+    });
+
+    elements.templateSelect.addEventListener("change", updateOutputs);
+    elements.searchInput.addEventListener("input", renderSections);
+
+    elements.loadInstanceBtn.addEventListener("click", () => {
+      loadInstance(elements.instanceSelect.value);
+    });
+
+    elements.clearBtn.addEventListener("click", clearAssignments);
+
+    elements.copyPromptBtn.addEventListener("click", () => {
+      copyText(elements.promptOutput.textContent, "Prompt in die Zwischenablage kopiert.");
+    });
+
+    elements.copySlotsBtn.addEventListener("click", () => {
+      copyText(elements.slotsOutput.textContent, "Slots in die Zwischenablage kopiert.");
+    });
+
+    loadLibrary().then(() => {
+      restoreAssignments();
+      updateTemplateVisibility();
+      updateOutputs();
+    });
+  </script>
+</body>
+</html>
