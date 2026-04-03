@@ -600,8 +600,8 @@
         <details class="disclosure">
           <summary>
             <div>
-              <strong>Sekundäre Werkzeuge</strong>
-              <div class="subtle-text">Filter, Kopieren und technische Hilfen nur bei Bedarf.</div>
+              <strong>Erweiterte Startoptionen</strong>
+              <div class="subtle-text">Modus, Filter und technische Hilfen nur bei Bedarf.</div>
             </div>
             <span class="badge subtle">Optional</span>
           </summary>
@@ -683,7 +683,7 @@
           <div class="section-header">
             <div>
               <h2>Aktueller Prompt</h2>
-              <p class="section-description">Direkt nutzbare Fassung auf Basis deiner Auswahl.</p>
+              <p class="section-description">Direkt nutzbare Fassung oder früher Zwischenstand auf Basis deiner Auswahl.</p>
             </div>
           </div>
           <div class="output-panel">
@@ -710,7 +710,7 @@
           <div class="section-header">
             <div>
               <h2>Prüfung</h2>
-              <p class="section-description">Pflichtfelder, Empfehlungen und Konflikte im Überblick.</p>
+              <p class="section-description">Nur offene Punkte, sinnvolle nächste Schritte und Konflikte.</p>
             </div>
           </div>
           <div id="statusOutput" class="notice-stack">
@@ -786,6 +786,115 @@
       ADRESSAT: "Adressat",
       INTERAKTIONSMODUS: "Interaktionsmodus",
       OUTPUT_FORM: "Output-Form"
+    };
+
+    const CURATED_REFINEMENT_SLOTS = [
+      "ZIEL_TIEFE",
+      "ZIEL_STATUS",
+      "ERGEBNISORIENTIERUNG",
+      "PROZESSLOGIK",
+      "SPRACHQUALITAET",
+      "INHALTSQUALITAET",
+      "PRIORISIERUNG",
+      "EXPERTENROLLE",
+      "WISSENSSTAND_ADRESSAT",
+      "MODUS",
+      "AUFGABENUMFANG"
+    ];
+
+    const HEURISTIC_RECOMMENDATIONS = {
+      ZIEL_TYP: {
+        entscheidung_vorbereiten: {
+          slots: ["ERGEBNISORIENTIERUNG", "PROZESSLOGIK", "PRIORISIERUNG", "ZIELGRUPPE"],
+          values: {
+            FORMAT: ["tabelle", "liste"],
+            ERGEBNISORIENTIERUNG: ["ergebnis_plus_begruendung", "ergebnis_plus_naechste_schritte"],
+            PRIORISIERUNG: ["praktikabilitaet_vor_theorie", "klarheit_vor_vollstaendigkeit"]
+          },
+          reason: "Bei Entscheidungsvorbereitung helfen klare Bewertungskriterien und eine eindeutige Empfehlung fast immer weiter."
+        },
+        umformulieren: {
+          slots: ["SPRACHQUALITAET", "WISSENSSTAND_ADRESSAT", "INHALTLICHE_AUSSCHLUESSE"],
+          values: {
+            FORMAT: ["fliesstext", "liste"],
+            SPRACHQUALITAET: ["klar", "einfach", "professionell"]
+          },
+          reason: "Bei Umformulierungen ist die Zielwirkung wichtiger als zusätzliche Metastruktur."
+        },
+        analysieren: {
+          slots: ["ZIEL_TIEFE", "PROZESSLOGIK", "INHALTSQUALITAET", "EXPERTENROLLE"],
+          values: {
+            PROZESSLOGIK: ["zuerst_analysieren_dann_bewerten"],
+            INHALTSQUALITAET: ["differenziert", "vollstaendig", "praxisnah"]
+          },
+          reason: "Analyseaufgaben werden deutlich belastbarer, wenn Tiefe, Vorgehen und Qualitätsanspruch klar gesetzt sind."
+        },
+        bewerten: {
+          slots: ["PROZESSLOGIK", "ERGEBNISORIENTIERUNG", "PRIORISIERUNG"],
+          values: {
+            ERGEBNISORIENTIERUNG: ["ergebnis_plus_begruendung", "ergebnis_plus_alternativen"]
+          },
+          reason: "Bewertungen wirken nur dann überzeugend, wenn Kriterien und Begründung sichtbar werden."
+        },
+        planen: {
+          slots: ["AUFGABENUMFANG", "ERGEBNISORIENTIERUNG", "MODUS"],
+          values: {
+            AUFGABENUMFANG: ["mehrstufig", "iterativ"],
+            ERGEBNISORIENTIERUNG: ["ergebnis_plus_naechste_schritte"]
+          },
+          reason: "Planungsaufgaben profitieren von Schrittlogik und sichtbaren nächsten Schritten."
+        }
+      },
+      AUFGABENTYP: {
+        verbessern: {
+          slots: ["SPRACHQUALITAET", "INHALTSQUALITAET", "PERSPEKTIVTIEFE"],
+          values: {
+            PERSPEKTIVTIEFE: ["hinterfragend", "herausfordernd"]
+          },
+          reason: "Verbessern wird nützlicher, wenn Qualitätsmaßstab und kritische Tiefe konkretisiert sind."
+        },
+        vergleichen: {
+          slots: ["ERGEBNISORIENTIERUNG", "PROZESSLOGIK", "PRIORISIERUNG"],
+          values: {
+            PROZESSLOGIK: ["erst_optionen_dann_empfehlung"],
+            FORMAT: ["tabelle", "liste"]
+          },
+          reason: "Vergleiche werden klarer, wenn die Vergleichslogik und das Entscheidungsformat feststehen."
+        },
+        entwerfen: {
+          slots: ["DENKRICHTUNG", "UMFANG", "MODUS"],
+          values: {
+            DENKRICHTUNG: ["kreativ", "pragmatisch"],
+            MODUS: ["iteratives_verfeinern", "varianten_entwickeln"]
+          },
+          reason: "Entwurfsaufgaben profitieren davon, Kreativmodus und Iterationsgrad früh festzulegen."
+        }
+      },
+      FORMAT: {
+        tabelle: {
+          slots: ["ERGEBNISORIENTIERUNG", "PRIORISIERUNG"],
+          values: {
+            PRIORISIERUNG: ["klarheit_vor_vollstaendigkeit", "praktikabilitaet_vor_theorie"]
+          },
+          reason: "Tabellen sind dann stark, wenn klar ist, ob eher Vergleich, Entscheidung oder Übersicht im Vordergrund steht."
+        },
+        email: {
+          slots: ["ZIELGRUPPE", "SPRACHQUALITAET", "RAHMENBEDINGUNG"],
+          values: {
+            SPRACHQUALITAET: ["klar", "professionell", "sachlich"],
+            RAHMENBEDINGUNG: ["formeller_anlass", "sensible_kommunikation"]
+          },
+          reason: "Bei E-Mails entscheidet der richtige Ton oft stärker über die Qualität als zusätzliche Tiefe."
+        },
+        leitfaden: {
+          slots: ["AUFGABENUMFANG", "MODUS", "ERGEBNISORIENTIERUNG"],
+          values: {
+            AUFGABENUMFANG: ["mehrstufig"],
+            ERGEBNISORIENTIERUNG: ["ergebnis_plus_naechste_schritte"]
+          },
+          reason: "Leitfäden brauchen meist eine klare Abfolge und sichtbare Handlungslogik."
+        }
+      }
     };
 
     function humanizeKey(value) {
@@ -933,21 +1042,44 @@
         .map(meta => meta.slot);
     }
 
+    function isCuratedRefinementSlot(slot) {
+      return CURATED_REFINEMENT_SLOTS.includes(slot);
+    }
+
+    function getRefinementPriority(slot) {
+      const curatedIndex = CURATED_REFINEMENT_SLOTS.indexOf(slot);
+      return curatedIndex === -1 ? 999 : curatedIndex;
+    }
+
     function getExclusionSlots() {
       return Object.values(state.slotIndex)
         .filter(meta => meta.slot.includes("AUSSCHLUESSE") || meta.dimensionKey === "GRENZEN")
         .map(meta => meta.slot);
     }
 
+    function addRecommendation(bucket, slot, reason, values = [], score = 1) {
+      if (!state.slotIndex[slot] || getRequiredSlots().includes(slot) || getExclusionSlots().includes(slot)) return;
+      bucket[slot] = bucket[slot] || { reasons: [], values: [], score: 0 };
+      if (reason) bucket[slot].reasons.push(reason);
+      if (values?.length) bucket[slot].values.push(...values);
+      bucket[slot].score += score;
+    }
+
+    function applyHeuristicRecommendations(bucket, sourceSlot, sourceValue) {
+      const blueprint = HEURISTIC_RECOMMENDATIONS[sourceSlot]?.[sourceValue];
+      if (!blueprint) return;
+      const reason = blueprint.reason || `${getSlotDisplayName(sourceSlot)} ist auf „${getValueLabel(sourceSlot, sourceValue)}“ gesetzt.`;
+      (blueprint.slots || []).forEach(slot => addRecommendation(bucket, slot, reason, [], 2));
+      Object.entries(blueprint.values || {}).forEach(([slot, values]) => addRecommendation(bucket, slot, reason, values, 2));
+    }
+
     function getActiveRecommendationData() {
       const constraints = state.libraryData?.constraints || [];
       const requiredComplete = isRequiredComplete();
-      const recommendedSlots = [];
-      const reasons = {};
-      const recommendedValues = {};
+      const bucket = {};
 
       if (!requiredComplete) {
-        return { recommendedSlots, reasons, recommendedValues };
+        return { recommendedSlots: [], reasons: {}, recommendedValues: {} };
       }
 
       constraints.forEach(constraint => {
@@ -956,27 +1088,36 @@
         const matches = current === cond.equals;
         if (!matches || constraint.type !== "recommendation") return;
 
+        const base = `${getSlotDisplayName(cond.slot)} ist auf „${getValueLabel(cond.slot, cond.equals)}“ gesetzt.`;
+
         (constraint.then?.recommended_slots || []).forEach(slot => {
-          recommendedSlots.push(slot);
-          const base = `${getSlotDisplayName(cond.slot)} ist auf „${getValueLabel(cond.slot, cond.equals)}“ gesetzt.`;
-          reasons[slot] = reasons[slot] || [];
-          reasons[slot].push(base);
+          addRecommendation(bucket, slot, base, [], 3);
         });
 
         Object.entries(constraint.then?.recommended_values || {}).forEach(([slot, values]) => {
-          recommendedSlots.push(slot);
-          recommendedValues[slot] = unique([...(recommendedValues[slot] || []), ...values]);
-          reasons[slot] = reasons[slot] || [];
-          const labels = values.map(value => getValueLabel(slot, value)).join(", ");
-          reasons[slot].push(`Typischerweise sinnvoll sind hier: ${labels}.`);
+          addRecommendation(bucket, slot, `${base} Passende Ausprägungen sind hier oft schneller anschlussfähig.`, values, 3);
         });
       });
 
-      return {
-        recommendedSlots: unique(recommendedSlots).filter(slot => state.slotIndex[slot]),
-        reasons,
-        recommendedValues
-      };
+      ["ZIEL_TYP", "AUFGABENTYP", "FORMAT"].forEach(sourceSlot => {
+        const sourceValue = state.assignments[sourceSlot];
+        if (typeof sourceValue === "string") applyHeuristicRecommendations(bucket, sourceSlot, sourceValue);
+      });
+
+      const recommendedSlots = Object.entries(bucket)
+        .sort((a, b) => b[1].score - a[1].score || getRefinementPriority(a[0]) - getRefinementPriority(b[0]) || a[0].localeCompare(b[0]))
+        .map(([slot]) => slot)
+        .filter(slot => state.slotIndex[slot]);
+
+      const reasons = {};
+      const recommendedValues = {};
+
+      recommendedSlots.forEach(slot => {
+        reasons[slot] = unique((bucket[slot]?.reasons || []).filter(Boolean));
+        recommendedValues[slot] = unique(bucket[slot]?.values || []);
+      });
+
+      return { recommendedSlots, reasons, recommendedValues };
     }
 
     function getRefinementGroups(recommendedSlots) {
@@ -1005,6 +1146,7 @@
             return !query || haystack.includes(query);
           });
 
+          slots.sort((a, b) => getRefinementPriority(a) - getRefinementPriority(b) || a.localeCompare(b));
           return { ...dimension, slots };
         })
         .filter(group => group.slots.length);
@@ -1046,21 +1188,17 @@
       Object.keys(state.slotIndex).forEach(slot => statuses[slot] = []);
 
       getRequiredSlots().forEach(slot => {
-        if (!isAssigned(slot)) {
-          statuses[slot].push({ type: "warning", text: "Pflichtangabe fehlt." });
-        } else {
-          statuses[slot].push({ type: "success", text: "Pflichtangabe gesetzt." });
-        }
+        if (!isAssigned(slot)) statuses[slot].push({ type: "warning", text: "Pflichtangabe fehlt." });
       });
 
       const { recommendedSlots, reasons, recommendedValues } = getActiveRecommendationData();
       recommendedSlots.forEach(slot => {
         if (!isAssigned(slot)) {
           const reasonText = reasons[slot]?.[0] || "Für deine aktuelle Auswahl empfohlen.";
-          statuses[slot].push({ type: "info", text: `Empfohlen: ${reasonText}` });
-        } else if (recommendedValues[slot] && typeof state.assignments[slot] === "string" && !recommendedValues[slot].includes(state.assignments[slot])) {
+          statuses[slot].push({ type: "info", text: `Als Nächstes sinnvoll: ${reasonText}` });
+        } else if (recommendedValues[slot]?.length && typeof state.assignments[slot] === "string" && !recommendedValues[slot].includes(state.assignments[slot])) {
           const labels = recommendedValues[slot].map(value => getValueLabel(slot, value)).join(", ");
-          statuses[slot].push({ type: "warning", text: `Der Slot ist gesetzt, aber empfohlen wären eher: ${labels}.` });
+          statuses[slot].push({ type: "warning", text: `Gesetzt, aber noch nicht optimal. Typisch passend wären eher: ${labels}.` });
         }
       });
 
@@ -1075,9 +1213,8 @@
         const targetValue = state.assignments[targetSlot];
         if (!Array.isArray(targetValue) || !targetValue.includes(forbidden)) return;
 
-        const message = `Widerspruch zu ${getSlotDisplayName(cond.slot)} = ${getValueLabel(cond.slot, cond.equals)}.`;
-        statuses[cond.slot].push({ type: "error", text: message });
-        statuses[targetSlot].push({ type: "error", text: `Passt nicht zu ${getSlotDisplayName(cond.slot)} = ${getValueLabel(cond.slot, cond.equals)}.` });
+        statuses[cond.slot].push({ type: "error", text: `Diese Auswahl kollidiert mit ${getSlotDisplayName(targetSlot)}.` });
+        statuses[targetSlot].push({ type: "error", text: `Diese Auswahl kollidiert mit ${getSlotDisplayName(cond.slot)}.` });
       });
 
       return statuses;
@@ -1110,6 +1247,7 @@
       badgeWrap.className = "inline-actions";
       if (meta.required) badgeWrap.innerHTML += '<span class="badge accent">Pflicht</span>';
       else if (options.recommended) badgeWrap.innerHTML += '<span class="badge subtle">Empfohlen</span>';
+      else if (options.curated) badgeWrap.innerHTML += '<span class="badge subtle">Häufig genutzt</span>';
       else badgeWrap.innerHTML += '<span class="badge subtle">Optional</span>';
 
       head.appendChild(metaWrap);
@@ -1246,7 +1384,8 @@
 
     function renderRecommendationSection() {
       const requiredComplete = isRequiredComplete();
-      const { recommendedSlots, reasons } = getActiveRecommendationData();
+      const { recommendedSlots, reasons, recommendedValues } = getActiveRecommendationData();
+      const actionableSlots = recommendedSlots.filter(slot => !isAssigned(slot) || (recommendedValues[slot]?.length && typeof state.assignments[slot] === "string" && !recommendedValues[slot].includes(state.assignments[slot])));
 
       elements.recommendedFields.innerHTML = "";
       if (!requiredComplete) {
@@ -1257,14 +1396,20 @@
 
       if (!recommendedSlots.length) {
         elements.recommendationIntro.className = "notice success";
-        elements.recommendationIntro.textContent = "Für die aktuelle Konfiguration gibt es keine expliziten Zusatzempfehlungen aus dem Regelwerk.";
+        elements.recommendationIntro.textContent = "Für die aktuelle Konfiguration gibt es noch keine zusätzlichen Empfehlungen aus Regeln oder Heuristiken.";
+        return;
+      }
+
+      if (!actionableSlots.length) {
+        elements.recommendationIntro.className = "notice success";
+        elements.recommendationIntro.textContent = "Die wichtigsten Ergänzungen für deine aktuelle Auswahl sind bereits gesetzt.";
         return;
       }
 
       elements.recommendationIntro.className = "notice info";
       elements.recommendationIntro.textContent = "Diese Felder sind für deine aktuelle Auswahl besonders sinnvoll und werden deshalb vorgezogen angezeigt.";
 
-      recommendedSlots.forEach(slot => {
+      actionableSlots.forEach(slot => {
         const reason = (reasons[slot] || []).join(" ");
         elements.recommendedFields.appendChild(renderFieldCard(slot, { recommended: true, reason }));
       });
@@ -1310,7 +1455,7 @@
           body.appendChild(info);
         }
 
-        group.slots.forEach(slot => body.appendChild(renderFieldCard(slot)));
+        group.slots.forEach(slot => body.appendChild(renderFieldCard(slot, { curated: isCuratedRefinementSlot(slot) })));
 
         details.appendChild(summary);
         details.appendChild(body);
@@ -1461,51 +1606,54 @@
         .filter(slot => !isAssigned(slot))
         .map(slot => `${getSlotDisplayName(slot)} (${slot})`);
 
+      const conflicts = [];
+      (state.libraryData?.constraints || []).forEach(constraint => {
+        if (constraint.type !== "incompatibility") return;
+        const cond = constraint.if || {};
+        const targetSlot = constraint.then_not?.slot;
+        const forbiddenValue = constraint.then_not?.contains;
+        const sourceMatches = state.assignments[cond.slot] === cond.equals;
+        const targetAssigned = state.assignments[targetSlot];
+        if (sourceMatches && Array.isArray(targetAssigned) && targetAssigned.includes(forbiddenValue)) {
+          conflicts.push(` ${getSlotDisplayName(cond.slot)} = ${getValueLabel(cond.slot, cond.equals)} ↔ ${getSlotDisplayName(targetSlot)} enthält ${getValueLabel(targetSlot, forbiddenValue)}`.trim());
+        }
+      });
+
+      const { recommendedSlots, recommendedValues } = getActiveRecommendationData();
+      const nextBestFields = recommendedSlots.filter(slot => !isAssigned(slot));
+      const tuneableFields = recommendedSlots.filter(slot => recommendedValues[slot]?.length && typeof state.assignments[slot] === "string" && !recommendedValues[slot].includes(state.assignments[slot]));
+
       if (requiredMissing.length) {
         notices.push({
           type: "warning",
           text: `Fehlende Pflichtfelder: ${requiredMissing.join(", ")}`
         });
-      } else {
+      }
+
+      if (nextBestFields.length) {
+        const preview = nextBestFields.slice(0, 4).map(getSlotDisplayName).join(", ");
         notices.push({
-          type: "success",
-          text: "Alle Pflichtfelder sind gesetzt."
+          type: "info",
+          text: `Als Nächstes sinnvoll: ${preview}${nextBestFields.length > 4 ? " …" : ""}`
         });
       }
 
-      const { recommendedSlots, recommendedValues } = getActiveRecommendationData();
-      recommendedSlots.forEach(slot => {
-        if (!isAssigned(slot)) {
-          notices.push({
-            type: "info",
-            text: `Sinnvolle Ergänzung: ${getSlotDisplayName(slot)}`
-          });
-        } else if (recommendedValues[slot] && typeof state.assignments[slot] === "string" && !recommendedValues[slot].includes(state.assignments[slot])) {
-          const labels = recommendedValues[slot].map(value => getValueLabel(slot, value)).join(", ");
-          notices.push({
-            type: "warning",
-            text: `${getSlotDisplayName(slot)} ist gesetzt, empfohlen wären eher: ${labels}.`
-          });
-        }
-      });
+      if (tuneableFields.length) {
+        const preview = tuneableFields.slice(0, 3).map(getSlotDisplayName).join(", ");
+        notices.push({
+          type: "warning",
+          text: `Bereits gesetzt, aber noch ausbaufähig: ${preview}${tuneableFields.length > 3 ? " …" : ""}`
+        });
+      }
 
-      (state.libraryData?.constraints || []).forEach(constraint => {
-        if (constraint.type !== "incompatibility") return;
-        const cond = constraint.if || {};
-        const matches = state.assignments[cond.slot] === cond.equals;
-        if (!matches) return;
+      conflicts.forEach(text => notices.push({ type: "error", text }));
 
-        const targetSlot = constraint.then_not?.slot;
-        const forbiddenValue = constraint.then_not?.contains;
-        const targetAssigned = state.assignments[targetSlot];
-
-        if (Array.isArray(targetAssigned) && targetAssigned.includes(forbiddenValue)) {
-          notices.push({
-            type: "error",
-            text: `Inkompatibel: ${getSlotDisplayName(cond.slot)} = ${getValueLabel(cond.slot, cond.equals)} widerspricht ${getSlotDisplayName(targetSlot)} enthält ${getValueLabel(targetSlot, forbiddenValue)}.`
-          });
-        }
-      });
+      if (!requiredMissing.length && !nextBestFields.length && !tuneableFields.length && !conflicts.length) {
+        notices.push({
+          type: "success",
+          text: "Konfiguration ist konsistent und aktuell ohne offene Hinweise."
+        });
+      }
 
       return notices;
     }
@@ -1524,6 +1672,7 @@
       elements.statusOutput.innerHTML = "";
 
       let prompt = "Noch kein Prompt gerendert.";
+      const hasAssignments = Object.keys(state.assignments).some(slot => isAssigned(slot));
       try {
         prompt = elements.modeSelect.value === "template"
           ? renderTemplatePrompt()
@@ -1533,7 +1682,13 @@
       }
 
       if (!isRequiredComplete()) {
-        prompt = "Der Prompt ist noch nicht vollständig. Ergänze zuerst die Pflichtangaben.";
+        if (hasAssignments) {
+          prompt = `Vorläufige Vorschau – noch nicht vollständig. Ergänze zuerst die Pflichtangaben.
+
+${renderStructuredPrompt()}`;
+        } else {
+          prompt = "Der Prompt ist noch nicht vollständig. Ergänze zuerst die Pflichtangaben.";
+        }
       }
 
       elements.promptOutput.textContent = prompt;
