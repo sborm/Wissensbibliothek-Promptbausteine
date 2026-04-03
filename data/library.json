@@ -1,11 +1,11 @@
 {
   "meta": {
     "project": "Prompt-Bibliothek",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "author": "dein-name",
     "created": "2026-03-31T12:00:00Z",
     "locale": "de-DE",
-    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit Hauptdimensionen, Subdimensionen, Slots, Templates, Constraints und Beispielinstanzen."
+    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit Hauptdimensionen, Subdimensionen, Slots, Templates, Constraints, Beispielinstanzen und Provenienzmetadaten für Heuristiken."
   },
   "library": {
     "ZIEL": {
@@ -69,7 +69,19 @@
               "label": "Planen",
               "description": "Schritte, Maßnahmen oder Vorgehen strukturieren."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "repo_practice",
+            "practitioner_blog"
+          ],
+          "evidence_strength": "stark",
+          "auto_recommendation_tier": "A",
+          "recommendation_notes": "Zentraler Task-Anker. Früh setzen und als Primärtreiber für Heuristiken behandeln.",
+          "heuristic_scope": [
+            "alle_tasks"
+          ],
+          "confidence": 0.9
         },
         "ZIEL_TIEFE": {
           "id": "A2",
@@ -185,7 +197,18 @@
               "label": "Vergleichen",
               "description": "Mehrere Optionen oder Varianten gegenüberstellen."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "repo_practice"
+          ],
+          "evidence_strength": "stark",
+          "auto_recommendation_tier": "A",
+          "recommendation_notes": "Als explizites Handlungsverb modellieren und getrennt vom Zieltyp behandeln.",
+          "heuristic_scope": [
+            "alle_tasks"
+          ],
+          "confidence": 0.88
         },
         "AUFGABENUMFANG": {
           "id": "B2",
@@ -359,7 +382,23 @@
               "label": "Fragenkatalog",
               "description": "Liste relevanter Fragen."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "repo_practice"
+          ],
+          "evidence_strength": "stark",
+          "auto_recommendation_tier": "A",
+          "recommendation_notes": "Früh explizit setzen; besonders relevant für strukturierte, evaluierbare Outputs.",
+          "heuristic_scope": [
+            "vergleichen",
+            "entscheidung_vorbereiten",
+            "umschreiben",
+            "verbessern",
+            "entwerfen",
+            "planen"
+          ],
+          "confidence": 0.9
         },
         "UMFANG": {
           "id": "D2",
@@ -387,7 +426,19 @@
               "label": "Ausführlich",
               "description": "Detaillierte Darstellung."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "repo_practice",
+            "forum_hypothesis"
+          ],
+          "evidence_strength": "stark",
+          "auto_recommendation_tier": "A",
+          "recommendation_notes": "Scope und Länge möglichst konkret halten; präzisiert Nutzwert und Erwartungshaltung.",
+          "heuristic_scope": [
+            "alle_tasks"
+          ],
+          "confidence": 0.82
         },
         "ERGEBNISORIENTIERUNG": {
           "id": "D3",
@@ -450,7 +501,23 @@
               "label": "Schrittweise vorgehen",
               "description": "In nachvollziehbaren Etappen arbeiten."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "repo_practice",
+            "practitioner_blog"
+          ],
+          "evidence_strength": "stark",
+          "auto_recommendation_tier": "A",
+          "recommendation_notes": "Besonders relevant bei Analyse-, Vergleichs-, Planungs- und Entscheidungsaufgaben.",
+          "heuristic_scope": [
+            "analysieren",
+            "vergleichen",
+            "bewerten",
+            "entscheidung_vorbereiten",
+            "planen"
+          ],
+          "confidence": 0.88
         },
         "DENKRICHTUNG": {
           "id": "E2",
@@ -523,7 +590,23 @@
               "label": "Sachlich",
               "description": "Nüchtern und faktenorientiert."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "forum_hypothesis"
+          ],
+          "evidence_strength": "stark",
+          "auto_recommendation_tier": "A",
+          "recommendation_notes": "Wichtiger Hebel für Ton, Register und Lesbarkeit; besonders nützlich bei Umformulierung und Kommunikation.",
+          "heuristic_scope": [
+            "umformulieren",
+            "umschreiben",
+            "verbessern",
+            "email",
+            "kunden",
+            "laien"
+          ],
+          "confidence": 0.8
         },
         "INHALTSQUALITAET": {
           "id": "F2",
@@ -767,7 +850,23 @@
               "label": "Öffentlichkeit",
               "description": "Breite, allgemeine Zielgruppe."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide"
+          ],
+          "evidence_strength": "stark",
+          "auto_recommendation_tier": "A",
+          "recommendation_notes": "Audience-Persona als wiederkehrendes Prompt-Muster; steuert Zweck, Perspektive und Ton.",
+          "heuristic_scope": [
+            "erklaeren",
+            "umformulieren",
+            "email",
+            "leitfaden",
+            "oeffentlichkeit",
+            "kunden",
+            "lernende"
+          ],
+          "confidence": 0.8
         },
         "WISSENSSTAND_ADRESSAT": {
           "id": "I2",
@@ -790,7 +889,23 @@
               "label": "Fachkundig",
               "description": "Mit solidem Fachwissen."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "forum_hypothesis"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "A",
+          "recommendation_notes": "Vorkenntnisannahmen steuern Erklärtiefe und Begriffsgebrauch; eng mit Zielgruppe koppeln.",
+          "heuristic_scope": [
+            "erklaeren",
+            "umformulieren",
+            "leitfaden",
+            "lernende",
+            "laien",
+            "semi_professionell"
+          ],
+          "confidence": 0.75
         }
       }
     },
@@ -854,51 +969,329 @@
     }
   },
   "slot_schema": [
-    { "slot": "ZIEL_TYP", "dimension": "ZIEL", "subdimension": "ZIEL_TYP", "required": true, "multi": false },
-    { "slot": "ZIEL_TIEFE", "dimension": "ZIEL", "subdimension": "ZIEL_TIEFE", "required": false, "multi": false },
-    { "slot": "ZIEL_STATUS", "dimension": "ZIEL", "subdimension": "ZIEL_STATUS", "required": false, "multi": false },
-    { "slot": "AUFGABENTYP", "dimension": "AUFGABE", "subdimension": "AUFGABENTYP", "required": true, "multi": false },
-    { "slot": "AUFGABENUMFANG", "dimension": "AUFGABE", "subdimension": "AUFGABENUMFANG", "required": false, "multi": false },
-    { "slot": "SITUATIONSKONTEXT", "dimension": "KONTEXT", "subdimension": "SITUATIONSKONTEXT", "required": false, "multi": false },
-    { "slot": "WISSENSKONTEXT", "dimension": "KONTEXT", "subdimension": "WISSENSKONTEXT", "required": false, "multi": false },
-    { "slot": "RAHMENBEDINGUNG", "dimension": "KONTEXT", "subdimension": "RAHMENBEDINGUNG", "required": false, "multi": false },
-    { "slot": "FORMAT", "dimension": "OUTPUT_FORM", "subdimension": "FORMAT", "required": true, "multi": false },
-    { "slot": "UMFANG", "dimension": "OUTPUT_FORM", "subdimension": "UMFANG", "required": false, "multi": false },
-    { "slot": "ERGEBNISORIENTIERUNG", "dimension": "OUTPUT_FORM", "subdimension": "ERGEBNISORIENTIERUNG", "required": false, "multi": false },
-    { "slot": "PROZESSLOGIK", "dimension": "PROZESS", "subdimension": "PROZESSLOGIK", "required": false, "multi": false },
-    { "slot": "DENKRICHTUNG", "dimension": "PROZESS", "subdimension": "DENKRICHTUNG", "required": false, "multi": false },
-    { "slot": "SPRACHQUALITAET", "dimension": "QUALITAETSKRITERIEN", "subdimension": "SPRACHQUALITAET", "required": false, "multi": false },
-    { "slot": "INHALTSQUALITAET", "dimension": "QUALITAETSKRITERIEN", "subdimension": "INHALTSQUALITAET", "required": false, "multi": false },
-    { "slot": "PRIORISIERUNG", "dimension": "QUALITAETSKRITERIEN", "subdimension": "PRIORISIERUNG", "required": false, "multi": false },
-    { "slot": "EXPERTENROLLE", "dimension": "ROLLE", "subdimension": "EXPERTENROLLE", "required": false, "multi": false },
-    { "slot": "PERSPEKTIVTIEFE", "dimension": "ROLLE", "subdimension": "PERSPEKTIVTIEFE", "required": false, "multi": false },
-    { "slot": "INHALTLICHE_AUSSCHLUESSE", "dimension": "GRENZEN", "subdimension": "INHALTLICHE_AUSSCHLUESSE", "required": false, "multi": true },
-    { "slot": "FORMALE_AUSSCHLUESSE", "dimension": "GRENZEN", "subdimension": "FORMALE_AUSSCHLUESSE", "required": false, "multi": true },
-    { "slot": "ZIELGRUPPE", "dimension": "ADRESSAT", "subdimension": "ZIELGRUPPE", "required": false, "multi": false },
-    { "slot": "WISSENSSTAND_ADRESSAT", "dimension": "ADRESSAT", "subdimension": "WISSENSSTAND_ADRESSAT", "required": false, "multi": false },
-    { "slot": "MODUS", "dimension": "INTERAKTIONSMODUS", "subdimension": "MODUS", "required": false, "multi": false },
-    { "slot": "STEUERUNGSGRAD", "dimension": "INTERAKTIONSMODUS", "subdimension": "STEUERUNGSGRAD", "required": false, "multi": false }
+    {
+      "slot": "ZIEL_TYP",
+      "dimension": "ZIEL",
+      "subdimension": "ZIEL_TYP",
+      "required": true,
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "repo_practice",
+        "practitioner_blog"
+      ],
+      "evidence_strength": "stark",
+      "auto_recommendation_tier": "A",
+      "recommendation_notes": "Zentraler Task-Anker. Früh setzen und als Primärtreiber für Heuristiken behandeln.",
+      "heuristic_scope": [
+        "alle_tasks"
+      ],
+      "confidence": 0.9
+    },
+    {
+      "slot": "ZIEL_TIEFE",
+      "dimension": "ZIEL",
+      "subdimension": "ZIEL_TIEFE",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "ZIEL_STATUS",
+      "dimension": "ZIEL",
+      "subdimension": "ZIEL_STATUS",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "AUFGABENTYP",
+      "dimension": "AUFGABE",
+      "subdimension": "AUFGABENTYP",
+      "required": true,
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "repo_practice"
+      ],
+      "evidence_strength": "stark",
+      "auto_recommendation_tier": "A",
+      "recommendation_notes": "Als explizites Handlungsverb modellieren und getrennt vom Zieltyp behandeln.",
+      "heuristic_scope": [
+        "alle_tasks"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "slot": "AUFGABENUMFANG",
+      "dimension": "AUFGABE",
+      "subdimension": "AUFGABENUMFANG",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "SITUATIONSKONTEXT",
+      "dimension": "KONTEXT",
+      "subdimension": "SITUATIONSKONTEXT",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "WISSENSKONTEXT",
+      "dimension": "KONTEXT",
+      "subdimension": "WISSENSKONTEXT",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "RAHMENBEDINGUNG",
+      "dimension": "KONTEXT",
+      "subdimension": "RAHMENBEDINGUNG",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "FORMAT",
+      "dimension": "OUTPUT_FORM",
+      "subdimension": "FORMAT",
+      "required": true,
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "repo_practice"
+      ],
+      "evidence_strength": "stark",
+      "auto_recommendation_tier": "A",
+      "recommendation_notes": "Früh explizit setzen; besonders relevant für strukturierte, evaluierbare Outputs.",
+      "heuristic_scope": [
+        "vergleichen",
+        "entscheidung_vorbereiten",
+        "umschreiben",
+        "verbessern",
+        "entwerfen",
+        "planen"
+      ],
+      "confidence": 0.9
+    },
+    {
+      "slot": "UMFANG",
+      "dimension": "OUTPUT_FORM",
+      "subdimension": "UMFANG",
+      "required": false,
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "repo_practice",
+        "forum_hypothesis"
+      ],
+      "evidence_strength": "stark",
+      "auto_recommendation_tier": "A",
+      "recommendation_notes": "Scope und Länge möglichst konkret halten; präzisiert Nutzwert und Erwartungshaltung.",
+      "heuristic_scope": [
+        "alle_tasks"
+      ],
+      "confidence": 0.82
+    },
+    {
+      "slot": "ERGEBNISORIENTIERUNG",
+      "dimension": "OUTPUT_FORM",
+      "subdimension": "ERGEBNISORIENTIERUNG",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "PROZESSLOGIK",
+      "dimension": "PROZESS",
+      "subdimension": "PROZESSLOGIK",
+      "required": false,
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "repo_practice",
+        "practitioner_blog"
+      ],
+      "evidence_strength": "stark",
+      "auto_recommendation_tier": "A",
+      "recommendation_notes": "Besonders relevant bei Analyse-, Vergleichs-, Planungs- und Entscheidungsaufgaben.",
+      "heuristic_scope": [
+        "analysieren",
+        "vergleichen",
+        "bewerten",
+        "entscheidung_vorbereiten",
+        "planen"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "slot": "DENKRICHTUNG",
+      "dimension": "PROZESS",
+      "subdimension": "DENKRICHTUNG",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "SPRACHQUALITAET",
+      "dimension": "QUALITAETSKRITERIEN",
+      "subdimension": "SPRACHQUALITAET",
+      "required": false,
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "forum_hypothesis"
+      ],
+      "evidence_strength": "stark",
+      "auto_recommendation_tier": "A",
+      "recommendation_notes": "Wichtiger Hebel für Ton, Register und Lesbarkeit; besonders nützlich bei Umformulierung und Kommunikation.",
+      "heuristic_scope": [
+        "umformulieren",
+        "umschreiben",
+        "verbessern",
+        "email",
+        "kunden",
+        "laien"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "slot": "INHALTSQUALITAET",
+      "dimension": "QUALITAETSKRITERIEN",
+      "subdimension": "INHALTSQUALITAET",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "PRIORISIERUNG",
+      "dimension": "QUALITAETSKRITERIEN",
+      "subdimension": "PRIORISIERUNG",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "EXPERTENROLLE",
+      "dimension": "ROLLE",
+      "subdimension": "EXPERTENROLLE",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "PERSPEKTIVTIEFE",
+      "dimension": "ROLLE",
+      "subdimension": "PERSPEKTIVTIEFE",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "INHALTLICHE_AUSSCHLUESSE",
+      "dimension": "GRENZEN",
+      "subdimension": "INHALTLICHE_AUSSCHLUESSE",
+      "required": false,
+      "multi": true
+    },
+    {
+      "slot": "FORMALE_AUSSCHLUESSE",
+      "dimension": "GRENZEN",
+      "subdimension": "FORMALE_AUSSCHLUESSE",
+      "required": false,
+      "multi": true
+    },
+    {
+      "slot": "ZIELGRUPPE",
+      "dimension": "ADRESSAT",
+      "subdimension": "ZIELGRUPPE",
+      "required": false,
+      "multi": false,
+      "origin": [
+        "community_guide"
+      ],
+      "evidence_strength": "stark",
+      "auto_recommendation_tier": "A",
+      "recommendation_notes": "Audience-Persona als wiederkehrendes Prompt-Muster; steuert Zweck, Perspektive und Ton.",
+      "heuristic_scope": [
+        "erklaeren",
+        "umformulieren",
+        "email",
+        "leitfaden",
+        "oeffentlichkeit",
+        "kunden",
+        "lernende"
+      ],
+      "confidence": 0.8
+    },
+    {
+      "slot": "WISSENSSTAND_ADRESSAT",
+      "dimension": "ADRESSAT",
+      "subdimension": "WISSENSSTAND_ADRESSAT",
+      "required": false,
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "forum_hypothesis"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "A",
+      "recommendation_notes": "Vorkenntnisannahmen steuern Erklärtiefe und Begriffsgebrauch; eng mit Zielgruppe koppeln.",
+      "heuristic_scope": [
+        "erklaeren",
+        "umformulieren",
+        "leitfaden",
+        "lernende",
+        "laien",
+        "semi_professionell"
+      ],
+      "confidence": 0.75
+    },
+    {
+      "slot": "MODUS",
+      "dimension": "INTERAKTIONSMODUS",
+      "subdimension": "MODUS",
+      "required": false,
+      "multi": false
+    },
+    {
+      "slot": "STEUERUNGSGRAD",
+      "dimension": "INTERAKTIONSMODUS",
+      "subdimension": "STEUERUNGSGRAD",
+      "required": false,
+      "multi": false
+    }
   ],
   "templates": [
     {
       "id": "default_v1",
       "label": "Standard-Template",
       "description": "Allgemeines Prompt-Schema für viele Aufgaben.",
-      "slots_used": ["ZIEL_TYP", "AUFGABENTYP", "FORMAT", "UMFANG", "SITUATIONSKONTEXT", "SPRACHQUALITAET"],
+      "slots_used": [
+        "ZIEL_TYP",
+        "AUFGABENTYP",
+        "FORMAT",
+        "UMFANG",
+        "SITUATIONSKONTEXT",
+        "SPRACHQUALITAET"
+      ],
       "text": "Bitte [AUFGABENTYP], um [ZIEL_TYP] zu unterstützen. Berücksichtige dabei [SITUATIONSKONTEXT]. Gib das Ergebnis als [FORMAT] in [UMFANG] aus. Achte besonders auf [SPRACHQUALITAET]."
     },
     {
       "id": "decision_table_v1",
       "label": "Entscheidungsvorbereitung als Tabelle",
       "description": "Für Vergleiche und Entscheidungsvorbereitung.",
-      "slots_used": ["ZIEL_TYP", "FORMAT", "ERGEBNISORIENTIERUNG", "PROZESSLOGIK", "ZIELGRUPPE"],
+      "slots_used": [
+        "ZIEL_TYP",
+        "FORMAT",
+        "ERGEBNISORIENTIERUNG",
+        "PROZESSLOGIK",
+        "ZIELGRUPPE"
+      ],
       "text": "Bitte unterstütze mich dabei, [ZIEL_TYP]. Gehe so vor: [PROZESSLOGIK]. Gib das Ergebnis als [FORMAT] aus. Liefere [ERGEBNISORIENTIERUNG]. Das Ergebnis ist gedacht für [ZIELGRUPPE]."
     },
     {
       "id": "rewrite_v1",
       "label": "Umformulieren",
       "description": "Für sprachliche Überarbeitung bestehender Texte.",
-      "slots_used": ["ZIEL_TYP", "AUFGABENTYP", "SPRACHQUALITAET", "INHALTLICHE_AUSSCHLUESSE", "FORMAT"],
+      "slots_used": [
+        "ZIEL_TYP",
+        "AUFGABENTYP",
+        "SPRACHQUALITAET",
+        "INHALTLICHE_AUSSCHLUESSE",
+        "FORMAT"
+      ],
       "text": "Bitte [AUFGABENTYP], um [ZIEL_TYP]. Formuliere sprachlich [SPRACHQUALITAET]. Vermeide [INHALTLICHE_AUSSCHLUESSE]. Gib das Ergebnis als [FORMAT] aus."
     }
   ],
@@ -911,10 +1304,20 @@
         "equals": "entscheidung_vorbereiten"
       },
       "then": {
-        "recommended_slots": ["FORMAT", "ERGEBNISORIENTIERUNG", "PROZESSLOGIK"],
+        "recommended_slots": [
+          "FORMAT",
+          "ERGEBNISORIENTIERUNG",
+          "PROZESSLOGIK"
+        ],
         "recommended_values": {
-          "FORMAT": ["tabelle", "liste"],
-          "ERGEBNISORIENTIERUNG": ["ergebnis_plus_begruendung", "ergebnis_plus_naechste_schritte"]
+          "FORMAT": [
+            "tabelle",
+            "liste"
+          ],
+          "ERGEBNISORIENTIERUNG": [
+            "ergebnis_plus_begruendung",
+            "ergebnis_plus_naechste_schritte"
+          ]
         }
       }
     },
@@ -926,9 +1329,16 @@
         "equals": "umformulieren"
       },
       "then": {
-        "recommended_slots": ["SPRACHQUALITAET", "INHALTLICHE_AUSSCHLUESSE", "FORMAT"],
+        "recommended_slots": [
+          "SPRACHQUALITAET",
+          "INHALTLICHE_AUSSCHLUESSE",
+          "FORMAT"
+        ],
         "recommended_values": {
-          "FORMAT": ["fliesstext", "liste"]
+          "FORMAT": [
+            "fliesstext",
+            "liste"
+          ]
         }
       }
     },
@@ -980,7 +1390,10 @@
         "PRIORISIERUNG": "praktikabilitaet_vor_theorie",
         "EXPERTENROLLE": "strategieberater",
         "PERSPEKTIVTIEFE": "beratend",
-        "INHALTLICHE_AUSSCHLUESSE": ["keine_fachsprache", "keine_langen_einleitungen"],
+        "INHALTLICHE_AUSSCHLUESSE": [
+          "keine_fachsprache",
+          "keine_langen_einleitungen"
+        ],
         "FORMALE_AUSSCHLUESSE": [],
         "ZIELGRUPPE": "team",
         "WISSENSSTAND_ADRESSAT": "semi_professionell",
@@ -1010,8 +1423,13 @@
         "PRIORISIERUNG": "klarheit_vor_vollstaendigkeit",
         "EXPERTENROLLE": "lektor",
         "PERSPEKTIVTIEFE": "beratend",
-        "INHALTLICHE_AUSSCHLUESSE": ["keine_fachsprache", "keine_wiederholungen"],
-        "FORMALE_AUSSCHLUESSE": ["keine_meta_erklaerungen"],
+        "INHALTLICHE_AUSSCHLUESSE": [
+          "keine_fachsprache",
+          "keine_wiederholungen"
+        ],
+        "FORMALE_AUSSCHLUESSE": [
+          "keine_meta_erklaerungen"
+        ],
         "ZIELGRUPPE": "kunden",
         "WISSENSSTAND_ADRESSAT": "laien",
         "MODUS": "iteratives_verfeinern",
