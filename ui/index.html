@@ -566,6 +566,70 @@
       line-height: 1.4;
     }
 
+    .compact-recommendation-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .compact-recommendation-item {
+      border: 1px solid var(--border-soft);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .compact-recommendation-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .compact-recommendation-main {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .compact-recommendation-main strong {
+      font-size: 0.95rem;
+    }
+
+    .compact-recommendation-value {
+      color: var(--text);
+      font-size: 0.92rem;
+    }
+
+    .compact-recommendation-meta {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.4;
+    }
+
+    .compact-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .recommendation-split {
+      display: grid;
+      gap: 12px;
+    }
+
+    .score-primary {
+      order: -1;
+    }
+
+    @media (max-width: 1080px) {
+      .score-primary {
+        order: 0;
+      }
+    }
+
     .hidden {
       display: none !important;
     }
@@ -738,6 +802,18 @@
           </div>
           <div id="recommendationIntro" class="notice info">Sobald die Pflichtangaben gesetzt sind, erscheinen hier kontextabhängige Ergänzungen.</div>
           <div id="recommendedFields" class="field-grid"></div>
+          <div id="recommendedCoveredWrap" class="recommendation-split hidden">
+            <details id="recommendedCoveredDetails" class="disclosure">
+              <summary>
+                <div>
+                  <strong id="recommendedCoveredTitle">Bereits passende Empfehlungen</strong>
+                  <div class="subtle-text">Kompakte Übersicht über gesetzte und aktuell stimmige Empfehlungsslots.</div>
+                </div>
+                <span id="recommendedCoveredBadge" class="badge subtle">0</span>
+              </summary>
+              <div id="recommendedCovered" class="disclosure-body compact-recommendation-list"></div>
+            </details>
+          </div>
         </section>
 
         <section class="card main-card">
@@ -774,22 +850,7 @@
           </div>
         </section>
 
-        <section class="card side-card">
-          <div class="section-header">
-            <div>
-              <h2>Deine Konfiguration</h2>
-              <p class="section-description">Lesbare Zusammenfassung der gesetzten Werte.</p>
-            </div>
-          </div>
-          <div id="summaryOutput" class="summary-columns">
-            <div class="summary-item">
-              <strong>Noch keine Auswahl</strong>
-              <span>Setze zuerst die Pflichtangaben, danach erscheinen hier die wichtigsten Entscheidungen in Klartext.</span>
-            </div>
-          </div>
-        </section>
-
-        <section class="card side-card">
+        <section class="card side-card score-primary">
           <div class="section-header">
             <div>
               <h2>Gesamtbewertung</h2>
@@ -826,6 +887,21 @@
                   <small>Danach lassen sich Kohärenz und heuristische Passung deutlich besser einschätzen.</small>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card side-card">
+          <div class="section-header">
+            <div>
+              <h2>Deine Konfiguration</h2>
+              <p class="section-description">Lesbare Zusammenfassung der gesetzten Werte.</p>
+            </div>
+          </div>
+          <div id="summaryOutput" class="summary-columns">
+            <div class="summary-item">
+              <strong>Noch keine Auswahl</strong>
+              <span>Setze zuerst die Pflichtangaben, danach erscheinen hier die wichtigsten Entscheidungen in Klartext.</span>
             </div>
           </div>
         </section>
@@ -890,6 +966,11 @@
       recommendationSection: document.getElementById("recommendationSection"),
       recommendationIntro: document.getElementById("recommendationIntro"),
       recommendedFields: document.getElementById("recommendedFields"),
+      recommendedCoveredWrap: document.getElementById("recommendedCoveredWrap"),
+      recommendedCoveredDetails: document.getElementById("recommendedCoveredDetails"),
+      recommendedCoveredTitle: document.getElementById("recommendedCoveredTitle"),
+      recommendedCoveredBadge: document.getElementById("recommendedCoveredBadge"),
+      recommendedCovered: document.getElementById("recommendedCovered"),
       refinementSections: document.getElementById("refinementSections"),
       exclusionFields: document.getElementById("exclusionFields"),
       slotsOutput: document.getElementById("slotsOutput"),
@@ -1555,6 +1636,9 @@
       const { recommendedSlots, reasons, recommendedValues, provenanceMeta } = getActiveRecommendationData();
 
       elements.recommendedFields.innerHTML = "";
+      elements.recommendedCovered.innerHTML = "";
+      elements.recommendedCoveredWrap.classList.add("hidden");
+      elements.recommendedCoveredDetails.open = false;
       if (!requiredComplete) {
         elements.recommendationIntro.className = "notice info";
         elements.recommendationIntro.textContent = "Sobald die Pflichtangaben vollständig sind, erscheinen hier kontextabhängige Ergänzungen.";
@@ -1567,13 +1651,24 @@
         return;
       }
 
-      const allCovered = recommendedSlots.every(slot => getRecommendationState(slot, recommendedValues) !== "missing");
-      elements.recommendationIntro.className = allCovered ? "notice success" : "notice info";
-      elements.recommendationIntro.textContent = allCovered
-        ? "Die empfohlenen Felder sind bereits gesetzt. Du kannst sie hier weiter prüfen oder feinjustieren."
-        : "Diese Felder werden aus Constraints plus Provenienz-Metadaten wie Scope, Evidenzstärke, Tier und Confidence priorisiert.";
+      const actionableSlots = recommendedSlots.filter(slot => {
+        const stateText = getRecommendationState(slot, recommendedValues);
+        return stateText === "missing" || stateText === "abweichend";
+      });
+      const coveredSlots = recommendedSlots.filter(slot => {
+        const stateText = getRecommendationState(slot, recommendedValues);
+        return stateText === "expected" || stateText === "set";
+      });
 
-      recommendedSlots.forEach(slot => {
+      if (!actionableSlots.length) {
+        elements.recommendationIntro.className = "notice success";
+        elements.recommendationIntro.textContent = "Die empfohlenen Felder sind bereits gesetzt. Du kannst sie unten kompakt prüfen oder bei Bedarf wieder aufklappen.";
+      } else {
+        elements.recommendationIntro.className = "notice info";
+        elements.recommendationIntro.textContent = "Oben siehst du nur die Empfehlungen mit echtem Handlungsbedarf. Bereits passende Empfehlungen bleiben darunter kompakt sichtbar.";
+      }
+
+      actionableSlots.forEach(slot => {
         const reason = (reasons[slot] || []).join(" ");
         elements.recommendedFields.appendChild(renderFieldCard(slot, {
           recommended: true,
@@ -1581,6 +1676,20 @@
           provenance: provenanceMeta[slot]
         }));
       });
+
+      if (coveredSlots.length) {
+        elements.recommendedCoveredWrap.classList.remove("hidden");
+        elements.recommendedCoveredBadge.textContent = `${coveredSlots.length}`;
+        elements.recommendedCoveredTitle.textContent = actionableSlots.length
+          ? "Bereits passende Empfehlungen"
+          : "Alle aktuell passenden Empfehlungen";
+        elements.recommendedCoveredDetails.open = !actionableSlots.length || coveredSlots.length <= 3;
+        coveredSlots.forEach(slot => {
+          elements.recommendedCovered.appendChild(
+            renderCompactRecommendationItem(slot, recommendedValues, provenanceMeta[slot])
+          );
+        });
+      }
     }
 
     function renderRefinementSections() {
@@ -1739,6 +1848,41 @@
         return overlap ? "expected" : "abweichend";
       }
       return expectedValues.includes(current) ? "expected" : "abweichend";
+    }
+
+    function renderCompactRecommendationItem(slot, recommendedValues = {}, provenance = null) {
+      const stateText = getRecommendationState(slot, recommendedValues);
+      const wrapper = document.createElement("div");
+      wrapper.className = "compact-recommendation-item";
+
+      const rawValue = state.assignments[slot];
+      const valueText = Array.isArray(rawValue)
+        ? rawValue.map(item => getValueLabel(slot, item)).join(", ")
+        : getValueLabel(slot, rawValue);
+
+      const statusMap = {
+        expected: { label: "passt gut", className: "accent" },
+        set: { label: "anschlussfähig", className: "subtle" },
+        abweichend: { label: "prüfen", className: "subtle" }
+      };
+      const currentStatus = statusMap[stateText] || statusMap.set;
+      const parts = [];
+      if (provenance?.autoRecommendationTier) parts.push(`Tier ${provenance.autoRecommendationTier}`);
+      if (provenance?.evidenceStrength) parts.push(`Evidenz ${provenance.evidenceStrength}`);
+
+      wrapper.innerHTML = `
+        <div class="compact-recommendation-head">
+          <div class="compact-recommendation-main">
+            <strong>${getSlotDisplayName(slot)}</strong>
+            <div class="compact-recommendation-value">${valueText}</div>
+            <div class="compact-recommendation-meta">${parts.join(" · ") || "Bereits gesetzt"}</div>
+          </div>
+          <div class="compact-badges">
+            <span class="badge ${currentStatus.className}">${currentStatus.label}</span>
+          </div>
+        </div>
+      `;
+      return wrapper;
     }
 
     function getConflictDetails() {
