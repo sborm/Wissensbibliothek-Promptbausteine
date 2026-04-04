@@ -1,7 +1,7 @@
 {
   "meta": {
     "project": "Prompt-Bibliothek",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "author": "dein-name",
     "created": "2026-03-31T12:00:00Z",
     "locale": "de-DE",
@@ -254,16 +254,18 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "B",
-          "recommendation_notes": "Für mehrstufige oder iterative Workflows relevant; hilft, Chaining und Verfeinerung explizit zu machen.",
+          "recommendation_notes": "Schrittigkeit und Arbeitsumfang werden besonders relevant, wenn Aufgaben geplant, analysiert, geprüft oder iterativ entworfen werden.",
           "heuristic_scope": [
             "analysieren",
+            "pruefen",
             "planen",
             "entwerfen",
             "verbessern",
-            "iteratives_verfeinern",
-            "varianten_entwickeln"
+            "leitfaden",
+            "checkliste",
+            "iteratives_verfeinern"
           ],
-          "confidence": 0.78
+          "confidence": 0.76
         }
       }
     },
@@ -512,13 +514,21 @@
             "repo_practice",
             "forum_hypothesis"
           ],
-          "evidence_strength": "stark",
+          "evidence_strength": "mittel",
           "auto_recommendation_tier": "A",
-          "recommendation_notes": "Scope und Länge möglichst konkret halten; präzisiert Nutzwert und Erwartungshaltung.",
+          "recommendation_notes": "Explizite Längensteuerung ist nützlich, sollte aber nicht pauschal jede Konfiguration dominieren. Besonders sinnvoll bei Erklär-, Analyse-, Vergleichs- und kommunikationsnahen Formaten.",
           "heuristic_scope": [
-            "alle_tasks"
+            "erklaeren",
+            "analysieren",
+            "vergleichen",
+            "bewerten",
+            "entscheidung_vorbereiten",
+            "leitfaden",
+            "email",
+            "fragenkatalog",
+            "checkliste"
           ],
-          "confidence": 0.82
+          "confidence": 0.68
         },
         "ERGEBNISORIENTIERUNG": {
           "id": "D3",
@@ -553,17 +563,19 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "B",
-          "recommendation_notes": "Ein klarer Deliverable-Typ erhöht Nutzwert; besonders relevant bei Vergleich, Entscheidung und Planung.",
+          "recommendation_notes": "Deliverable-orientierte Ergebnissteuerung ist besonders hilfreich, wenn nicht nur Inhalt, sondern auch Entscheidungs- oder Handlungsausgang klar sein soll.",
           "heuristic_scope": [
             "vergleichen",
             "bewerten",
             "entscheidung_vorbereiten",
             "planen",
+            "entwerfen",
             "leitfaden",
+            "checkliste",
             "tabelle",
             "liste"
           ],
-          "confidence": 0.79
+          "confidence": 0.78
         }
       }
     },
@@ -606,15 +618,18 @@
           ],
           "evidence_strength": "stark",
           "auto_recommendation_tier": "A",
-          "recommendation_notes": "Besonders relevant bei Analyse-, Vergleichs-, Planungs- und Entscheidungsaufgaben.",
+          "recommendation_notes": "Besonders relevant bei Analyse-, Vergleichs-, Planungs-, Entwurfs- und Entscheidungsaufgaben, bei denen nachvollziehbare Schrittlogik den Nutzwert erhöht.",
           "heuristic_scope": [
             "analysieren",
             "vergleichen",
             "bewerten",
             "entscheidung_vorbereiten",
-            "planen"
+            "planen",
+            "entwerfen",
+            "leitfaden",
+            "checkliste"
           ],
-          "confidence": 0.88
+          "confidence": 0.9
         },
         "DENKRICHTUNG": {
           "id": "E2",
@@ -846,18 +861,18 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "B",
-          "recommendation_notes": "Rollen helfen vor allem dann, wenn sie Perspektive, Kriterien oder Ton konkret verändern.",
+          "recommendation_notes": "Rollenprompting hilft vor allem dort, wo Perspektive oder Qualitätsmaßstab die Antwortform stark prägen, etwa bei Analyse, Bewertung, Entscheidungsvorbereitung oder Textverbesserung.",
           "heuristic_scope": [
             "analysieren",
             "bewerten",
+            "entscheidung_vorbereiten",
+            "pruefen",
             "verbessern",
-            "erklaeren",
             "strategieberater",
-            "analyst",
             "lektor",
             "sparringspartner"
           ],
-          "confidence": 0.71
+          "confidence": 0.7
         },
         "PERSPEKTIVTIEFE": {
           "id": "G2",
@@ -1001,17 +1016,23 @@
           ],
           "evidence_strength": "stark",
           "auto_recommendation_tier": "A",
-          "recommendation_notes": "Audience-Persona als wiederkehrendes Prompt-Muster; steuert Zweck, Perspektive und Ton.",
+          "recommendation_notes": "Audience-Persona als wiederkehrendes Prompt-Muster; besonders wichtig bei Erklär-, Kommunikations- und Entscheidungssituationen, in denen sich Nutzen und Darstellung nach dem Empfänger richten.",
           "heuristic_scope": [
             "erklaeren",
             "umformulieren",
+            "entscheidung_vorbereiten",
+            "vergleichen",
             "email",
             "leitfaden",
-            "oeffentlichkeit",
+            "tabelle",
+            "liste",
+            "team",
+            "fuehrungskraefte",
             "kunden",
-            "lernende"
+            "lernende",
+            "oeffentlichkeit"
           ],
-          "confidence": 0.8
+          "confidence": 0.86
         },
         "WISSENSSTAND_ADRESSAT": {
           "id": "I2",
@@ -1093,16 +1114,17 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "B",
-          "recommendation_notes": "Interaktionsmodus bestimmt, ob einmalige Antwort, Rückfragen oder iterative Verfeinerung sinnvoll sind.",
+          "recommendation_notes": "Der Interaktionsmodus ist vor allem dann wichtig, wenn Aufgaben iterativ verfeinert, in Varianten entwickelt oder über mehrere Schritte bearbeitet werden sollen.",
           "heuristic_scope": [
-            "iteratives_verfeinern",
-            "rueckfragen_stellen",
-            "varianten_entwickeln",
             "planen",
             "entwerfen",
-            "verbessern"
+            "verbessern",
+            "iteratives_verfeinern",
+            "varianten_entwickeln",
+            "leitfaden",
+            "checkliste"
           ],
-          "confidence": 0.74
+          "confidence": 0.72
         },
         "STEUERUNGSGRAD": {
           "id": "J2",
@@ -1210,16 +1232,18 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "B",
-      "recommendation_notes": "Für mehrstufige oder iterative Workflows relevant; hilft, Chaining und Verfeinerung explizit zu machen.",
+      "recommendation_notes": "Schrittigkeit und Arbeitsumfang werden besonders relevant, wenn Aufgaben geplant, analysiert, geprüft oder iterativ entworfen werden.",
       "heuristic_scope": [
         "analysieren",
+        "pruefen",
         "planen",
         "entwerfen",
         "verbessern",
-        "iteratives_verfeinern",
-        "varianten_entwickeln"
+        "leitfaden",
+        "checkliste",
+        "iteratives_verfeinern"
       ],
-      "confidence": 0.78
+      "confidence": 0.76
     },
     {
       "slot": "SITUATIONSKONTEXT",
@@ -1324,13 +1348,21 @@
         "repo_practice",
         "forum_hypothesis"
       ],
-      "evidence_strength": "stark",
+      "evidence_strength": "mittel",
       "auto_recommendation_tier": "A",
-      "recommendation_notes": "Scope und Länge möglichst konkret halten; präzisiert Nutzwert und Erwartungshaltung.",
+      "recommendation_notes": "Explizite Längensteuerung ist nützlich, sollte aber nicht pauschal jede Konfiguration dominieren. Besonders sinnvoll bei Erklär-, Analyse-, Vergleichs- und kommunikationsnahen Formaten.",
       "heuristic_scope": [
-        "alle_tasks"
+        "erklaeren",
+        "analysieren",
+        "vergleichen",
+        "bewerten",
+        "entscheidung_vorbereiten",
+        "leitfaden",
+        "email",
+        "fragenkatalog",
+        "checkliste"
       ],
-      "confidence": 0.82
+      "confidence": 0.68
     },
     {
       "slot": "ERGEBNISORIENTIERUNG",
@@ -1344,17 +1376,19 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "B",
-      "recommendation_notes": "Ein klarer Deliverable-Typ erhöht Nutzwert; besonders relevant bei Vergleich, Entscheidung und Planung.",
+      "recommendation_notes": "Deliverable-orientierte Ergebnissteuerung ist besonders hilfreich, wenn nicht nur Inhalt, sondern auch Entscheidungs- oder Handlungsausgang klar sein soll.",
       "heuristic_scope": [
         "vergleichen",
         "bewerten",
         "entscheidung_vorbereiten",
         "planen",
+        "entwerfen",
         "leitfaden",
+        "checkliste",
         "tabelle",
         "liste"
       ],
-      "confidence": 0.79
+      "confidence": 0.78
     },
     {
       "slot": "PROZESSLOGIK",
@@ -1369,15 +1403,18 @@
       ],
       "evidence_strength": "stark",
       "auto_recommendation_tier": "A",
-      "recommendation_notes": "Besonders relevant bei Analyse-, Vergleichs-, Planungs- und Entscheidungsaufgaben.",
+      "recommendation_notes": "Besonders relevant bei Analyse-, Vergleichs-, Planungs-, Entwurfs- und Entscheidungsaufgaben, bei denen nachvollziehbare Schrittlogik den Nutzwert erhöht.",
       "heuristic_scope": [
         "analysieren",
         "vergleichen",
         "bewerten",
         "entscheidung_vorbereiten",
-        "planen"
+        "planen",
+        "entwerfen",
+        "leitfaden",
+        "checkliste"
       ],
-      "confidence": 0.88
+      "confidence": 0.9
     },
     {
       "slot": "DENKRICHTUNG",
@@ -1465,18 +1502,18 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "B",
-      "recommendation_notes": "Rollen helfen vor allem dann, wenn sie Perspektive, Kriterien oder Ton konkret verändern.",
+      "recommendation_notes": "Rollenprompting hilft vor allem dort, wo Perspektive oder Qualitätsmaßstab die Antwortform stark prägen, etwa bei Analyse, Bewertung, Entscheidungsvorbereitung oder Textverbesserung.",
       "heuristic_scope": [
         "analysieren",
         "bewerten",
+        "entscheidung_vorbereiten",
+        "pruefen",
         "verbessern",
-        "erklaeren",
         "strategieberater",
-        "analyst",
         "lektor",
         "sparringspartner"
       ],
-      "confidence": 0.71
+      "confidence": 0.7
     },
     {
       "slot": "PERSPEKTIVTIEFE",
@@ -1510,17 +1547,23 @@
       ],
       "evidence_strength": "stark",
       "auto_recommendation_tier": "A",
-      "recommendation_notes": "Audience-Persona als wiederkehrendes Prompt-Muster; steuert Zweck, Perspektive und Ton.",
+      "recommendation_notes": "Audience-Persona als wiederkehrendes Prompt-Muster; besonders wichtig bei Erklär-, Kommunikations- und Entscheidungssituationen, in denen sich Nutzen und Darstellung nach dem Empfänger richten.",
       "heuristic_scope": [
         "erklaeren",
         "umformulieren",
+        "entscheidung_vorbereiten",
+        "vergleichen",
         "email",
         "leitfaden",
-        "oeffentlichkeit",
+        "tabelle",
+        "liste",
+        "team",
+        "fuehrungskraefte",
         "kunden",
-        "lernende"
+        "lernende",
+        "oeffentlichkeit"
       ],
-      "confidence": 0.8
+      "confidence": 0.86
     },
     {
       "slot": "WISSENSSTAND_ADRESSAT",
@@ -1558,16 +1601,17 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "B",
-      "recommendation_notes": "Interaktionsmodus bestimmt, ob einmalige Antwort, Rückfragen oder iterative Verfeinerung sinnvoll sind.",
+      "recommendation_notes": "Der Interaktionsmodus ist vor allem dann wichtig, wenn Aufgaben iterativ verfeinert, in Varianten entwickelt oder über mehrere Schritte bearbeitet werden sollen.",
       "heuristic_scope": [
-        "iteratives_verfeinern",
-        "rueckfragen_stellen",
-        "varianten_entwickeln",
         "planen",
         "entwerfen",
-        "verbessern"
+        "verbessern",
+        "iteratives_verfeinern",
+        "varianten_entwickeln",
+        "leitfaden",
+        "checkliste"
       ],
-      "confidence": 0.74
+      "confidence": 0.72
     },
     {
       "slot": "STEUERUNGSGRAD",
