@@ -639,6 +639,41 @@
       gap: 12px;
     }
 
+    .field-card.field-focus,
+    .field-card:target {
+      border-color: rgba(122,162,255,0.55);
+      box-shadow: 0 0 0 3px rgba(122,162,255,0.16);
+      transition: box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .suggestion-item.primary-lever {
+      border-color: rgba(122,162,255,0.32);
+      background: rgba(122,162,255,0.06);
+    }
+
+    .suggestion-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .jump-btn {
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(122,162,255,0.28);
+      background: rgba(122,162,255,0.08);
+      color: var(--text);
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .jump-btn:hover {
+      border-color: var(--accent);
+    }
+
     .score-primary {
       order: -1;
       position: sticky;
@@ -1494,6 +1529,8 @@
       const statuses = getFieldStatuses()[slot] || [];
       const card = document.createElement("div");
       card.className = "field-card";
+      card.id = `field-card-${slot}`;
+      card.dataset.slot = slot;
 
       if (meta.required) card.classList.add("required");
       if (options.recommended) card.classList.add("recommended");
@@ -1999,6 +2036,41 @@
       return "prüfen";
     }
 
+    function focusSlotCard(slot) {
+      const card = document.getElementById(`field-card-${slot}`);
+      if (!card) return;
+
+      const disclosure = card.closest("details.disclosure");
+      if (disclosure) disclosure.open = true;
+
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      const focusTarget = card.querySelector("select, input, textarea, button");
+      if (focusTarget) {
+        window.setTimeout(() => {
+          try {
+            focusTarget.focus({ preventScroll: true });
+          } catch (_) {
+            focusTarget.focus();
+          }
+        }, 180);
+      }
+
+      card.classList.remove("field-focus");
+      void card.offsetWidth;
+      card.classList.add("field-focus");
+      window.setTimeout(() => card.classList.remove("field-focus"), 1800);
+    }
+
+    function createSuggestionJumpButton(slot, label = "Zum Feld") {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "jump-btn";
+      button.textContent = label;
+      button.addEventListener("click", () => focusSlotCard(slot));
+      return button;
+    }
+
     function buildAssessmentInterpretation(metrics) {
       if (!Object.keys(state.assignments).some(slot => isAssigned(slot))) {
         return "Noch keine belastbare Bewertung: Setze zuerst die Pflichtangaben, damit die Bibliothek Kohärenz und Anschlussfähigkeit einschätzen kann.";
@@ -2038,7 +2110,8 @@
           kind: "required",
           delta: estimateSuggestionDelta("required"),
           title: `${getSlotDisplayName(slot)} setzen`,
-          detail: `Hebt vor allem die Vollständigkeit an und verbessert die Belastbarkeit der Gesamtbewertung.`
+          detail: `Hebt vor allem die Vollständigkeit an und verbessert die Belastbarkeit der Gesamtbewertung.`,
+          targetSlot: slot
         });
       });
 
@@ -2047,7 +2120,9 @@
           kind: "conflict",
           delta: estimateSuggestionDelta("conflict"),
           title: `Konflikt zwischen ${getSlotDisplayName(conflict.sourceSlot)} und ${getSlotDisplayName(conflict.targetSlot)} auflösen`,
-          detail: `Prüfe ${getSlotDisplayName(conflict.targetSlot)} oder ändere ${getSlotDisplayName(conflict.sourceSlot)}, damit die Kohärenz nicht unnötig gedrückt wird.`
+          detail: `Prüfe ${getSlotDisplayName(conflict.targetSlot)} oder ändere ${getSlotDisplayName(conflict.sourceSlot)}, damit die Kohärenz nicht unnötig gedrückt wird.`,
+          targetSlot: conflict.targetSlot,
+          secondarySlot: conflict.sourceSlot
         });
       });
 
@@ -2059,7 +2134,8 @@
             kind: "recommended-missing",
             delta: estimateSuggestionDelta("recommended-missing", weight),
             title: `${getSlotDisplayName(slot)} ergänzen`,
-            detail: `${(recommendationData.reasons[slot] || ["Diese Ergänzung passt gut zum aktuellen Pfad."])[0]}`
+            detail: `${(recommendationData.reasons[slot] || ["Diese Ergänzung passt gut zum aktuellen Pfad."])[0]}`,
+            targetSlot: slot
           });
         } else if (stateText === "abweichend") {
           const expected = (recommendedValues[slot] || []).map(value => getValueLabel(slot, value)).join(", ");
@@ -2067,7 +2143,8 @@
             kind: "recommended-align",
             delta: estimateSuggestionDelta("recommended-align", weight),
             title: `${getSlotDisplayName(slot)} an erwarteten Pfad anpassen`,
-            detail: expected ? `Typisch passend wären eher: ${expected}.` : `Die aktuelle Ausprägung weicht vom empfohlenen Pfad ab.`
+            detail: expected ? `Typisch passend wären eher: ${expected}.` : `Die aktuelle Ausprägung weicht vom empfohlenen Pfad ab.`,
+            targetSlot: slot
           });
         }
       });
@@ -2198,13 +2275,48 @@
         item.innerHTML = `<strong>Aktuell kein dringender Hebel</strong><small>Die Konfiguration ist bereits gut anschlussfähig. Prüfe nur noch Feinjustierungen nach Bedarf.</small>`;
         elements.scoreSuggestions.appendChild(item);
       } else {
-        model.suggestions.forEach(suggestion => {
+        model.suggestions.forEach((suggestion, index) => {
           const item = document.createElement("div");
-          item.className = "suggestion-item";
-          item.innerHTML = `
-            <div class="suggestion-head"><strong>${suggestion.title}</strong><span class="badge subtle">ca. +${suggestion.delta}</span></div>
-            <small>${suggestion.detail}</small>
+          item.className = `suggestion-item${index === 0 ? " primary-lever" : ""}`;
+
+          const head = document.createElement("div");
+          head.className = "suggestion-head";
+          head.innerHTML = `
+            <strong>${suggestion.title}</strong>
+            <div class="inline-actions">
+              ${index === 0 ? '<span class="badge accent">größter Hebel</span>' : ""}
+              <span class="badge subtle">ca. +${suggestion.delta}</span>
+            </div>
           `;
+
+          const detail = document.createElement("small");
+          detail.textContent = suggestion.detail;
+
+          item.appendChild(head);
+          item.appendChild(detail);
+
+          if (suggestion.targetSlot) {
+            const actions = document.createElement("div");
+            actions.className = "suggestion-actions";
+
+            const targetLabel = suggestion.secondarySlot
+              ? `Zu ${getSlotDisplayName(suggestion.targetSlot)}`
+              : "Zum Feld";
+
+            actions.appendChild(createSuggestionJumpButton(suggestion.targetSlot, targetLabel));
+
+            if (suggestion.secondarySlot) {
+              actions.appendChild(
+                createSuggestionJumpButton(
+                  suggestion.secondarySlot,
+                  `${getSlotDisplayName(suggestion.secondarySlot)} prüfen`
+                )
+              );
+            }
+
+            item.appendChild(actions);
+          }
+
           elements.scoreSuggestions.appendChild(item);
         });
       }
@@ -2323,9 +2435,7 @@
 
       if (!isRequiredComplete()) {
         if (hasAssignments) {
-          prompt = `Vorläufige Vorschau – noch nicht vollständig. Ergänze zuerst die Pflichtangaben.
-
-${renderStructuredPrompt()}`;
+          prompt = `Vorläufige Vorschau – noch nicht vollständig. Ergänze zuerst die Pflichtangaben.\n\n${renderStructuredPrompt()}`;
         } else {
           prompt = "Der Prompt ist noch nicht vollständig. Ergänze zuerst die Pflichtangaben.";
         }
