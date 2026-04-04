@@ -575,9 +575,9 @@
       border: 1px solid var(--border-soft);
       border-radius: 14px;
       background: rgba(255,255,255,0.02);
-      padding: 12px;
+      padding: 10px 12px;
       display: grid;
-      gap: 8px;
+      gap: 4px;
     }
 
     .compact-recommendation-head {
@@ -589,7 +589,7 @@
 
     .compact-recommendation-main {
       display: grid;
-      gap: 3px;
+      gap: 2px;
       min-width: 0;
     }
 
@@ -599,20 +599,18 @@
 
     .compact-recommendation-value {
       color: var(--text);
-      font-size: 0.92rem;
+      font-size: 0.9rem;
+      line-height: 1.35;
     }
 
     .compact-recommendation-meta {
       color: var(--muted);
-      font-size: 0.84rem;
-      line-height: 1.4;
+      font-size: 0.82rem;
+      line-height: 1.35;
     }
 
     .compact-recommendation-reason {
-      color: var(--text);
-      font-size: 0.85rem;
-      line-height: 1.45;
-      opacity: 0.92;
+      display: none;
     }
 
     .badge.soft {
@@ -637,41 +635,6 @@
     .recommendation-split {
       display: grid;
       gap: 12px;
-    }
-
-    .field-card.field-focus,
-    .field-card:target {
-      border-color: rgba(122,162,255,0.55);
-      box-shadow: 0 0 0 3px rgba(122,162,255,0.16);
-      transition: box-shadow .18s ease, border-color .18s ease;
-    }
-
-    .suggestion-item.primary-lever {
-      border-color: rgba(122,162,255,0.32);
-      background: rgba(122,162,255,0.06);
-    }
-
-    .suggestion-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .jump-btn {
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(122,162,255,0.28);
-      background: rgba(122,162,255,0.08);
-      color: var(--text);
-      font-size: 0.86rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .jump-btn:hover {
-      border-color: var(--accent);
     }
 
     .score-primary {
@@ -864,7 +827,7 @@
               <summary>
                 <div>
                   <strong id="recommendedCoveredTitle">Bereits passende Empfehlungen</strong>
-                  <div class="subtle-text">Kompakte Übersicht über gesetzte Empfehlungen mit kurzer Begründung, warum sie aktuell passen.</div>
+                  <div class="subtle-text">Kompakte Übersicht über gesetzte Empfehlungen. Nur Status und Nutzenhinweis bleiben direkt sichtbar.</div>
                 </div>
                 <span id="recommendedCoveredBadge" class="badge subtle">0</span>
               </summary>
@@ -1529,8 +1492,6 @@
       const statuses = getFieldStatuses()[slot] || [];
       const card = document.createElement("div");
       card.className = "field-card";
-      card.id = `field-card-${slot}`;
-      card.dataset.slot = slot;
 
       if (meta.required) card.classList.add("required");
       if (options.recommended) card.classList.add("recommended");
@@ -1742,7 +1703,7 @@
         elements.recommendedCoveredTitle.textContent = actionableSlots.length
           ? "Bereits passende Empfehlungen"
           : "Alle aktuell passenden Empfehlungen";
-        elements.recommendedCoveredDetails.open = !actionableSlots.length || coveredSlots.length <= 3;
+        elements.recommendedCoveredDetails.open = !actionableSlots.length && coveredSlots.length <= 3;
         coveredSlots.forEach(slot => {
           elements.recommendedCovered.appendChild(
             renderCompactRecommendationItem(slot, recommendedValues, provenanceMeta[slot])
@@ -1962,31 +1923,29 @@
         : getValueLabel(slot, rawValue);
 
       const currentStatus = getCompactStatusMeta(stateText, provenance);
-      const parts = [];
-      if (provenance?.autoRecommendationTier) parts.push(`Tier ${provenance.autoRecommendationTier}`);
-      if (provenance?.evidenceStrength) parts.push(`Evidenz ${provenance.evidenceStrength}`);
-
+      const benefitText = getCompactBenefitText(slot);
       const expectedValues = recommendedValues[slot] || [];
-      const expectedHint = expectedValues.length
-        ? `Erwarteter Pfad: ${expectedValues.map(value => getValueLabel(slot, value)).join(", ")}.`
-        : "";
-      const reasonText = shortenText(
-        provenance?.recommendationNotes || expectedHint || getCompactBenefitText(slot),
-        132
-      );
       const supportText = stateText === "expected"
-        ? `${reasonText} ${getCompactBenefitText(slot)}`
+        ? benefitText
         : stateText === "set"
-          ? `${reasonText} Bleibt derzeit stimmig, ist aber weniger eng geführt.`
-          : `${reasonText} Prüfe, ob eine nähere Ausprägung besser passt.`;
+          ? "Bleibt aktuell stimmig."
+          : expectedValues.length
+            ? `Typischer wäre: ${expectedValues.map(value => getValueLabel(slot, value)).join(", ")}.`
+            : "Passt aktuell nur eingeschränkt.";
+
+      const titleParts = [];
+      if (provenance?.recommendationNotes) titleParts.push(provenance.recommendationNotes);
+      if (provenance?.autoRecommendationTier) titleParts.push(`Tier ${provenance.autoRecommendationTier}`);
+      if (provenance?.evidenceStrength) titleParts.push(`Evidenz ${provenance.evidenceStrength}`);
+      if (typeof provenance?.confidence === "number") titleParts.push(`Confidence ${provenance.confidence.toFixed(2)}`);
+      wrapper.title = titleParts.join(" · ");
 
       wrapper.innerHTML = `
         <div class="compact-recommendation-head">
           <div class="compact-recommendation-main">
             <strong>${getSlotDisplayName(slot)}</strong>
             <div class="compact-recommendation-value">${valueText}</div>
-            <div class="compact-recommendation-reason">${supportText.trim()}</div>
-            <div class="compact-recommendation-meta">${parts.join(" · ") || "Bereits gesetzt"}</div>
+            <div class="compact-recommendation-meta">${currentStatus.label} · ${supportText}</div>
           </div>
           <div class="compact-badges">
             <span class="badge ${currentStatus.className}">${currentStatus.label}</span>
@@ -2036,41 +1995,6 @@
       return "prüfen";
     }
 
-    function focusSlotCard(slot) {
-      const card = document.getElementById(`field-card-${slot}`);
-      if (!card) return;
-
-      const disclosure = card.closest("details.disclosure");
-      if (disclosure) disclosure.open = true;
-
-      card.scrollIntoView({ behavior: "smooth", block: "center" });
-
-      const focusTarget = card.querySelector("select, input, textarea, button");
-      if (focusTarget) {
-        window.setTimeout(() => {
-          try {
-            focusTarget.focus({ preventScroll: true });
-          } catch (_) {
-            focusTarget.focus();
-          }
-        }, 180);
-      }
-
-      card.classList.remove("field-focus");
-      void card.offsetWidth;
-      card.classList.add("field-focus");
-      window.setTimeout(() => card.classList.remove("field-focus"), 1800);
-    }
-
-    function createSuggestionJumpButton(slot, label = "Zum Feld") {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "jump-btn";
-      button.textContent = label;
-      button.addEventListener("click", () => focusSlotCard(slot));
-      return button;
-    }
-
     function buildAssessmentInterpretation(metrics) {
       if (!Object.keys(state.assignments).some(slot => isAssigned(slot))) {
         return "Noch keine belastbare Bewertung: Setze zuerst die Pflichtangaben, damit die Bibliothek Kohärenz und Anschlussfähigkeit einschätzen kann.";
@@ -2110,8 +2034,7 @@
           kind: "required",
           delta: estimateSuggestionDelta("required"),
           title: `${getSlotDisplayName(slot)} setzen`,
-          detail: `Hebt vor allem die Vollständigkeit an und verbessert die Belastbarkeit der Gesamtbewertung.`,
-          targetSlot: slot
+          detail: `Hebt vor allem die Vollständigkeit an und verbessert die Belastbarkeit der Gesamtbewertung.`
         });
       });
 
@@ -2120,9 +2043,7 @@
           kind: "conflict",
           delta: estimateSuggestionDelta("conflict"),
           title: `Konflikt zwischen ${getSlotDisplayName(conflict.sourceSlot)} und ${getSlotDisplayName(conflict.targetSlot)} auflösen`,
-          detail: `Prüfe ${getSlotDisplayName(conflict.targetSlot)} oder ändere ${getSlotDisplayName(conflict.sourceSlot)}, damit die Kohärenz nicht unnötig gedrückt wird.`,
-          targetSlot: conflict.targetSlot,
-          secondarySlot: conflict.sourceSlot
+          detail: `Prüfe ${getSlotDisplayName(conflict.targetSlot)} oder ändere ${getSlotDisplayName(conflict.sourceSlot)}, damit die Kohärenz nicht unnötig gedrückt wird.`
         });
       });
 
@@ -2134,8 +2055,7 @@
             kind: "recommended-missing",
             delta: estimateSuggestionDelta("recommended-missing", weight),
             title: `${getSlotDisplayName(slot)} ergänzen`,
-            detail: `${(recommendationData.reasons[slot] || ["Diese Ergänzung passt gut zum aktuellen Pfad."])[0]}`,
-            targetSlot: slot
+            detail: `${(recommendationData.reasons[slot] || ["Diese Ergänzung passt gut zum aktuellen Pfad."])[0]}`
           });
         } else if (stateText === "abweichend") {
           const expected = (recommendedValues[slot] || []).map(value => getValueLabel(slot, value)).join(", ");
@@ -2143,8 +2063,7 @@
             kind: "recommended-align",
             delta: estimateSuggestionDelta("recommended-align", weight),
             title: `${getSlotDisplayName(slot)} an erwarteten Pfad anpassen`,
-            detail: expected ? `Typisch passend wären eher: ${expected}.` : `Die aktuelle Ausprägung weicht vom empfohlenen Pfad ab.`,
-            targetSlot: slot
+            detail: expected ? `Typisch passend wären eher: ${expected}.` : `Die aktuelle Ausprägung weicht vom empfohlenen Pfad ab.`
           });
         }
       });
@@ -2275,48 +2194,13 @@
         item.innerHTML = `<strong>Aktuell kein dringender Hebel</strong><small>Die Konfiguration ist bereits gut anschlussfähig. Prüfe nur noch Feinjustierungen nach Bedarf.</small>`;
         elements.scoreSuggestions.appendChild(item);
       } else {
-        model.suggestions.forEach((suggestion, index) => {
+        model.suggestions.forEach(suggestion => {
           const item = document.createElement("div");
-          item.className = `suggestion-item${index === 0 ? " primary-lever" : ""}`;
-
-          const head = document.createElement("div");
-          head.className = "suggestion-head";
-          head.innerHTML = `
-            <strong>${suggestion.title}</strong>
-            <div class="inline-actions">
-              ${index === 0 ? '<span class="badge accent">größter Hebel</span>' : ""}
-              <span class="badge subtle">ca. +${suggestion.delta}</span>
-            </div>
+          item.className = "suggestion-item";
+          item.innerHTML = `
+            <div class="suggestion-head"><strong>${suggestion.title}</strong><span class="badge subtle">ca. +${suggestion.delta}</span></div>
+            <small>${suggestion.detail}</small>
           `;
-
-          const detail = document.createElement("small");
-          detail.textContent = suggestion.detail;
-
-          item.appendChild(head);
-          item.appendChild(detail);
-
-          if (suggestion.targetSlot) {
-            const actions = document.createElement("div");
-            actions.className = "suggestion-actions";
-
-            const targetLabel = suggestion.secondarySlot
-              ? `Zu ${getSlotDisplayName(suggestion.targetSlot)}`
-              : "Zum Feld";
-
-            actions.appendChild(createSuggestionJumpButton(suggestion.targetSlot, targetLabel));
-
-            if (suggestion.secondarySlot) {
-              actions.appendChild(
-                createSuggestionJumpButton(
-                  suggestion.secondarySlot,
-                  `${getSlotDisplayName(suggestion.secondarySlot)} prüfen`
-                )
-              );
-            }
-
-            item.appendChild(actions);
-          }
-
           elements.scoreSuggestions.appendChild(item);
         });
       }
@@ -2435,7 +2319,9 @@
 
       if (!isRequiredComplete()) {
         if (hasAssignments) {
-          prompt = `Vorläufige Vorschau – noch nicht vollständig. Ergänze zuerst die Pflichtangaben.\n\n${renderStructuredPrompt()}`;
+          prompt = `Vorläufige Vorschau – noch nicht vollständig. Ergänze zuerst die Pflichtangaben.
+
+${renderStructuredPrompt()}`;
         } else {
           prompt = "Der Prompt ist noch nicht vollständig. Ergänze zuerst die Pflichtangaben.";
         }
