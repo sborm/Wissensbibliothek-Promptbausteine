@@ -740,6 +740,7 @@
     const state = {
       libraryData: null,
       slotIndex: {},
+      slotSchemaIndex: {},
       dimensionOrder: [],
       templateIndex: {},
       exampleIndex: {},
@@ -788,113 +789,30 @@
       OUTPUT_FORM: "Output-Form"
     };
 
-    const CURATED_REFINEMENT_SLOTS = [
-      "ZIEL_TIEFE",
-      "ZIEL_STATUS",
-      "ERGEBNISORIENTIERUNG",
-      "PROZESSLOGIK",
-      "SPRACHQUALITAET",
-      "INHALTSQUALITAET",
-      "PRIORISIERUNG",
-      "EXPERTENROLLE",
-      "WISSENSSTAND_ADRESSAT",
-      "MODUS",
-      "AUFGABENUMFANG"
-    ];
+    const ORIGIN_LABELS = {
+      community_guide: "Community-Guide",
+      repo_practice: "Repo-Praxis",
+      practitioner_blog: "Practitioner-Blog",
+      forum_hypothesis: "Forum-Hypothese",
+      internal_taxonomy: "Interne Taxonomie"
+    };
 
-    const HEURISTIC_RECOMMENDATIONS = {
-      ZIEL_TYP: {
-        entscheidung_vorbereiten: {
-          slots: ["ERGEBNISORIENTIERUNG", "PROZESSLOGIK", "PRIORISIERUNG", "ZIELGRUPPE"],
-          values: {
-            FORMAT: ["tabelle", "liste"],
-            ERGEBNISORIENTIERUNG: ["ergebnis_plus_begruendung", "ergebnis_plus_naechste_schritte"],
-            PRIORISIERUNG: ["praktikabilitaet_vor_theorie", "klarheit_vor_vollstaendigkeit"]
-          },
-          reason: "Bei Entscheidungsvorbereitung helfen klare Bewertungskriterien und eine eindeutige Empfehlung fast immer weiter."
-        },
-        umformulieren: {
-          slots: ["SPRACHQUALITAET", "WISSENSSTAND_ADRESSAT", "INHALTLICHE_AUSSCHLUESSE"],
-          values: {
-            FORMAT: ["fliesstext", "liste"],
-            SPRACHQUALITAET: ["klar", "einfach", "professionell"]
-          },
-          reason: "Bei Umformulierungen ist die Zielwirkung wichtiger als zusätzliche Metastruktur."
-        },
-        analysieren: {
-          slots: ["ZIEL_TIEFE", "PROZESSLOGIK", "INHALTSQUALITAET", "EXPERTENROLLE"],
-          values: {
-            PROZESSLOGIK: ["zuerst_analysieren_dann_bewerten"],
-            INHALTSQUALITAET: ["differenziert", "vollstaendig", "praxisnah"]
-          },
-          reason: "Analyseaufgaben werden deutlich belastbarer, wenn Tiefe, Vorgehen und Qualitätsanspruch klar gesetzt sind."
-        },
-        bewerten: {
-          slots: ["PROZESSLOGIK", "ERGEBNISORIENTIERUNG", "PRIORISIERUNG"],
-          values: {
-            ERGEBNISORIENTIERUNG: ["ergebnis_plus_begruendung", "ergebnis_plus_alternativen"]
-          },
-          reason: "Bewertungen wirken nur dann überzeugend, wenn Kriterien und Begründung sichtbar werden."
-        },
-        planen: {
-          slots: ["AUFGABENUMFANG", "ERGEBNISORIENTIERUNG", "MODUS"],
-          values: {
-            AUFGABENUMFANG: ["mehrstufig", "iterativ"],
-            ERGEBNISORIENTIERUNG: ["ergebnis_plus_naechste_schritte"]
-          },
-          reason: "Planungsaufgaben profitieren von Schrittlogik und sichtbaren nächsten Schritten."
-        }
-      },
-      AUFGABENTYP: {
-        verbessern: {
-          slots: ["SPRACHQUALITAET", "INHALTSQUALITAET", "PERSPEKTIVTIEFE"],
-          values: {
-            PERSPEKTIVTIEFE: ["hinterfragend", "herausfordernd"]
-          },
-          reason: "Verbessern wird nützlicher, wenn Qualitätsmaßstab und kritische Tiefe konkretisiert sind."
-        },
-        vergleichen: {
-          slots: ["ERGEBNISORIENTIERUNG", "PROZESSLOGIK", "PRIORISIERUNG"],
-          values: {
-            PROZESSLOGIK: ["erst_optionen_dann_empfehlung"],
-            FORMAT: ["tabelle", "liste"]
-          },
-          reason: "Vergleiche werden klarer, wenn die Vergleichslogik und das Entscheidungsformat feststehen."
-        },
-        entwerfen: {
-          slots: ["DENKRICHTUNG", "UMFANG", "MODUS"],
-          values: {
-            DENKRICHTUNG: ["kreativ", "pragmatisch"],
-            MODUS: ["iteratives_verfeinern", "varianten_entwickeln"]
-          },
-          reason: "Entwurfsaufgaben profitieren davon, Kreativmodus und Iterationsgrad früh festzulegen."
-        }
-      },
-      FORMAT: {
-        tabelle: {
-          slots: ["ERGEBNISORIENTIERUNG", "PRIORISIERUNG"],
-          values: {
-            PRIORISIERUNG: ["klarheit_vor_vollstaendigkeit", "praktikabilitaet_vor_theorie"]
-          },
-          reason: "Tabellen sind dann stark, wenn klar ist, ob eher Vergleich, Entscheidung oder Übersicht im Vordergrund steht."
-        },
-        email: {
-          slots: ["ZIELGRUPPE", "SPRACHQUALITAET", "RAHMENBEDINGUNG"],
-          values: {
-            SPRACHQUALITAET: ["klar", "professionell", "sachlich"],
-            RAHMENBEDINGUNG: ["formeller_anlass", "sensible_kommunikation"]
-          },
-          reason: "Bei E-Mails entscheidet der richtige Ton oft stärker über die Qualität als zusätzliche Tiefe."
-        },
-        leitfaden: {
-          slots: ["AUFGABENUMFANG", "MODUS", "ERGEBNISORIENTIERUNG"],
-          values: {
-            AUFGABENUMFANG: ["mehrstufig"],
-            ERGEBNISORIENTIERUNG: ["ergebnis_plus_naechste_schritte"]
-          },
-          reason: "Leitfäden brauchen meist eine klare Abfolge und sichtbare Handlungslogik."
-        }
-      }
+    const EVIDENCE_WEIGHTS = {
+      stark: 1.0,
+      mittel: 0.72,
+      schwach: 0.45
+    };
+
+    const TIER_PRIORITY = {
+      A: 0,
+      B: 1,
+      C: 2
+    };
+
+    const TIER_SCORE = {
+      A: 100,
+      B: 70,
+      C: 40
     };
 
     function humanizeKey(value) {
@@ -952,9 +870,14 @@
 
     function buildIndexes(data) {
       state.slotIndex = {};
+      state.slotSchemaIndex = {};
       state.dimensionOrder = [];
       state.templateIndex = {};
       state.exampleIndex = {};
+
+      (data.slot_schema || []).forEach(item => {
+        state.slotSchemaIndex[item.slot] = item;
+      });
 
       const library = data.library || {};
       Object.entries(library).forEach(([dimensionKey, dimensionObj]) => {
@@ -970,6 +893,7 @@
           const slot = subObj.slot || subKey;
           const rawValues = subObj.values || [];
           const allowedValues = {};
+          const provenanceSource = { ...(state.slotSchemaIndex[slot] || {}), ...subObj };
 
           rawValues.forEach(valueObj => {
             if (typeof valueObj === "string") {
@@ -994,7 +918,13 @@
             subdimensionLabel: subObj.label || humanizeKey(subKey),
             required: Boolean(subObj.required),
             multi: Boolean(subObj.multi),
-            allowedValues
+            allowedValues,
+            origin: Array.isArray(provenanceSource.origin) ? provenanceSource.origin : [],
+            evidenceStrength: provenanceSource.evidence_strength || "",
+            autoRecommendationTier: provenanceSource.auto_recommendation_tier || "",
+            recommendationNotes: provenanceSource.recommendation_notes || "",
+            heuristicScope: Array.isArray(provenanceSource.heuristic_scope) ? provenanceSource.heuristic_scope : [],
+            confidence: typeof provenanceSource.confidence === "number" ? provenanceSource.confidence : null
           };
 
           dimInfo.slots.push(slot);
@@ -1042,13 +972,56 @@
         .map(meta => meta.slot);
     }
 
+    function normalizeScopeToken(value) {
+      return String(value || "").trim().toLowerCase();
+    }
+
+    function getSlotProvenance(slot) {
+      const meta = state.slotIndex[slot] || {};
+      return {
+        origin: Array.isArray(meta.origin) ? meta.origin : [],
+        evidenceStrength: meta.evidenceStrength || "",
+        autoRecommendationTier: meta.autoRecommendationTier || "",
+        recommendationNotes: meta.recommendationNotes || "",
+        heuristicScope: Array.isArray(meta.heuristicScope) ? meta.heuristicScope : [],
+        confidence: typeof meta.confidence === "number" ? meta.confidence : null
+      };
+    }
+
+    function getOriginDisplayText(origins) {
+      return (origins || []).map(origin => ORIGIN_LABELS[origin] || humanizeKey(origin)).join(", ");
+    }
+
+    function getAssignedScopeTokens() {
+      const tokens = [];
+
+      Object.entries(state.assignments).forEach(([slot, value]) => {
+        tokens.push(slot);
+        const meta = state.slotIndex[slot];
+        if (meta?.dimensionKey) tokens.push(meta.dimensionKey);
+
+        if (Array.isArray(value)) value.forEach(item => tokens.push(item));
+        else if (typeof value === "string") tokens.push(value);
+      });
+
+      return new Set(tokens.map(normalizeScopeToken).filter(Boolean));
+    }
+
     function isCuratedRefinementSlot(slot) {
-      return CURATED_REFINEMENT_SLOTS.includes(slot);
+      const provenance = getSlotProvenance(slot);
+      return ["A", "B"].includes(provenance.autoRecommendationTier);
     }
 
     function getRefinementPriority(slot) {
-      const curatedIndex = CURATED_REFINEMENT_SLOTS.indexOf(slot);
-      return curatedIndex === -1 ? 999 : curatedIndex;
+      const provenance = getSlotProvenance(slot);
+      if (!provenance.autoRecommendationTier) return 999;
+
+      const tierPriority = TIER_PRIORITY[provenance.autoRecommendationTier] ?? 9;
+      const confidencePenalty = typeof provenance.confidence === "number"
+        ? Math.max(0, 1 - provenance.confidence)
+        : 0.5;
+
+      return tierPriority * 100 + confidencePenalty * 10;
     }
 
     function getExclusionSlots() {
@@ -1057,20 +1030,77 @@
         .map(meta => meta.slot);
     }
 
-    function addRecommendation(bucket, slot, reason, values = [], score = 1) {
+    function addRecommendation(bucket, slot, reason, values = [], score = 1, source = "soft") {
       if (!state.slotIndex[slot] || getRequiredSlots().includes(slot) || getExclusionSlots().includes(slot)) return;
-      bucket[slot] = bucket[slot] || { reasons: [], values: [], score: 0 };
+      bucket[slot] = bucket[slot] || {
+        reasons: [],
+        values: [],
+        score: 0,
+        sources: [],
+        provenance: getSlotProvenance(slot)
+      };
       if (reason) bucket[slot].reasons.push(reason);
       if (values?.length) bucket[slot].values.push(...values);
+      if (source) bucket[slot].sources.push(source);
       bucket[slot].score += score;
     }
 
-    function applyHeuristicRecommendations(bucket, sourceSlot, sourceValue) {
-      const blueprint = HEURISTIC_RECOMMENDATIONS[sourceSlot]?.[sourceValue];
-      if (!blueprint) return;
-      const reason = blueprint.reason || `${getSlotDisplayName(sourceSlot)} ist auf „${getValueLabel(sourceSlot, sourceValue)}“ gesetzt.`;
-      (blueprint.slots || []).forEach(slot => addRecommendation(bucket, slot, reason, [], 2));
-      Object.entries(blueprint.values || {}).forEach(([slot, values]) => addRecommendation(bucket, slot, reason, values, 2));
+    function getProvenanceRecommendationReason(slot, matchDetails) {
+      const provenance = getSlotProvenance(slot);
+      const parts = [];
+
+      if (provenance.recommendationNotes) parts.push(provenance.recommendationNotes);
+      else parts.push(`${getSlotDisplayName(slot)} ist in der Provenienzschicht als relevanter Empfehlungsslot markiert.`);
+
+      if (matchDetails.matches.length) {
+        parts.push(`Scope-Treffer: ${matchDetails.matches.map(humanizeKey).join(", ")}.`);
+      } else if (matchDetails.global) {
+        parts.push("Gilt bibliotheksweit für viele Aufgaben.");
+      }
+
+      const metaBits = [];
+      if (provenance.origin.length) metaBits.push(`Herkunft: ${getOriginDisplayText(provenance.origin)}`);
+      if (provenance.evidenceStrength) metaBits.push(`Evidenz: ${provenance.evidenceStrength}`);
+      if (provenance.autoRecommendationTier) metaBits.push(`Tier: ${provenance.autoRecommendationTier}`);
+      if (typeof provenance.confidence === "number") metaBits.push(`Confidence: ${provenance.confidence.toFixed(2)}`);
+
+      if (metaBits.length) parts.push(metaBits.join(" · "));
+      return parts.join(" ");
+    }
+
+    function applyProvenanceRecommendations(bucket) {
+      const assignedTokens = getAssignedScopeTokens();
+
+      Object.values(state.slotIndex).forEach(meta => {
+        if (meta.required) return;
+        if (getExclusionSlots().includes(meta.slot)) return;
+
+        const provenance = getSlotProvenance(meta.slot);
+        if (!provenance.autoRecommendationTier) return;
+
+        const scopes = provenance.heuristicScope.map(normalizeScopeToken).filter(Boolean);
+        const matches = scopes.filter(scope => scope !== "alle_tasks" && assignedTokens.has(scope));
+        const globalMatch = scopes.includes("alle_tasks");
+
+        if (!globalMatch && !matches.length) return;
+
+        const tierScore = TIER_SCORE[provenance.autoRecommendationTier] ?? 20;
+        const evidenceWeight = EVIDENCE_WEIGHTS[provenance.evidenceStrength] ?? 0.45;
+        const confidence = typeof provenance.confidence === "number" ? provenance.confidence : 0.5;
+        const scopeWeight = matches.length
+          ? 1 + Math.min(matches.length, 3) * 0.2
+          : 0.72;
+
+        const score = tierScore * evidenceWeight * confidence * scopeWeight;
+        if (score <= 0) return;
+
+        const reason = getProvenanceRecommendationReason(meta.slot, {
+          matches,
+          global: globalMatch
+        });
+
+        addRecommendation(bucket, meta.slot, reason, [], score, "provenance");
+      });
     }
 
     function getActiveRecommendationData() {
@@ -1079,7 +1109,7 @@
       const bucket = {};
 
       if (!requiredComplete) {
-        return { recommendedSlots: [], reasons: {}, recommendedValues: {} };
+        return { recommendedSlots: [], reasons: {}, recommendedValues: {}, provenanceMeta: {} };
       }
 
       constraints.forEach(constraint => {
@@ -1091,18 +1121,15 @@
         const base = `${getSlotDisplayName(cond.slot)} ist auf „${getValueLabel(cond.slot, cond.equals)}“ gesetzt.`;
 
         (constraint.then?.recommended_slots || []).forEach(slot => {
-          addRecommendation(bucket, slot, base, [], 3);
+          addRecommendation(bucket, slot, `${base} Regelbasierte Empfehlung aus dem Constraint-Modell.`, [], 160, "constraint");
         });
 
         Object.entries(constraint.then?.recommended_values || {}).forEach(([slot, values]) => {
-          addRecommendation(bucket, slot, `${base} Passende Ausprägungen sind hier oft schneller anschlussfähig.`, values, 3);
+          addRecommendation(bucket, slot, `${base} Passende Ausprägungen sind hier oft schneller anschlussfähig.`, values, 180, "constraint-values");
         });
       });
 
-      ["ZIEL_TYP", "AUFGABENTYP", "FORMAT"].forEach(sourceSlot => {
-        const sourceValue = state.assignments[sourceSlot];
-        if (typeof sourceValue === "string") applyHeuristicRecommendations(bucket, sourceSlot, sourceValue);
-      });
+      applyProvenanceRecommendations(bucket);
 
       const recommendedSlots = Object.entries(bucket)
         .sort((a, b) => b[1].score - a[1].score || getRefinementPriority(a[0]) - getRefinementPriority(b[0]) || a[0].localeCompare(b[0]))
@@ -1111,13 +1138,15 @@
 
       const reasons = {};
       const recommendedValues = {};
+      const provenanceMeta = {};
 
       recommendedSlots.forEach(slot => {
         reasons[slot] = unique((bucket[slot]?.reasons || []).filter(Boolean));
         recommendedValues[slot] = unique(bucket[slot]?.values || []);
+        provenanceMeta[slot] = bucket[slot]?.provenance || getSlotProvenance(slot);
       });
 
-      return { recommendedSlots, reasons, recommendedValues };
+      return { recommendedSlots, reasons, recommendedValues, provenanceMeta };
     }
 
     function getRefinementGroups(recommendedSlots) {
@@ -1191,7 +1220,7 @@
         if (!isAssigned(slot)) statuses[slot].push({ type: "warning", text: "Pflichtangabe fehlt." });
       });
 
-      const { recommendedSlots, reasons, recommendedValues } = getActiveRecommendationData();
+      const { recommendedSlots, reasons, recommendedValues, provenanceMeta } = getActiveRecommendationData();
       recommendedSlots.forEach(slot => {
         if (!isAssigned(slot)) {
           const reasonText = reasons[slot]?.[0] || "Für deine aktuelle Auswahl empfohlen.";
@@ -1246,8 +1275,12 @@
       const badgeWrap = document.createElement("div");
       badgeWrap.className = "inline-actions";
       if (meta.required) badgeWrap.innerHTML += '<span class="badge accent">Pflicht</span>';
-      else if (options.recommended) badgeWrap.innerHTML += '<span class="badge subtle">Empfohlen</span>';
-      else if (options.curated) badgeWrap.innerHTML += '<span class="badge subtle">Häufig genutzt</span>';
+      else if (options.recommended) {
+        badgeWrap.innerHTML += '<span class="badge subtle">Empfohlen</span>';
+        if (options.provenance?.autoRecommendationTier) {
+          badgeWrap.innerHTML += `<span class="badge subtle">Tier ${options.provenance.autoRecommendationTier}</span>`;
+        }
+      } else if (options.curated) badgeWrap.innerHTML += '<span class="badge subtle">Häufig genutzt</span>';
       else badgeWrap.innerHTML += '<span class="badge subtle">Optional</span>';
 
       head.appendChild(metaWrap);
@@ -1407,11 +1440,15 @@
       }
 
       elements.recommendationIntro.className = "notice info";
-      elements.recommendationIntro.textContent = "Diese Felder sind für deine aktuelle Auswahl besonders sinnvoll und werden deshalb vorgezogen angezeigt.";
+      elements.recommendationIntro.textContent = "Diese Felder werden aus Constraints plus Provenienz-Metadaten wie Scope, Evidenzstärke, Tier und Confidence priorisiert.";
 
       actionableSlots.forEach(slot => {
         const reason = (reasons[slot] || []).join(" ");
-        elements.recommendedFields.appendChild(renderFieldCard(slot, { recommended: true, reason }));
+        elements.recommendedFields.appendChild(renderFieldCard(slot, {
+          recommended: true,
+          reason,
+          provenance: provenanceMeta[slot]
+        }));
       });
     }
 
