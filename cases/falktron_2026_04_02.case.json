@@ -1,0 +1,521 @@
+{
+  "case_meta": {
+    "id": "falktron_2026_04_02",
+    "label": "Falktron-Fall 02.04.2026",
+    "description": "Separat geführte Fallakte für Laptop-Exit, Arbeitgeberkommunikation und Arbeitsgerichtsvorbereitung.",
+    "source_note": "Abgeleitet aus dem Übergabedokument Master_Uebergabe_Bormann_Falktron_02042026.docx.",
+    "date_context": "2026-04-02"
+  },
+  "case_contexts": [
+    {
+      "id": "falktron_2026_04_02",
+      "label": "Falktron-Fall 02.04.2026",
+      "description": "Gemeinsame Kontextbasis für Laptop-Exit, Arbeitgeberkommunikation und Arbeitsgerichtsvorbereitung.",
+      "meta": {
+        "priority_order": [
+          "laptop_exit",
+          "antwort_email",
+          "arbeitsgericht_vorbereitung"
+        ],
+        "decision_model": "Sarah entscheidet, KI analysiert und strukturiert, Tools oder Sarah führen aus."
+      },
+      "shared_blocks": [
+        "case_parties_and_timeline",
+        "case_claims_open",
+        "case_legal_strengths",
+        "case_evidence_registry",
+        "case_laptop_exit_status",
+        "case_today_plan",
+        "user_operating_profile",
+        "session_role_instruction"
+      ]
+    }
+  ],
+  "context_blocks": [
+    {
+      "id": "case_parties_and_timeline",
+      "label": "Parteien und Grundsituation",
+      "status": "gesichert",
+      "content": {
+        "claimant": {
+          "name": "Sarah Bormann",
+          "city": "Paderborn",
+          "email": "sarah.bormann595@gmail.com"
+        },
+        "defendant": {
+          "name": "Falktron GmbH",
+          "address": "Geiststraße 53, 59302 Oelde",
+          "hrb": "HRB 19962 Amtsgericht Münster"
+        },
+        "contacts": [
+          {
+            "name": "Matthias Mut",
+            "role": "Geschäftsführer",
+            "email": "m.mut@falktron.de"
+          },
+          {
+            "name": "Sebastian Schweppe",
+            "role": "operativer Kontakt",
+            "email": "s.schweppe@falktron.de"
+          }
+        ],
+        "employment_period": {
+          "from": "2025-05-13",
+          "to": "2026-03-15",
+          "termination_date": "2026-02-10"
+        },
+        "court": "Arbeitsgericht Paderborn",
+        "today_context": {
+          "date": "2026-04-02",
+          "laptop_return_due": true,
+          "claim_filing_due": true,
+          "employer_email_reference": "Klageeinreichung beim AG Münster für heute 16:00 Uhr angekündigt"
+        }
+      }
+    },
+    {
+      "id": "case_claims_open",
+      "label": "Offene Rechtsansprüche",
+      "status": "gesichert",
+      "content": {
+        "claims": [
+          {
+            "id": "claim_1",
+            "type": "Arbeitsvergütung Februar 2026",
+            "amount_estimate": "ca. 1.300 € brutto",
+            "basis": "§ 611a BGB, Änderungsvereinbarung 15h/Woche"
+          },
+          {
+            "id": "claim_2",
+            "type": "Arbeitsvergütung 01.03.–15.03.2026",
+            "amount_estimate": "ca. 650 € brutto",
+            "basis": "§ 611a BGB, Änderungsvereinbarung 15h/Woche"
+          },
+          {
+            "id": "claim_3",
+            "type": "Urlaubsabgeltung",
+            "basis": "§ 7 Abs. 4 BUrlG"
+          },
+          {
+            "id": "claim_4",
+            "type": "Ordnungsgemäße Entgeltabrechnungen Januar, Februar, März 2026"
+          }
+        ],
+        "interest": "5 Prozentpunkte über Basiszinssatz ab Fälligkeit",
+        "employer_linkage_issue": "Lohnzahlung an Herausgabe von Arbeitsergebnissen und Laptopübergabe geknüpft"
+      }
+    },
+    {
+      "id": "case_legal_strengths",
+      "label": "Rechtliche Stärken",
+      "status": "abgeleitet",
+      "content": {
+        "strengths": [
+          {
+            "id": "strength_acceptance_default_rebutted",
+            "title": "Annahmeverzug-Einwand widerlegt",
+            "supporting_evidence": [
+              "K5",
+              "K6",
+              "K20",
+              "K21"
+            ]
+          },
+          {
+            "id": "strength_work_results_rebutted",
+            "title": "Totalbehauptung fehlender Arbeitsergebnisse widerlegt",
+            "supporting_evidence": [
+              "K7",
+              "K10",
+              "K17",
+              "K18",
+              "K20",
+              "K26"
+            ]
+          },
+          {
+            "id": "strength_january_payroll_error",
+            "title": "Januarabrechnung-Fehler durch eigene SMS belegt",
+            "supporting_evidence": [
+              "K4",
+              "K19"
+            ]
+          },
+          {
+            "id": "strength_empty_deadline_pattern",
+            "title": "Muster leerer Fristen dokumentiert",
+            "supporting_evidence": [
+              "K16"
+            ]
+          },
+          {
+            "id": "strength_wage_conditioning",
+            "title": "Konditionierungsstrategie früh dokumentiert",
+            "supporting_evidence": [
+              "K8",
+              "K15"
+            ]
+          }
+        ],
+        "personality_rights_track": {
+          "status": "offen_zu_pruefen",
+          "possible_bases": [
+            "§ 823 BGB i.V.m. Art. 2 GG",
+            "§ 241 Abs. 2 BGB",
+            "§ 253 BGB"
+          ],
+          "supporting_evidence": [
+            "K22",
+            "K23",
+            "K24"
+          ]
+        }
+      }
+    },
+    {
+      "id": "case_evidence_registry",
+      "label": "Beweismittelverzeichnis",
+      "status": "gesichert",
+      "content": {
+        "evidence_items": [
+          {
+            "id": "K1",
+            "topic": "Änderungsvereinbarung 15h/Woche"
+          },
+          {
+            "id": "K2",
+            "topic": "Kündigung 10.02.2026"
+          },
+          {
+            "id": "K3",
+            "topic": "Abrechnungen Januar + Februar 2026"
+          },
+          {
+            "id": "K4",
+            "topic": "SMS 26.01.2026 – Freistellung"
+          },
+          {
+            "id": "K5",
+            "topic": "SMS 09./10.02.2026 – Arbeitsaufnahme / Teams"
+          },
+          {
+            "id": "K6",
+            "topic": "SMS 11.02.2026 – Übergabeleistungen angefordert"
+          },
+          {
+            "id": "K7",
+            "topic": "SMS 04.01.2026 – Empfang Projektvorstellung"
+          },
+          {
+            "id": "K8",
+            "topic": "SMS 20.02.2026 – Lohnkonditionierung"
+          },
+          {
+            "id": "K9",
+            "topic": "E-Mail 01.03.2026 – Lieferung Unterlagen"
+          },
+          {
+            "id": "K10",
+            "topic": "E-Mail 03.03.2026 – Eingangsbestätigung"
+          },
+          {
+            "id": "K11",
+            "topic": "E-Mail 10.03.2026 – Anspruchsgeltendmachung"
+          },
+          {
+            "id": "K12",
+            "topic": "E-Mail 12.03.2026 – Sorgen-Mail"
+          },
+          {
+            "id": "K13",
+            "topic": "E-Mail 16.03.2026 – Annahmeverzug-Argumentation"
+          },
+          {
+            "id": "K14",
+            "topic": "E-Mail 18.03.2026 – juristische Gegendarstellung"
+          },
+          {
+            "id": "K15",
+            "topic": "E-Mail 19.03.2026 – Ausweitung / konditionierte Zahlung"
+          },
+          {
+            "id": "K16",
+            "topic": "E-Mails 30.03. + 01.04.2026 – leere Fristen"
+          },
+          {
+            "id": "K17",
+            "topic": "Projektvorstellung Seinskalender"
+          },
+          {
+            "id": "K18",
+            "topic": "Projektdokumentation Sinnkompass"
+          },
+          {
+            "id": "K19",
+            "topic": "Stundentabelle Januar 2026"
+          },
+          {
+            "id": "K20",
+            "topic": "data.json Chat-Export"
+          },
+          {
+            "id": "K21",
+            "topic": "Teams-Protokoll Screenshot"
+          },
+          {
+            "id": "K22",
+            "topic": "WhatsApp-Export Sebastian Schweppe"
+          },
+          {
+            "id": "K23",
+            "topic": "E-Mail 12.12.2025 – Kenntnis neurobiologisches Profil"
+          },
+          {
+            "id": "K24",
+            "topic": "Systembeschreibung + Videowirkung"
+          },
+          {
+            "id": "K25",
+            "topic": "Protokollnotiz Zugriffsentzug mium 02.04.2026"
+          },
+          {
+            "id": "K26",
+            "topic": "Nachweis Arbeitsleistungen"
+          }
+        ]
+      }
+    },
+    {
+      "id": "case_laptop_exit_status",
+      "label": "Laptop-Exit-Status",
+      "status": "gesichert",
+      "content": {
+        "formal_exit_complete": true,
+        "remaining_checks": [
+          "Desktop: arbeitsrechtliche_zeitleiste.html",
+          "Desktop: Transkript_Matthias_Sarah.pdf",
+          "Desktop: zeitleiste_endfassung_v2*.html",
+          "Desktop: mailverkehr/",
+          "Desktop: Screenshot_20260227/20260323*.jpg",
+          "Downloads: Unknown*.wav",
+          "LaptopExit_Reports/",
+          "LaptopExit_Staging/"
+        ],
+        "secured": [
+          "iCloud GERICHTSPAKET",
+          "iCloud PRIVATE_Laptop_Exit",
+          "iCloud ARBEIT_Backup",
+          "Downloads: data.json"
+        ],
+        "access_note": "mium-Zugriff entzogen 09:09 Uhr, Export gesichert"
+      }
+    },
+    {
+      "id": "case_today_plan",
+      "label": "Plan für heute",
+      "status": "gesichert",
+      "content": {
+        "tasks": [
+          {
+            "order": 1,
+            "task": "Laptop-Prüfung: kritische Dateien sichern",
+            "executor": "Claude Code"
+          },
+          {
+            "order": 2,
+            "task": "LaptopExit_Reports + Staging in iCloud, dann lokal löschen",
+            "executor": "Claude Code"
+          },
+          {
+            "order": 3,
+            "task": "Laptop einpacken + Versandetikett drauf",
+            "executor": "Sarah"
+          },
+          {
+            "order": 4,
+            "task": "Laptop zur Post / Versand",
+            "executor": "Sarah"
+          },
+          {
+            "order": 5,
+            "task": "Arbeitsgericht Paderborn: Rechtsantragsstelle aufsuchen",
+            "executor": "Sarah"
+          },
+          {
+            "order": 6,
+            "task": "Klage einreichen: Anlagen K1–K26 mitbringen",
+            "executor": "Rechtsantragsstelle"
+          },
+          {
+            "order": 7,
+            "task": "Optional: kurze sachliche Antwort-E-Mail an Matthias Mut",
+            "executor": "Chat / Sarah"
+          }
+        ]
+      }
+    },
+    {
+      "id": "user_operating_profile",
+      "label": "Persönlicher und operativer Kontext",
+      "status": "gesichert",
+      "content": {
+        "language": "Deutsch",
+        "style_preference": "direkt, klar, ohne Floskeln",
+        "working_mode": "Sarah denkt mit der KI, entscheidet selbst, delegiert Ausführung an Tools oder Personen",
+        "time_pressure": "extrem hoch",
+        "response_preference": [
+          "direkt",
+          "strukturiert",
+          "handlungsorientiert",
+          "kein unnötiges Absichern"
+        ],
+        "neurobiological_context": [
+          "autistische Struktur",
+          "C-PTBS",
+          "hoher Kohärenzbedarf",
+          "Druck erzeugt Handlungsblockaden"
+        ]
+      }
+    },
+    {
+      "id": "session_role_instruction",
+      "label": "Anweisung für Folge-Session",
+      "status": "gesichert",
+      "content": {
+        "role": "Berater, Analyst und Denkpartner",
+        "authority_model": "Sarah entscheidet, KI unterstützt",
+        "execution_model": "Ausführung übernehmen Tools oder Sarah",
+        "priority_order": [
+          "Laptop-Exit",
+          "Antwort-E-Mail",
+          "Arbeitsgericht vorbereiten"
+        ]
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "dep_claims_need_evidence",
+      "from": "case_claims_open",
+      "to": "case_evidence_registry",
+      "type": "gestuetzt_durch",
+      "status": "gesichert"
+    },
+    {
+      "id": "dep_legal_strengths_need_evidence",
+      "from": "case_legal_strengths",
+      "to": "case_evidence_registry",
+      "type": "gestuetzt_durch",
+      "status": "gesichert"
+    },
+    {
+      "id": "dep_laptop_exit_evidence_risk",
+      "from": "case_laptop_exit_status",
+      "to": "case_evidence_registry",
+      "type": "beweisrelevant",
+      "status": "abgeleitet"
+    },
+    {
+      "id": "dep_today_plan_prioritizes_laptop_exit",
+      "from": "case_today_plan",
+      "to": "case_laptop_exit_status",
+      "type": "priorisiert",
+      "status": "gesichert"
+    },
+    {
+      "id": "dep_today_plan_prioritizes_court",
+      "from": "case_today_plan",
+      "to": "case_claims_open",
+      "type": "priorisiert",
+      "status": "gesichert"
+    },
+    {
+      "id": "dep_operating_profile_shapes_outputs",
+      "from": "user_operating_profile",
+      "to": "session_role_instruction",
+      "type": "steuert_antwortmodus",
+      "status": "gesichert"
+    },
+    {
+      "id": "dep_personality_track_needs_factual_care",
+      "from": "case_legal_strengths",
+      "to": "user_operating_profile",
+      "type": "sensibler_kontext",
+      "status": "offen_zu_pruefen"
+    }
+  ],
+  "linked_example_instances": [
+    {
+      "id": "laptop_exit_02042026",
+      "label": "Laptop-Exit heute",
+      "base_context": "falktron_2026_04_02",
+      "focus_blocks": [
+        "case_laptop_exit_status",
+        "case_evidence_registry",
+        "case_today_plan",
+        "user_operating_profile",
+        "session_role_instruction"
+      ],
+      "values": {
+        "ZIEL_TYP": "planen",
+        "AUFGABENTYP": "pruefen",
+        "FORMAT": "leitfaden",
+        "ZIEL_TIEFE": "tiefenanalyse",
+        "AUFGABENUMFANG": "mehrstufig",
+        "RAHMENBEDINGUNG": "zeitdruck",
+        "ERGEBNISORIENTIERUNG": "ergebnis_plus_naechste_schritte",
+        "PROZESSLOGIK": "schrittweise_vorgehen",
+        "EXPERTENROLLE": "sparringspartner",
+        "MODUS": "iteratives_verfeinern"
+      }
+    },
+    {
+      "id": "antwort_mail_matthias_sachlich",
+      "label": "Sachliche Antwort-E-Mail an Matthias Mut",
+      "base_context": "falktron_2026_04_02",
+      "focus_blocks": [
+        "case_parties_and_timeline",
+        "case_claims_open",
+        "case_legal_strengths",
+        "case_today_plan",
+        "user_operating_profile",
+        "session_role_instruction"
+      ],
+      "values": {
+        "ZIEL_TYP": "umformulieren",
+        "AUFGABENTYP": "verbessern",
+        "FORMAT": "email",
+        "ZIELGRUPPE": "kunden",
+        "WISSENSSTAND_ADRESSAT": "fachkundig",
+        "SPRACHQUALITAET": "sachlich",
+        "RAHMENBEDINGUNG": "sensible_kommunikation",
+        "ERGEBNISORIENTIERUNG": "direkt_nutzbare_fassung",
+        "EXPERTENROLLE": "sparringspartner"
+      }
+    },
+    {
+      "id": "arbeitsgericht_vorbereitung_02042026",
+      "label": "Arbeitsgericht vorbereiten",
+      "base_context": "falktron_2026_04_02",
+      "focus_blocks": [
+        "case_claims_open",
+        "case_legal_strengths",
+        "case_evidence_registry",
+        "case_today_plan",
+        "user_operating_profile",
+        "session_role_instruction"
+      ],
+      "values": {
+        "ZIEL_TYP": "entscheidung_vorbereiten",
+        "AUFGABENTYP": "strukturieren",
+        "FORMAT": "checkliste",
+        "ZIEL_TIEFE": "tiefenanalyse",
+        "AUFGABENUMFANG": "mehrstufig",
+        "INHALTSQUALITAET": "differenziert",
+        "PRIORISIERUNG": "tiefe_vor_kuerze",
+        "ERGEBNISORIENTIERUNG": "ergebnis_plus_naechste_schritte",
+        "PROZESSLOGIK": "erst_sammeln_dann_strukturieren"
+      }
+    }
+  ]
+}
