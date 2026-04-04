@@ -608,6 +608,25 @@
       line-height: 1.4;
     }
 
+    .compact-recommendation-reason {
+      color: var(--text);
+      font-size: 0.85rem;
+      line-height: 1.45;
+      opacity: 0.92;
+    }
+
+    .badge.soft {
+      border-color: rgba(127,227,161,0.26);
+      background: rgba(127,227,161,0.09);
+      color: #d6ffe3;
+    }
+
+    .badge.warn {
+      border-color: rgba(255,207,112,0.26);
+      background: rgba(255,207,112,0.09);
+      color: #ffe9b6;
+    }
+
     .compact-badges {
       display: flex;
       gap: 8px;
@@ -622,11 +641,14 @@
 
     .score-primary {
       order: -1;
+      position: sticky;
+      top: 16px;
     }
 
     @media (max-width: 1080px) {
       .score-primary {
         order: 0;
+        position: static;
       }
     }
 
@@ -807,7 +829,7 @@
               <summary>
                 <div>
                   <strong id="recommendedCoveredTitle">Bereits passende Empfehlungen</strong>
-                  <div class="subtle-text">Kompakte Übersicht über gesetzte und aktuell stimmige Empfehlungsslots.</div>
+                  <div class="subtle-text">Kompakte Übersicht über gesetzte Empfehlungen mit kurzer Begründung, warum sie aktuell passen.</div>
                 </div>
                 <span id="recommendedCoveredBadge" class="badge subtle">0</span>
               </summary>
@@ -1850,6 +1872,48 @@
       return expectedValues.includes(current) ? "expected" : "abweichend";
     }
 
+    function shortenText(text, maxLength = 118) {
+      const clean = String(text || "").replace(/\s+/g, " ").trim();
+      if (!clean) return "";
+      return clean.length <= maxLength ? clean : `${clean.slice(0, maxLength - 1).trim()}…`;
+    }
+
+    function getCompactBenefitText(slot) {
+      const meta = state.slotIndex[slot] || {};
+      const map = {
+        ZIEL: "Stützt Zielschärfe und Ausrichtung.",
+        AUFGABE: "Stützt Aufgabenlogik und Bearbeitungsrichtung.",
+        KONTEXT: "Stützt Kontext- und Situationspassung.",
+        OUTPUT_FORM: "Stützt Ergebnisform und Nutzwert.",
+        PROZESS: "Stützt Struktur und Nachvollziehbarkeit.",
+        QUALITAETSKRITERIEN: "Stützt Qualität und Lesbarkeit.",
+        ROLLE: "Stützt Perspektive und Anspruchsniveau.",
+        ADRESSAT: "Stützt Zielgruppenpassung.",
+        INTERAKTIONSMODUS: "Stützt Arbeitsfluss und Iteration."
+      };
+      return map[meta.dimensionKey] || "Stützt die aktuelle Konfiguration.";
+    }
+
+    function getCompactStatusMeta(stateText, provenance = null) {
+      const tier = provenance?.autoRecommendationTier || "";
+      const confidence = typeof provenance?.confidence === "number" ? provenance.confidence : null;
+      const highSignal = tier === "A" && (confidence === null || confidence >= 0.8);
+
+      if (stateText === "expected") {
+        return highSignal
+          ? { label: "stark passend", className: "accent" }
+          : { label: "gut passend", className: "soft" };
+      }
+
+      if (stateText === "set") {
+        return highSignal
+          ? { label: "gut passend", className: "soft" }
+          : { label: "eher passend", className: "subtle" };
+      }
+
+      return { label: "prüfen", className: "warn" };
+    }
+
     function renderCompactRecommendationItem(slot, recommendedValues = {}, provenance = null) {
       const stateText = getRecommendationState(slot, recommendedValues);
       const wrapper = document.createElement("div");
@@ -1860,21 +1924,31 @@
         ? rawValue.map(item => getValueLabel(slot, item)).join(", ")
         : getValueLabel(slot, rawValue);
 
-      const statusMap = {
-        expected: { label: "passt gut", className: "accent" },
-        set: { label: "anschlussfähig", className: "subtle" },
-        abweichend: { label: "prüfen", className: "subtle" }
-      };
-      const currentStatus = statusMap[stateText] || statusMap.set;
+      const currentStatus = getCompactStatusMeta(stateText, provenance);
       const parts = [];
       if (provenance?.autoRecommendationTier) parts.push(`Tier ${provenance.autoRecommendationTier}`);
       if (provenance?.evidenceStrength) parts.push(`Evidenz ${provenance.evidenceStrength}`);
+
+      const expectedValues = recommendedValues[slot] || [];
+      const expectedHint = expectedValues.length
+        ? `Erwarteter Pfad: ${expectedValues.map(value => getValueLabel(slot, value)).join(", ")}.`
+        : "";
+      const reasonText = shortenText(
+        provenance?.recommendationNotes || expectedHint || getCompactBenefitText(slot),
+        132
+      );
+      const supportText = stateText === "expected"
+        ? `${reasonText} ${getCompactBenefitText(slot)}`
+        : stateText === "set"
+          ? `${reasonText} Bleibt derzeit stimmig, ist aber weniger eng geführt.`
+          : `${reasonText} Prüfe, ob eine nähere Ausprägung besser passt.`;
 
       wrapper.innerHTML = `
         <div class="compact-recommendation-head">
           <div class="compact-recommendation-main">
             <strong>${getSlotDisplayName(slot)}</strong>
             <div class="compact-recommendation-value">${valueText}</div>
+            <div class="compact-recommendation-reason">${supportText.trim()}</div>
             <div class="compact-recommendation-meta">${parts.join(" · ") || "Bereits gesetzt"}</div>
           </div>
           <div class="compact-badges">
