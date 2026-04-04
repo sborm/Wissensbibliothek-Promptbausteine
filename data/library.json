@@ -1882,7 +1882,7 @@
     {
       "id": "falktron_2026_04_02",
       "label": "Falktron-Fall 02.04.2026",
-      "path": "cases/falktron_2026_04_02.json",
+      "path": "cases/falktron_2026_04_02.case.json",
       "status": "active",
       "schema_ref": "schema/case-context.schema.json",
       "description": "Separat geführte Fallakte mit gemeinsamer Kontextbasis, Kontextblöcken, Abhängigkeiten und fallbezogenen Presets."
