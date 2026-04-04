@@ -1416,41 +1416,53 @@
     }
 
     function renderRecommendationSection() {
-      const requiredComplete = isRequiredComplete();
-      const { recommendedSlots, reasons, recommendedValues } = getActiveRecommendationData();
-      const actionableSlots = recommendedSlots.filter(slot => !isAssigned(slot) || (recommendedValues[slot]?.length && typeof state.assignments[slot] === "string" && !recommendedValues[slot].includes(state.assignments[slot])));
+  const requiredComplete = isRequiredComplete();
+  const { recommendedSlots, reasons, recommendedValues, provenanceMeta } = getActiveRecommendationData();
+  const actionableSlots = recommendedSlots.filter(
+    slot =>
+      !isAssigned(slot) ||
+      (recommendedValues[slot]?.length &&
+        typeof state.assignments[slot] === "string" &&
+        !recommendedValues[slot].includes(state.assignments[slot]))
+  );
 
-      elements.recommendedFields.innerHTML = "";
-      if (!requiredComplete) {
-        elements.recommendationIntro.className = "notice info";
-        elements.recommendationIntro.textContent = "Sobald die Pflichtangaben vollständig sind, erscheinen hier kontextabhängige Ergänzungen.";
-        return;
-      }
+  elements.recommendedFields.innerHTML = "";
+  if (!requiredComplete) {
+    elements.recommendationIntro.className = "notice info";
+    elements.recommendationIntro.textContent =
+      "Sobald die Pflichtangaben vollständig sind, erscheinen hier kontextabhängige Ergänzungen.";
+    return;
+  }
 
-      if (!recommendedSlots.length) {
-        elements.recommendationIntro.className = "notice success";
-        elements.recommendationIntro.textContent = "Für die aktuelle Konfiguration gibt es noch keine zusätzlichen Empfehlungen aus Regeln oder Heuristiken.";
-        return;
-      }
+  if (!recommendedSlots.length) {
+    elements.recommendationIntro.className = "notice success";
+    elements.recommendationIntro.textContent =
+      "Für die aktuelle Konfiguration gibt es noch keine zusätzlichen Empfehlungen aus Regeln oder Heuristiken.";
+    return;
+  }
 
-      if (!actionableSlots.length) {
-        elements.recommendationIntro.className = "notice success";
-        elements.recommendationIntro.textContent = "Die wichtigsten Ergänzungen für deine aktuelle Auswahl sind bereits gesetzt.";
-        return;
-      }
+  if (!actionableSlots.length) {
+    elements.recommendationIntro.className = "notice success";
+    elements.recommendationIntro.textContent =
+      "Die wichtigsten Ergänzungen für deine aktuelle Auswahl sind bereits gesetzt.";
+    return;
+  }
 
-      elements.recommendationIntro.className = "notice info";
-      elements.recommendationIntro.textContent = "Diese Felder werden aus Constraints plus Provenienz-Metadaten wie Scope, Evidenzstärke, Tier und Confidence priorisiert.";
+  elements.recommendationIntro.className = "notice info";
+  elements.recommendationIntro.textContent =
+    "Diese Felder werden aus Constraints plus Provenienz-Metadaten wie Scope, Evidenzstärke, Tier und Confidence priorisiert.";
 
-      actionableSlots.forEach(slot => {
-        const reason = (reasons[slot] || []).join(" ");
-        elements.recommendedFields.appendChild(renderFieldCard(slot, {
-          recommended: true,
-          reason,
-          provenance: provenanceMeta[slot]
-        }));
-      });
-    }
+  actionableSlots.forEach(slot => {
+    const reason = (reasons[slot] || []).join(" ");
+    elements.recommendedFields.appendChild(
+      renderFieldCard(slot, {
+        recommended: true,
+        reason,
+        provenance: provenanceMeta[slot]
+      })
+    );
+  });
+}
 
     function renderRefinementSections() {
       const { recommendedSlots } = getActiveRecommendationData();
