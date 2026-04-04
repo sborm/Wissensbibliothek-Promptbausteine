@@ -483,6 +483,89 @@
       line-height: 1.45;
     }
 
+
+    .score-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .score-overview {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .score-big {
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .score-caption {
+      display: grid;
+      gap: 4px;
+    }
+
+    .score-caption strong {
+      font-size: 1rem;
+    }
+
+    .metric-grid,
+    .suggestion-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .metric-item,
+    .suggestion-item {
+      border: 1px solid var(--border-soft);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .metric-head,
+    .suggestion-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .metric-bar {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .metric-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      width: 0%;
+    }
+
+    .assessment-block {
+      display: grid;
+      gap: 8px;
+    }
+
+    .assessment-block h3 {
+      margin: 0;
+    }
+
+    .suggestion-item small,
+    .metric-item small {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -709,6 +792,47 @@
         <section class="card side-card">
           <div class="section-header">
             <div>
+              <h2>Gesamtbewertung</h2>
+              <p class="section-description">Interner Bibliotheks-Score auf Basis von Vollständigkeit, Kohärenz und heuristischer Passung.</p>
+            </div>
+          </div>
+          <div class="score-panel">
+            <div class="score-overview">
+              <div id="overallScore" class="score-big">0</div>
+              <div class="score-caption">
+                <strong id="overallLabel">Noch unvollständig</strong>
+                <span id="overallSubline" class="subtle-text">Setze zuerst die Pflichtangaben, damit die Gesamtbewertung belastbarer wird.</span>
+              </div>
+            </div>
+
+            <div id="assessmentMetrics" class="metric-grid">
+              <div class="metric-item">
+                <div class="metric-head"><strong>Vollständigkeit</strong><span>0 %</span></div>
+                <div class="metric-bar"><div class="metric-fill" style="width:0%"></div></div>
+                <small>Pflichtfelder, aktuelle Empfehlungen und Feinschliff.</small>
+              </div>
+            </div>
+
+            <div class="assessment-block">
+              <h3>Interpretation</h3>
+              <div id="assessmentInterpretation" class="subtle-text">Noch keine belastbare Interpretation möglich.</div>
+            </div>
+
+            <div class="assessment-block">
+              <h3>So erhöhst du den Score</h3>
+              <div id="scoreSuggestions" class="suggestion-list">
+                <div class="suggestion-item">
+                  <strong>Setze zuerst die Pflichtangaben.</strong>
+                  <small>Danach lassen sich Kohärenz und heuristische Passung deutlich besser einschätzen.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card side-card">
+          <div class="section-header">
+            <div>
               <h2>Prüfung</h2>
               <p class="section-description">Nur offene Punkte, sinnvolle nächste Schritte und Konflikte.</p>
             </div>
@@ -771,7 +895,13 @@
       slotsOutput: document.getElementById("slotsOutput"),
       promptOutput: document.getElementById("promptOutput"),
       summaryOutput: document.getElementById("summaryOutput"),
-      statusOutput: document.getElementById("statusOutput")
+      statusOutput: document.getElementById("statusOutput"),
+      overallScore: document.getElementById("overallScore"),
+      overallLabel: document.getElementById("overallLabel"),
+      overallSubline: document.getElementById("overallSubline"),
+      assessmentMetrics: document.getElementById("assessmentMetrics"),
+      assessmentInterpretation: document.getElementById("assessmentInterpretation"),
+      scoreSuggestions: document.getElementById("scoreSuggestions")
     };
 
     const FIELD_QUESTIONS = {
@@ -1220,14 +1350,19 @@
         if (!isAssigned(slot)) statuses[slot].push({ type: "warning", text: "Pflichtangabe fehlt." });
       });
 
-      const { recommendedSlots, reasons, recommendedValues, provenanceMeta } = getActiveRecommendationData();
+      const { recommendedSlots, reasons, recommendedValues } = getActiveRecommendationData();
       recommendedSlots.forEach(slot => {
-        if (!isAssigned(slot)) {
+        const recommendationState = getRecommendationState(slot, recommendedValues);
+        if (recommendationState === "missing") {
           const reasonText = reasons[slot]?.[0] || "Für deine aktuelle Auswahl empfohlen.";
           statuses[slot].push({ type: "info", text: `Als Nächstes sinnvoll: ${reasonText}` });
-        } else if (recommendedValues[slot]?.length && typeof state.assignments[slot] === "string" && !recommendedValues[slot].includes(state.assignments[slot])) {
-          const labels = recommendedValues[slot].map(value => getValueLabel(slot, value)).join(", ");
-          statuses[slot].push({ type: "warning", text: `Gesetzt, aber noch nicht optimal. Typisch passend wären eher: ${labels}.` });
+        } else if (recommendationState === "expected") {
+          statuses[slot].push({ type: "success", text: "Entspricht der aktuellen Erwartungslogik und passt gut zum Rest der Konfiguration." });
+        } else if (recommendationState === "set") {
+          statuses[slot].push({ type: "success", text: "Ist gesetzt und aktuell gut anschlussfähig." });
+        } else if (recommendationState === "abweichend") {
+          const labels = (recommendedValues[slot] || []).map(value => getValueLabel(slot, value)).join(", ");
+          statuses[slot].push({ type: "warning", text: labels ? `Gesetzt, aber weniger erwartbar. Typisch passend wären eher: ${labels}.` : "Gesetzt, aber noch nicht ideal auf den erwarteten Pfad abgestimmt." });
         }
       });
 
@@ -1418,7 +1553,6 @@
     function renderRecommendationSection() {
       const requiredComplete = isRequiredComplete();
       const { recommendedSlots, reasons, recommendedValues, provenanceMeta } = getActiveRecommendationData();
-      const actionableSlots = recommendedSlots.filter(slot => !isAssigned(slot) || (recommendedValues[slot]?.length && typeof state.assignments[slot] === "string" && !recommendedValues[slot].includes(state.assignments[slot])));
 
       elements.recommendedFields.innerHTML = "";
       if (!requiredComplete) {
@@ -1433,16 +1567,13 @@
         return;
       }
 
-      if (!actionableSlots.length) {
-        elements.recommendationIntro.className = "notice success";
-        elements.recommendationIntro.textContent = "Die wichtigsten Ergänzungen für deine aktuelle Auswahl sind bereits gesetzt.";
-        return;
-      }
+      const allCovered = recommendedSlots.every(slot => getRecommendationState(slot, recommendedValues) !== "missing");
+      elements.recommendationIntro.className = allCovered ? "notice success" : "notice info";
+      elements.recommendationIntro.textContent = allCovered
+        ? "Die empfohlenen Felder sind bereits gesetzt. Du kannst sie hier weiter prüfen oder feinjustieren."
+        : "Diese Felder werden aus Constraints plus Provenienz-Metadaten wie Scope, Evidenzstärke, Tier und Confidence priorisiert.";
 
-      elements.recommendationIntro.className = "notice info";
-      elements.recommendationIntro.textContent = "Diese Felder werden aus Constraints plus Provenienz-Metadaten wie Scope, Evidenzstärke, Tier und Confidence priorisiert.";
-
-      actionableSlots.forEach(slot => {
+      recommendedSlots.forEach(slot => {
         const reason = (reasons[slot] || []).join(" ");
         elements.recommendedFields.appendChild(renderFieldCard(slot, {
           recommended: true,
@@ -1597,6 +1728,270 @@
       return lines.length ? lines.join("\n") : "Noch keine Auswahl.";
     }
 
+
+    function getRecommendationState(slot, recommendedValues = {}) {
+      if (!isAssigned(slot)) return "missing";
+      const current = state.assignments[slot];
+      const expectedValues = recommendedValues[slot] || [];
+      if (!expectedValues.length) return "set";
+      if (Array.isArray(current)) {
+        const overlap = current.some(value => expectedValues.includes(value));
+        return overlap ? "expected" : "abweichend";
+      }
+      return expectedValues.includes(current) ? "expected" : "abweichend";
+    }
+
+    function getConflictDetails() {
+      const conflicts = [];
+      (state.libraryData?.constraints || []).forEach(constraint => {
+        if (constraint.type !== "incompatibility") return;
+        const cond = constraint.if || {};
+        const targetSlot = constraint.then_not?.slot;
+        const forbiddenValue = constraint.then_not?.contains;
+        const sourceMatches = state.assignments[cond.slot] === cond.equals;
+        const targetAssigned = state.assignments[targetSlot];
+        if (sourceMatches && Array.isArray(targetAssigned) && targetAssigned.includes(forbiddenValue)) {
+          conflicts.push({
+            sourceSlot: cond.slot,
+            sourceValue: cond.equals,
+            targetSlot,
+            forbiddenValue
+          });
+        }
+      });
+      return conflicts;
+    }
+
+    function clampScore(value) {
+      return Math.max(0, Math.min(100, Math.round(value)));
+    }
+
+    function getRecommendationWeight(slot, provenanceMeta = null) {
+      const provenance = provenanceMeta || getSlotProvenance(slot);
+      const tierWeight = TIER_SCORE[provenance.autoRecommendationTier] ?? 30;
+      const evidenceWeight = EVIDENCE_WEIGHTS[provenance.evidenceStrength] ?? 0.45;
+      const confidenceWeight = typeof provenance.confidence === "number" ? provenance.confidence : 0.5;
+      return tierWeight * evidenceWeight * confidenceWeight;
+    }
+
+    function getOverallLabel(score) {
+      if (score >= 85) return "stark";
+      if (score >= 70) return "gut";
+      if (score >= 50) return "solide";
+      return "prüfen";
+    }
+
+    function buildAssessmentInterpretation(metrics) {
+      if (!Object.keys(state.assignments).some(slot => isAssigned(slot))) {
+        return "Noch keine belastbare Bewertung: Setze zuerst die Pflichtangaben, damit die Bibliothek Kohärenz und Anschlussfähigkeit einschätzen kann.";
+      }
+
+      const parts = [];
+      if (metrics.completeness >= 80) parts.push("Die Konfiguration ist weitgehend ausgearbeitet.");
+      else if (metrics.completeness >= 55) parts.push("Die Grundkonfiguration steht, aber einige sinnvolle Ergänzungen fehlen noch.");
+      else parts.push("Die Konfiguration ist noch früh und profitiert vor allem von weiteren Kernentscheidungen.");
+
+      if (metrics.coherence >= 80) parts.push("Die Auswahl wirkt intern stimmig.");
+      else if (metrics.coherence >= 60) parts.push("Die Auswahl ist im Wesentlichen konsistent, aber noch nicht überall sauber aufeinander abgestimmt.");
+      else parts.push("Die aktuelle Zusammenstellung erzeugt noch merkliche Spannungen oder Konflikte.");
+
+      if (metrics.heuristicFit >= 80) parts.push("Die heuristische Passung zur Bibliothekslogik ist hoch.");
+      else if (metrics.heuristicFit >= 60) parts.push("Die Bibliothek erkennt einen plausiblen Pfad, aber noch nicht den stärksten Anschlusszustand.");
+      else parts.push("Viele aktuelle Empfehlungen sind noch nicht aufgegriffen oder weichen vom erwarteten Pfad ab.");
+
+      parts.push(`Eingriffsbedarf aktuell: ${metrics.interventionNeed}.`);
+      return parts.join(" ");
+    }
+
+    function estimateSuggestionDelta(kind, weight = 1, hasConflict = false) {
+      if (kind === "required") return 10;
+      if (kind === "conflict") return 14;
+      if (kind === "recommended-missing") return clampScore(3 + weight / 18);
+      if (kind === "recommended-align") return clampScore(2 + weight / 24);
+      return 3;
+    }
+
+    function buildImprovementSuggestions(assessment) {
+      const suggestions = [];
+      const { recommendationData, requiredMissing, conflicts, recommendedValues } = assessment;
+
+      requiredMissing.forEach(slot => {
+        suggestions.push({
+          kind: "required",
+          delta: estimateSuggestionDelta("required"),
+          title: `${getSlotDisplayName(slot)} setzen`,
+          detail: `Hebt vor allem die Vollständigkeit an und verbessert die Belastbarkeit der Gesamtbewertung.`
+        });
+      });
+
+      conflicts.forEach(conflict => {
+        suggestions.push({
+          kind: "conflict",
+          delta: estimateSuggestionDelta("conflict"),
+          title: `Konflikt zwischen ${getSlotDisplayName(conflict.sourceSlot)} und ${getSlotDisplayName(conflict.targetSlot)} auflösen`,
+          detail: `Prüfe ${getSlotDisplayName(conflict.targetSlot)} oder ändere ${getSlotDisplayName(conflict.sourceSlot)}, damit die Kohärenz nicht unnötig gedrückt wird.`
+        });
+      });
+
+      recommendationData.recommendedSlots.forEach(slot => {
+        const weight = getRecommendationWeight(slot, recommendationData.provenanceMeta[slot]);
+        const stateText = getRecommendationState(slot, recommendedValues);
+        if (stateText === "missing") {
+          suggestions.push({
+            kind: "recommended-missing",
+            delta: estimateSuggestionDelta("recommended-missing", weight),
+            title: `${getSlotDisplayName(slot)} ergänzen`,
+            detail: `${(recommendationData.reasons[slot] || ["Diese Ergänzung passt gut zum aktuellen Pfad."])[0]}`
+          });
+        } else if (stateText === "abweichend") {
+          const expected = (recommendedValues[slot] || []).map(value => getValueLabel(slot, value)).join(", ");
+          suggestions.push({
+            kind: "recommended-align",
+            delta: estimateSuggestionDelta("recommended-align", weight),
+            title: `${getSlotDisplayName(slot)} an erwarteten Pfad anpassen`,
+            detail: expected ? `Typisch passend wären eher: ${expected}.` : `Die aktuelle Ausprägung weicht vom empfohlenen Pfad ab.`
+          });
+        }
+      });
+
+      suggestions.sort((a, b) => b.delta - a.delta || a.title.localeCompare(b.title));
+      return suggestions.slice(0, 4);
+    }
+
+    function computeAssessmentModel() {
+      const recommendationData = getActiveRecommendationData();
+      const requiredSlots = getRequiredSlots();
+      const requiredMissing = requiredSlots.filter(slot => !isAssigned(slot));
+      const conflicts = getConflictDetails();
+      const assignedSlots = Object.keys(state.assignments).filter(slot => isAssigned(slot));
+      const recommendedValues = recommendationData.recommendedValues || {};
+      const activeRecommended = recommendationData.recommendedSlots || [];
+      const optionalAssigned = assignedSlots.filter(slot => !requiredSlots.includes(slot) && !activeRecommended.includes(slot)).length;
+
+      const requiredRatio = requiredSlots.length ? (requiredSlots.length - requiredMissing.length) / requiredSlots.length : 0;
+      let completeness = requiredRatio * 70;
+      if (activeRecommended.length) {
+        let recTotal = 0;
+        let recDone = 0;
+        activeRecommended.forEach(slot => {
+          const weight = getRecommendationWeight(slot, recommendationData.provenanceMeta[slot]);
+          recTotal += weight;
+          if (isAssigned(slot)) recDone += weight;
+        });
+        completeness += recTotal ? (recDone / recTotal) * 25 : 0;
+      } else if (isRequiredComplete()) {
+        completeness += 25;
+      }
+      completeness += Math.min(optionalAssigned, 3) / 3 * 5;
+      completeness = clampScore(completeness);
+
+      let coherence = assignedSlots.length ? 58 : 0;
+      coherence += requiredSlots.filter(slot => isAssigned(slot)).length * 4;
+      activeRecommended.forEach(slot => {
+        const stateText = getRecommendationState(slot, recommendedValues);
+        if (stateText === "expected") coherence += 8;
+        else if (stateText === "set") coherence += 5;
+        else if (stateText === "abweichend") coherence -= 4;
+      });
+      coherence += Math.min(optionalAssigned, 2) * 2;
+      coherence -= conflicts.length * 32;
+      coherence = clampScore(coherence);
+
+      let passTotal = 0;
+      let passAchieved = 0;
+      activeRecommended.forEach(slot => {
+        const weight = getRecommendationWeight(slot, recommendationData.provenanceMeta[slot]);
+        passTotal += weight;
+        const stateText = getRecommendationState(slot, recommendedValues);
+        if (stateText === "expected") passAchieved += weight;
+        else if (stateText === "set") passAchieved += weight * 0.82;
+        else if (stateText === "abweichend") passAchieved += weight * 0.4;
+      });
+      let heuristicFit = passTotal ? clampScore((passAchieved / passTotal) * 100) : (isRequiredComplete() ? 100 : 0);
+      heuristicFit = clampScore(heuristicFit - Math.min(20, conflicts.length * 8));
+
+      const overall = clampScore(completeness * 0.25 + coherence * 0.35 + heuristicFit * 0.40);
+      const interventionNeed = conflicts.length || requiredMissing.length ? "hoch" : (overall >= 80 ? "niedrig" : "mittel");
+      const interpretation = buildAssessmentInterpretation({ completeness, coherence, heuristicFit, interventionNeed });
+      const suggestions = buildImprovementSuggestions({
+        recommendationData,
+        requiredMissing,
+        conflicts,
+        recommendedValues
+      });
+
+      return {
+        completeness,
+        coherence,
+        heuristicFit,
+        overall,
+        label: getOverallLabel(overall),
+        interventionNeed,
+        interpretation,
+        suggestions,
+        requiredMissing,
+        conflicts,
+        recommendationData,
+        recommendedValues
+      };
+    }
+
+    function renderAssessment() {
+      const model = computeAssessmentModel();
+      elements.overallScore.textContent = model.overall;
+      elements.overallLabel.textContent = `Gesamtscore: ${model.label}`;
+      elements.overallSubline.textContent = `Vollständigkeit ${model.completeness}% · Kohärenz ${model.coherence}% · Heuristische Passung ${model.heuristicFit}%`;
+      elements.assessmentInterpretation.textContent = model.interpretation;
+
+      const metrics = [
+        {
+          title: "Vollständigkeit",
+          value: model.completeness,
+          text: "Pflichtfelder, aktive Empfehlungen und ein kleiner Feinschliff-Bonus."
+        },
+        {
+          title: "Kohärenz",
+          value: model.coherence,
+          text: "Wie stimmig die bisherige Auswahl intern zusammenpasst."
+        },
+        {
+          title: "Heuristische Passung",
+          value: model.heuristicFit,
+          text: "Wie nah die Konfiguration an der aktuellen Bibliothekslogik liegt."
+        }
+      ];
+
+      elements.assessmentMetrics.innerHTML = "";
+      metrics.forEach(metric => {
+        const item = document.createElement("div");
+        item.className = "metric-item";
+        item.innerHTML = `
+          <div class="metric-head"><strong>${metric.title}</strong><span>${metric.value} %</span></div>
+          <div class="metric-bar"><div class="metric-fill" style="width:${metric.value}%"></div></div>
+          <small>${metric.text}</small>
+        `;
+        elements.assessmentMetrics.appendChild(item);
+      });
+
+      elements.scoreSuggestions.innerHTML = "";
+      if (!model.suggestions.length) {
+        const item = document.createElement("div");
+        item.className = "suggestion-item";
+        item.innerHTML = `<strong>Aktuell kein dringender Hebel</strong><small>Die Konfiguration ist bereits gut anschlussfähig. Prüfe nur noch Feinjustierungen nach Bedarf.</small>`;
+        elements.scoreSuggestions.appendChild(item);
+      } else {
+        model.suggestions.forEach(suggestion => {
+          const item = document.createElement("div");
+          item.className = "suggestion-item";
+          item.innerHTML = `
+            <div class="suggestion-head"><strong>${suggestion.title}</strong><span class="badge subtle">ca. +${suggestion.delta}</span></div>
+            <small>${suggestion.detail}</small>
+          `;
+          elements.scoreSuggestions.appendChild(item);
+        });
+      }
+    }
+
     function renderSummary() {
       const wrapper = document.createDocumentFragment();
       const orderedSlots = [
@@ -1639,33 +2034,17 @@
 
     function validateAssignments() {
       const notices = [];
-      const requiredMissing = getRequiredSlots()
-        .filter(slot => !isAssigned(slot))
-        .map(slot => `${getSlotDisplayName(slot)} (${slot})`);
+      const assessment = computeAssessmentModel();
 
-      const conflicts = [];
-      (state.libraryData?.constraints || []).forEach(constraint => {
-        if (constraint.type !== "incompatibility") return;
-        const cond = constraint.if || {};
-        const targetSlot = constraint.then_not?.slot;
-        const forbiddenValue = constraint.then_not?.contains;
-        const sourceMatches = state.assignments[cond.slot] === cond.equals;
-        const targetAssigned = state.assignments[targetSlot];
-        if (sourceMatches && Array.isArray(targetAssigned) && targetAssigned.includes(forbiddenValue)) {
-          conflicts.push(` ${getSlotDisplayName(cond.slot)} = ${getValueLabel(cond.slot, cond.equals)} ↔ ${getSlotDisplayName(targetSlot)} enthält ${getValueLabel(targetSlot, forbiddenValue)}`.trim());
-        }
-      });
-
-      const { recommendedSlots, recommendedValues } = getActiveRecommendationData();
-      const nextBestFields = recommendedSlots.filter(slot => !isAssigned(slot));
-      const tuneableFields = recommendedSlots.filter(slot => recommendedValues[slot]?.length && typeof state.assignments[slot] === "string" && !recommendedValues[slot].includes(state.assignments[slot]));
-
-      if (requiredMissing.length) {
+      if (assessment.requiredMissing.length) {
         notices.push({
           type: "warning",
-          text: `Fehlende Pflichtfelder: ${requiredMissing.join(", ")}`
+          text: `Fehlende Pflichtfelder: ${assessment.requiredMissing.map(slot => `${getSlotDisplayName(slot)} (${slot})`).join(", ")}`
         });
       }
+
+      const nextBestFields = assessment.recommendationData.recommendedSlots.filter(slot => getRecommendationState(slot, assessment.recommendedValues) === "missing");
+      const tuneableFields = assessment.recommendationData.recommendedSlots.filter(slot => getRecommendationState(slot, assessment.recommendedValues) === "abweichend");
 
       if (nextBestFields.length) {
         const preview = nextBestFields.slice(0, 4).map(getSlotDisplayName).join(", ");
@@ -1683,9 +2062,14 @@
         });
       }
 
-      conflicts.forEach(text => notices.push({ type: "error", text }));
+      assessment.conflicts.forEach(conflict => {
+        notices.push({
+          type: "error",
+          text: `${getSlotDisplayName(conflict.sourceSlot)} = ${getValueLabel(conflict.sourceSlot, conflict.sourceValue)} ↔ ${getSlotDisplayName(conflict.targetSlot)} enthält ${getValueLabel(conflict.targetSlot, conflict.forbiddenValue)}`
+        });
+      });
 
-      if (!requiredMissing.length && !nextBestFields.length && !tuneableFields.length && !conflicts.length) {
+      if (!assessment.requiredMissing.length && !nextBestFields.length && !tuneableFields.length && !assessment.conflicts.length) {
         notices.push({
           type: "success",
           text: "Konfiguration ist konsistent und aktuell ohne offene Hinweise."
@@ -1704,6 +2088,7 @@
       elements.slotsOutput.textContent = renderSlotsNotation();
       elements.summaryOutput.innerHTML = "";
       elements.summaryOutput.appendChild(renderSummary());
+      renderAssessment();
 
       const notices = validateAssignments();
       elements.statusOutput.innerHTML = "";
