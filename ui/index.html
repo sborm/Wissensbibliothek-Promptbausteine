@@ -1740,6 +1740,12 @@
 
     function renderStructuredPrompt(){
       const lines = ["Erstelle eine Antwort anhand der folgenden Vorgaben:"];
+      const caseLines = buildCasePromptContextLines();
+      if (caseLines.length) {
+        lines.push("");
+        lines.push("Fallkontext:");
+        caseLines.forEach(line => lines.push(`- ${line}`));
+      }
       state.dimensionOrder.forEach(dimension => {
         const slotLines = [];
         dimension.slots.forEach(slot => {
@@ -1755,7 +1761,8 @@
           lines.push(...slotLines);
         }
       });
-      return lines.join("\n").trim();
+      return lines.join("
+").trim();
     }
 
     function renderTemplatePrompt(){
@@ -1769,12 +1776,22 @@
       (template.slots_used || []).forEach(slot => {
         const rawValue = state.assignments[slot];
         const replacement = valueToTemplateText(slot, rawValue);
-        const pattern = new RegExp(`\\[${escapeRegExp(slot)}\\]`, "g");
+        const pattern = new RegExp(`\[${escapeRegExp(slot)}\]`, "g");
         text = text.replace(pattern, replacement);
       });
       const unresolved = text.match(/\[[A-Z0-9_]+\]/g);
       if (unresolved) throw new Error(`Template enthält noch unaufgelöste Platzhalter: ${[...new Set(unresolved)].join(", ")}`);
-      return text.trim();
+      const trimmed = text.trim();
+      const caseLines = buildCasePromptContextLines();
+      if (!caseLines.length) return trimmed;
+      return [
+        "Fallkontext:",
+        ...caseLines.map(line => `- ${line}`),
+        "",
+        "Aufgabe:",
+        trimmed
+      ].join("
+").trim();
     }
 
     function valueToTemplateText(slot, value){
