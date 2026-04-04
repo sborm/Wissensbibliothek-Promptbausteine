@@ -253,6 +253,21 @@
         </div>
         <div id="caseInlineNotice" class="notice info hidden">Keine Fallakte geladen.</div>
 
+        <div class="toolbar-row">
+          <div class="field">
+            <label for="casePromptModeSelect">Fallkontext im Prompt</label>
+            <select id="casePromptModeSelect">
+              <option value="off">Aus</option>
+              <option value="compact">Kompakt</option>
+              <option value="focus">Mit Fokusblöcken</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <div id="casePromptModeHint" class="notice info">Nur aktiv, wenn eine Fallakte geladen ist.</div>
+          </div>
+        </div>
+
         <details class="disclosure">
           <summary>
             <div>
@@ -445,7 +460,9 @@
       coveredEditorOpen: {},
       caseSourceIndex: {},
       activeCaseId: "",
-      activeCaseData: null
+      activeCaseData: null,
+      activePresetKey: "",
+      activePresetMeta: null
     };
 
     const elements = {
@@ -455,6 +472,8 @@
       templateSelect: document.getElementById("templateSelect"),
       instanceSelect: document.getElementById("instanceSelect"),
       caseSelect: document.getElementById("caseSelect"),
+      casePromptModeSelect: document.getElementById("casePromptModeSelect"),
+      casePromptModeHint: document.getElementById("casePromptModeHint"),
       loadCaseBtn: document.getElementById("loadCaseBtn"),
       clearCaseBtn: document.getElementById("clearCaseBtn"),
       caseInlineNotice: document.getElementById("caseInlineNotice"),
@@ -552,6 +571,7 @@
         restoreAssignments();
         await restoreCaseIfNeeded();
         updateTemplateVisibility();
+        updateCasePromptControls();
         updateOutputs();
         const meta = data.meta || {};
         const caseCount = Object.keys(state.caseSourceIndex).length;
@@ -700,6 +720,134 @@
       const isTemplateMode = elements.modeSelect.value === "template";
       elements.templateField.classList.toggle("hidden", !isTemplateMode);
       elements.templateSelect.disabled = !isTemplateMode;
+    }
+
+    function updateCasePromptControls(){
+      const hasActiveCase = Boolean(state.activeCaseData && state.activeCaseId);
+      const mode = elements.casePromptModeSelect.value;
+      elements.casePromptModeSelect.disabled = !hasActiveCase;
+      if (!hasActiveCase) {
+        elements.casePromptModeSelect.value = "off";
+        elements.casePromptModeHint.className = "notice info";
+        elements.casePromptModeHint.textContent = "Nur aktiv, wenn eine Fallakte geladen ist.";
+        return;
+      }
+      const hasCasePreset = Boolean(state.activePresetMeta && state.activePresetMeta.__source === "case");
+      elements.casePromptModeHint.className = mode === "off" ? "notice warning" : "notice success";
+      if (mode === "off") {
+        elements.casePromptModeHint.textContent = "Fallakte geladen, aber aktuell nicht in den Prompt eingezogen.";
+      } else if (mode === "compact") {
+        elements.casePromptModeHint.textContent = "Der Prompt erhält eine kompakte Fallzusammenfassung.";
+      } else {
+        elements.casePromptModeHint.textContent = hasCasePreset
+          ? "Der Prompt nutzt die Fokusblöcke des geladenen Fall-Presets."
+          : "Der Prompt nutzt priorisierte Fallblöcke der aktiven Fallakte.";
+      }
+    }
+
+    function getCurrentCaseSource(){
+      return state.caseSourceIndex[state.activeCaseId] || null;
+    }
+
+    function getCurrentPresetFocusBlocks(){
+      if (!state.activePresetMeta || state.activePresetMeta.__source !== "case") return [];
+      return Array.isArray(state.activePresetMeta.focus_blocks) ? state.activePresetMeta.focus_blocks : [];
+    }
+
+    function getCaseBlockById(blockId){
+      return (state.activeCaseData?.context_blocks || []).find(block => block.id === blockId) || null;
+    }
+
+    function summarizeCaseBlock(blockId){
+      const block = getCaseBlockById(blockId);
+      if (!block) return "";
+      const content = block.content || {};
+      switch (blockId) {
+        case "case_parties_and_timeline": {
+          const claimant = content.claimant?.name || "Anspruchstellerin";
+          const defendant = content.defendant?.name || "Arbeitgeberseite";
+          const period = content.employment_period ? `${content.employment_period.from} bis ${content.employment_period.to}` : "Arbeitsverhältnis dokumentiert";
+          return `${claimant} gegen ${defendant}; Arbeitsverhältnis ${period}; heute Rückgabe- und Klagekontext.`;
+        }
+        case "case_claims_open": {
+          const claims = Array.isArray(content.claims) ? content.claims.slice(0, 3).map(item => item.type).filter(Boolean) : [];
+          const suffix = Array.isArray(content.claims) && content.claims.length > 3 ? ` plus ${content.claims.length - 3} weitere Ansprüche` : "";
+          const linkage = content.employer_linkage_issue ? ` Streitpunkt: ${content.employer_linkage_issue}.` : "";
+          return `Offene Ansprüche: ${claims.join("; ")}${suffix}.${linkage}`.trim();
+        }
+        case "case_legal_strengths": {
+          const strengths = Array.isArray(content.strengths) ? content.strengths.slice(0, 3).map(item => item.title).filter(Boolean) : [];
+          const track = content.personality_rights_track?.status === "offen_zu_pruefen" ? " Zusätzlicher Prüfungspfad bleibt offen." : "";
+          return `Dokumentierte Stärken: ${strengths.join("; ")}.${track}`.trim();
+        }
+        case "case_evidence_registry": {
+          const count = Array.isArray(content.evidence_items) ? content.evidence_items.length : 0;
+          return `Beweismittel: ${count} Anlagen oder Belege erfasst.`;
+        }
+        case "case_laptop_exit_status": {
+          const remaining = Array.isArray(content.remaining_checks) ? content.remaining_checks.length : 0;
+          const complete = content.formal_exit_complete ? "formal weitgehend abgeschlossen" : "noch offen";
+          return `Laptop-Exit ${complete}; noch ${remaining} Prüfpunkte; Exportzugriff gesichert.`;
+        }
+        case "case_today_plan": {
+          const tasks = Array.isArray(content.tasks) ? content.tasks.slice(0, 4).map(item => item.task).filter(Boolean) : [];
+          return `Heutige Prioritäten: ${tasks.join(" → ")}.`;
+        }
+        case "user_operating_profile": {
+          const prefs = Array.isArray(content.response_preference) ? content.response_preference.slice(0, 3).join(", ") : "direkt, strukturiert, handlungsorientiert";
+          return `Arbeitsmodus: ${prefs}; Zeitdruck ${content.time_pressure || "hoch"}.`;
+        }
+        case "session_role_instruction": {
+          const role = content.role || "Berater, Analyst und Denkpartner";
+          const priorities = Array.isArray(content.priority_order) ? content.priority_order.join(" → ") : "Prioritäten dokumentiert";
+          return `Rollenmodell: ${role}; Prioritäten: ${priorities}.`;
+        }
+        default:
+          return `${block.label}: fallbezogener Kontextblock aktiv.`;
+      }
+    }
+
+    function summarizeRelevantDependencies(focusBlocks){
+      const deps = (state.activeCaseData?.dependencies || []).filter(dep => focusBlocks.includes(dep.from) || focusBlocks.includes(dep.to));
+      return deps.slice(0, 2).map(dep => {
+        const from = getCaseBlockById(dep.from)?.label || dep.from;
+        const to = getCaseBlockById(dep.to)?.label || dep.to;
+        return `${from} → ${to} (${humanizeKey(dep.type)})`;
+      });
+    }
+
+    function buildCasePromptContextLines(){
+      if (!state.activeCaseData || !state.activeCaseId) return [];
+      const mode = elements.casePromptModeSelect.value;
+      if (mode === "off") return [];
+      const caseMeta = state.activeCaseData.case_meta || {};
+      const baseContext = (state.activeCaseData.case_contexts || [])[0] || {};
+      const focusBlocks = getCurrentPresetFocusBlocks();
+      let selectedBlocks = [];
+      if (mode === "focus") {
+        selectedBlocks = focusBlocks.length ? focusBlocks : (baseContext.shared_blocks || []).slice(0, 5);
+      } else {
+        selectedBlocks = [
+          "case_parties_and_timeline",
+          "case_claims_open",
+          "case_laptop_exit_status",
+          "case_today_plan",
+          "user_operating_profile"
+        ].filter(blockId => getCaseBlockById(blockId));
+      }
+      const uniqueBlocks = [...new Set(selectedBlocks)].slice(0, mode === "focus" ? 6 : 5);
+      const lines = [`Aktive Fallakte: ${caseMeta.label || state.activeCaseId}.`];
+      uniqueBlocks.forEach(blockId => {
+        const block = getCaseBlockById(blockId);
+        if (!block) return;
+        const summary = summarizeCaseBlock(blockId);
+        if (summary) lines.push(`${block.label}: ${summary}`);
+      });
+      if (mode === "focus") {
+        const depLines = summarizeRelevantDependencies(uniqueBlocks);
+        depLines.forEach(dep => lines.push(`Wichtige Abhängigkeit: ${dep}.`));
+      }
+      return lines;
     }
 
     function getRequiredSlots(){
@@ -1548,11 +1696,13 @@
       elements.caseInlineNotice.innerHTML = `Fallakte aktiv: <strong>${source.label || state.activeCaseId}</strong> · ${linkedExamples.length} verknüpfte Presets`;
 
       elements.casePanelContent.innerHTML = "";
+      const modeMap = { off: "Aus", compact: "Kompakt", focus: "Mit Fokusblöcken" };
       const blocks = [
         { title: "Aktive Fallakte", text: source.label || state.activeCaseId },
         { title: "Datei", text: source.path || "unbekannt" },
         { title: "Gemeinsame Blöcke", text: String((baseContext.shared_blocks || []).length) },
         { title: "Verknüpfte Presets", text: String(linkedExamples.length) },
+        { title: "Fallkontext im Prompt", text: modeMap[elements.casePromptModeSelect.value] || "Aus" },
         { title: "Kontextbasis", text: baseContext.description || state.activeCaseData.case_meta?.description || "" }
       ];
       blocks.forEach(block => {
@@ -1726,6 +1876,7 @@
         state.activeCaseData = caseData;
         elements.caseSelect.value = caseId;
         mergeCaseExamples(caseData, caseId);
+        updateCasePromptControls();
         persistCaseSelection();
         if (!silent) {
           const div = document.createElement("div");
@@ -1748,9 +1899,12 @@
     function clearCase({ silent = false } = {}){
       state.activeCaseId = "";
       state.activeCaseData = null;
+      state.activePresetKey = "";
+      state.activePresetMeta = null;
       state.exampleIndex = { ...state.baseExampleIndex };
       elements.caseSelect.value = "";
       populateInstanceSelect();
+      updateCasePromptControls();
       persistCaseSelection();
       if (!silent) {
         const div = document.createElement("div");
@@ -1764,6 +1918,8 @@
     function loadInstance(instanceId){
       if (!instanceId || !state.exampleIndex[instanceId]) return;
       const example = state.exampleIndex[instanceId];
+      state.activePresetKey = instanceId;
+      state.activePresetMeta = example;
       state.assignments = JSON.parse(JSON.stringify(example.values || {}));
       state.coveredEditorOpen = {};
       updateOutputs();
@@ -1772,6 +1928,8 @@
     function clearAssignments(){
       state.assignments = {};
       state.coveredEditorOpen = {};
+      state.activePresetKey = "";
+      state.activePresetMeta = null;
       updateOutputs();
     }
 
@@ -1795,6 +1953,7 @@
         localStorage.setItem("prompt-library-ui.assignments", JSON.stringify(state.assignments));
         localStorage.setItem("prompt-library-ui.mode", elements.modeSelect.value);
         localStorage.setItem("prompt-library-ui.template", elements.templateSelect.value);
+        localStorage.setItem("prompt-library-ui.casePromptMode", elements.casePromptModeSelect.value);
       } catch(_){}
     }
 
@@ -1809,9 +1968,11 @@
         const rawAssignments = localStorage.getItem("prompt-library-ui.assignments");
         const rawMode = localStorage.getItem("prompt-library-ui.mode");
         const rawTemplate = localStorage.getItem("prompt-library-ui.template");
+        const rawCasePromptMode = localStorage.getItem("prompt-library-ui.casePromptMode");
         if (rawAssignments) state.assignments = JSON.parse(rawAssignments);
         if (rawMode) elements.modeSelect.value = rawMode;
         if (rawTemplate) elements.templateSelect.value = rawTemplate;
+        if (rawCasePromptMode) elements.casePromptModeSelect.value = rawCasePromptMode;
       } catch(_){}
     }
 
@@ -1826,6 +1987,7 @@
 
     elements.modeSelect.addEventListener("change", () => { updateTemplateVisibility(); updateOutputs(); });
     elements.templateSelect.addEventListener("change", updateOutputs);
+    elements.casePromptModeSelect.addEventListener("change", () => { updateCasePromptControls(); updateOutputs(); });
     elements.searchInput.addEventListener("input", updateOutputs);
     elements.loadInstanceBtn.addEventListener("click", () => loadInstance(elements.instanceSelect.value));
     elements.loadCaseBtn.addEventListener("click", () => loadCase(elements.caseSelect.value));
