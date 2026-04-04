@@ -1,11 +1,11 @@
 {
   "meta": {
     "project": "Prompt-Bibliothek",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "author": "dein-name",
     "created": "2026-03-31T12:00:00Z",
     "locale": "de-DE",
-    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit Hauptdimensionen, Subdimensionen, Slots, Templates, Constraints, Beispielinstanzen und Provenienzmetadaten für Heuristiken."
+    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit Hauptdimensionen, Subdimensionen, Slots, Templates, Constraints, Beispielinstanzen und Provenienzmetadaten für Heuristiken (Tier A + B befüllt)."
   },
   "library": {
     "ZIEL": {
@@ -104,7 +104,22 @@
               "label": "Tiefenanalyse",
               "description": "Detaillierte, differenzierte Bearbeitung."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "repo_practice"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Hilft, den gewünschten Analyse- und Erklärungsgrad zu kalibrieren; besonders nützlich bei komplexeren Aufgaben.",
+          "heuristic_scope": [
+            "analysieren",
+            "bewerten",
+            "entscheidung_vorbereiten",
+            "planen",
+            "erklaeren"
+          ],
+          "confidence": 0.72
         },
         "ZIEL_STATUS": {
           "id": "A3",
@@ -231,7 +246,24 @@
               "label": "Iterativ",
               "description": "Schrittweise Verfeinerung in mehreren Runden."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "repo_practice",
+            "practitioner_blog"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Für mehrstufige oder iterative Workflows relevant; hilft, Chaining und Verfeinerung explizit zu machen.",
+          "heuristic_scope": [
+            "analysieren",
+            "planen",
+            "entwerfen",
+            "verbessern",
+            "iteratives_verfeinern",
+            "varianten_entwickeln"
+          ],
+          "confidence": 0.78
         }
       }
     },
@@ -271,7 +303,23 @@
               "label": "Entscheidungsfindung",
               "description": "Vorbereitung oder Unterstützung einer Entscheidung."
             }
-          ]
+          ],
+          "origin": [
+            "practitioner_blog",
+            "repo_practice",
+            "forum_hypothesis"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Kontext nur dann setzen, wenn er Entscheidungen, Ton oder Prioritäten real verändert.",
+          "heuristic_scope": [
+            "meetingvorbereitung",
+            "strategiearbeit",
+            "kundengespraech",
+            "entscheidungsfindung",
+            "lernprozess"
+          ],
+          "confidence": 0.7
         },
         "WISSENSKONTEXT": {
           "id": "C2",
@@ -299,7 +347,23 @@
               "label": "Gemischte Zielgruppe",
               "description": "Unterschiedliche Wissensstände in der Zielgruppe."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "forum_hypothesis"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Setzt Flughöhe und implizites Vorwissen; besonders nützlich bei erklärenden oder didaktischen Aufgaben.",
+          "heuristic_scope": [
+            "erklaeren",
+            "informieren",
+            "lernprozess",
+            "anfaenger",
+            "fortgeschritten",
+            "experte"
+          ],
+          "confidence": 0.68
         },
         "RAHMENBEDINGUNG": {
           "id": "C3",
@@ -327,7 +391,23 @@
               "label": "Formeller Anlass",
               "description": "Ergebnis soll professionell und formell wirken."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "repo_practice"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Explizite Constraints wie Zeitdruck oder sensible Kommunikation beeinflussen Ton, Scope und Prioritäten oft stark.",
+          "heuristic_scope": [
+            "zeitdruck",
+            "sensible_kommunikation",
+            "formeller_anlass",
+            "begrenzte_datenlage",
+            "email",
+            "kunden"
+          ],
+          "confidence": 0.76
         }
       }
     },
@@ -466,7 +546,24 @@
               "label": "Ergebnis plus nächste Schritte",
               "description": "Ergebnis mit Handlungsempfehlung."
             }
-          ]
+          ],
+          "origin": [
+            "repo_practice",
+            "community_guide"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Ein klarer Deliverable-Typ erhöht Nutzwert; besonders relevant bei Vergleich, Entscheidung und Planung.",
+          "heuristic_scope": [
+            "vergleichen",
+            "bewerten",
+            "entscheidung_vorbereiten",
+            "planen",
+            "leitfaden",
+            "tabelle",
+            "liste"
+          ],
+          "confidence": 0.79
         }
       }
     },
@@ -639,7 +736,23 @@
               "label": "Praxisnah",
               "description": "Direkt verwendbar und realistisch."
             }
-          ]
+          ],
+          "origin": [
+            "repo_practice",
+            "community_guide"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Qualitätskriterien sind wirksamer, wenn sie den inhaltlichen Fokus oder Bewertungsmaßstab klar setzen.",
+          "heuristic_scope": [
+            "analysieren",
+            "bewerten",
+            "verbessern",
+            "pruefen",
+            "fachkundig",
+            "experte"
+          ],
+          "confidence": 0.69
         },
         "PRIORISIERUNG": {
           "id": "F3",
@@ -667,7 +780,22 @@
               "label": "Praktikabilität vor Theorie",
               "description": "Anwendbarkeit hat Vorrang vor theoretischer Breite."
             }
-          ]
+          ],
+          "origin": [
+            "repo_practice",
+            "community_guide"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Explizite Trade-offs helfen, wenn nicht alles gleichzeitig maximiert werden kann.",
+          "heuristic_scope": [
+            "entscheidung_vorbereiten",
+            "vergleichen",
+            "bewerten",
+            "zeitdruck",
+            "semi_professionell"
+          ],
+          "confidence": 0.73
         }
       }
     },
@@ -712,7 +840,24 @@
               "label": "Sparringspartner",
               "description": "Kritisch mitdenkend und hinterfragend."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Rollen helfen vor allem dann, wenn sie Perspektive, Kriterien oder Ton konkret verändern.",
+          "heuristic_scope": [
+            "analysieren",
+            "bewerten",
+            "verbessern",
+            "erklaeren",
+            "strategieberater",
+            "analyst",
+            "lektor",
+            "sparringspartner"
+          ],
+          "confidence": 0.71
         },
         "PERSPEKTIVTIEFE": {
           "id": "G2",
@@ -940,7 +1085,24 @@
               "label": "Varianten entwickeln",
               "description": "Mehrere Alternativen erzeugen."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "repo_practice",
+            "forum_hypothesis"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Interaktionsmodus bestimmt, ob einmalige Antwort, Rückfragen oder iterative Verfeinerung sinnvoll sind.",
+          "heuristic_scope": [
+            "iteratives_verfeinern",
+            "rueckfragen_stellen",
+            "varianten_entwickeln",
+            "planen",
+            "entwerfen",
+            "verbessern"
+          ],
+          "confidence": 0.74
         },
         "STEUERUNGSGRAD": {
           "id": "J2",
@@ -993,7 +1155,22 @@
       "dimension": "ZIEL",
       "subdimension": "ZIEL_TIEFE",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "repo_practice"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Hilft, den gewünschten Analyse- und Erklärungsgrad zu kalibrieren; besonders nützlich bei komplexeren Aufgaben.",
+      "heuristic_scope": [
+        "analysieren",
+        "bewerten",
+        "entscheidung_vorbereiten",
+        "planen",
+        "erklaeren"
+      ],
+      "confidence": 0.72
     },
     {
       "slot": "ZIEL_STATUS",
@@ -1025,28 +1202,93 @@
       "dimension": "AUFGABE",
       "subdimension": "AUFGABENUMFANG",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "repo_practice",
+        "practitioner_blog"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Für mehrstufige oder iterative Workflows relevant; hilft, Chaining und Verfeinerung explizit zu machen.",
+      "heuristic_scope": [
+        "analysieren",
+        "planen",
+        "entwerfen",
+        "verbessern",
+        "iteratives_verfeinern",
+        "varianten_entwickeln"
+      ],
+      "confidence": 0.78
     },
     {
       "slot": "SITUATIONSKONTEXT",
       "dimension": "KONTEXT",
       "subdimension": "SITUATIONSKONTEXT",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "practitioner_blog",
+        "repo_practice",
+        "forum_hypothesis"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Kontext nur dann setzen, wenn er Entscheidungen, Ton oder Prioritäten real verändert.",
+      "heuristic_scope": [
+        "meetingvorbereitung",
+        "strategiearbeit",
+        "kundengespraech",
+        "entscheidungsfindung",
+        "lernprozess"
+      ],
+      "confidence": 0.7
     },
     {
       "slot": "WISSENSKONTEXT",
       "dimension": "KONTEXT",
       "subdimension": "WISSENSKONTEXT",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "forum_hypothesis"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Setzt Flughöhe und implizites Vorwissen; besonders nützlich bei erklärenden oder didaktischen Aufgaben.",
+      "heuristic_scope": [
+        "erklaeren",
+        "informieren",
+        "lernprozess",
+        "anfaenger",
+        "fortgeschritten",
+        "experte"
+      ],
+      "confidence": 0.68
     },
     {
       "slot": "RAHMENBEDINGUNG",
       "dimension": "KONTEXT",
       "subdimension": "RAHMENBEDINGUNG",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "repo_practice"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Explizite Constraints wie Zeitdruck oder sensible Kommunikation beeinflussen Ton, Scope und Prioritäten oft stark.",
+      "heuristic_scope": [
+        "zeitdruck",
+        "sensible_kommunikation",
+        "formeller_anlass",
+        "begrenzte_datenlage",
+        "email",
+        "kunden"
+      ],
+      "confidence": 0.76
     },
     {
       "slot": "FORMAT",
@@ -1095,7 +1337,24 @@
       "dimension": "OUTPUT_FORM",
       "subdimension": "ERGEBNISORIENTIERUNG",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "repo_practice",
+        "community_guide"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Ein klarer Deliverable-Typ erhöht Nutzwert; besonders relevant bei Vergleich, Entscheidung und Planung.",
+      "heuristic_scope": [
+        "vergleichen",
+        "bewerten",
+        "entscheidung_vorbereiten",
+        "planen",
+        "leitfaden",
+        "tabelle",
+        "liste"
+      ],
+      "confidence": 0.79
     },
     {
       "slot": "PROZESSLOGIK",
@@ -1155,21 +1414,69 @@
       "dimension": "QUALITAETSKRITERIEN",
       "subdimension": "INHALTSQUALITAET",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "repo_practice",
+        "community_guide"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Qualitätskriterien sind wirksamer, wenn sie den inhaltlichen Fokus oder Bewertungsmaßstab klar setzen.",
+      "heuristic_scope": [
+        "analysieren",
+        "bewerten",
+        "verbessern",
+        "pruefen",
+        "fachkundig",
+        "experte"
+      ],
+      "confidence": 0.69
     },
     {
       "slot": "PRIORISIERUNG",
       "dimension": "QUALITAETSKRITERIEN",
       "subdimension": "PRIORISIERUNG",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "repo_practice",
+        "community_guide"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Explizite Trade-offs helfen, wenn nicht alles gleichzeitig maximiert werden kann.",
+      "heuristic_scope": [
+        "entscheidung_vorbereiten",
+        "vergleichen",
+        "bewerten",
+        "zeitdruck",
+        "semi_professionell"
+      ],
+      "confidence": 0.73
     },
     {
       "slot": "EXPERTENROLLE",
       "dimension": "ROLLE",
       "subdimension": "EXPERTENROLLE",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "community_guide"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Rollen helfen vor allem dann, wenn sie Perspektive, Kriterien oder Ton konkret verändern.",
+      "heuristic_scope": [
+        "analysieren",
+        "bewerten",
+        "verbessern",
+        "erklaeren",
+        "strategieberater",
+        "analyst",
+        "lektor",
+        "sparringspartner"
+      ],
+      "confidence": 0.71
     },
     {
       "slot": "PERSPEKTIVTIEFE",
@@ -1243,7 +1550,24 @@
       "dimension": "INTERAKTIONSMODUS",
       "subdimension": "MODUS",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "community_guide",
+        "repo_practice",
+        "forum_hypothesis"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Interaktionsmodus bestimmt, ob einmalige Antwort, Rückfragen oder iterative Verfeinerung sinnvoll sind.",
+      "heuristic_scope": [
+        "iteratives_verfeinern",
+        "rueckfragen_stellen",
+        "varianten_entwickeln",
+        "planen",
+        "entwerfen",
+        "verbessern"
+      ],
+      "confidence": 0.74
     },
     {
       "slot": "STEUERUNGSGRAD",
