@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prompt-Bibliothek UI – Progressive Disclosure</title>
+  <title>Prompt-Bibliothek UI – Reparierte Konfigurationslogik</title>
   <style>
     :root {
       --bg: #0b1020;
@@ -20,672 +20,150 @@
       --danger: #ff7b7b;
       --warn: #ffcf70;
       --ok: #7fe3a1;
-      --shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+      --shadow: 0 12px 32px rgba(0,0,0,.28);
       --radius: 18px;
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
       background:
-        radial-gradient(circle at top right, rgba(122,162,255,0.16), transparent 24%),
-        radial-gradient(circle at top left, rgba(155,140,255,0.12), transparent 18%),
+        radial-gradient(circle at top right, rgba(122,162,255,.16), transparent 24%),
+        radial-gradient(circle at top left, rgba(155,140,255,.12), transparent 18%),
         var(--bg);
-      min-height: 100vh;
-    }
-
-    code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.94em;
-    }
-
-    .container {
-      width: min(1440px, calc(100% - 32px));
-      margin: 24px auto 40px;
-    }
-
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.4fr 0.9fr;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .hero-main,
-    .hero-side,
-    .start-card,
-    .main-card,
-    .side-card {
-      padding: 18px;
-    }
-
-    h1, h2, h3, h4 {
-      margin: 0 0 10px;
-      line-height: 1.15;
-    }
-
-    h1 {
-      font-size: clamp(1.9rem, 3vw, 2.8rem);
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-    }
-
-    h2 { font-size: 1.18rem; }
-    h3 { font-size: 1rem; }
-    h4 { font-size: 0.96rem; }
-
-    p {
-      margin: 0 0 10px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .hero-pills,
-    .button-row,
-    .inline-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .pill,
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.03);
-      color: var(--text);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.88rem;
-    }
-
-    .pill.subtle,
-    .badge.subtle {
-      color: var(--muted);
-      background: rgba(255,255,255,0.02);
-    }
-
-    .pill.accent,
-    .badge.accent {
-      border-color: rgba(122,162,255,0.38);
-      background: rgba(122,162,255,0.12);
-      color: #dce8ff;
-    }
-
-    .status-stack,
-    .notice-stack,
-    .field-hints {
-      display: grid;
-      gap: 8px;
-    }
-
-    .notice {
-      border-radius: 12px;
-      padding: 11px 12px;
-      border: 1px solid transparent;
-      font-size: 0.92rem;
-      line-height: 1.45;
-    }
-
-    .notice.error {
-      color: #ffd7d7;
-      border-color: rgba(255,123,123,0.3);
-      background: rgba(255,123,123,0.08);
-    }
-
-    .notice.warning {
-      color: #ffe9b6;
-      border-color: rgba(255,207,112,0.3);
-      background: rgba(255,207,112,0.08);
-    }
-
-    .notice.success {
-      color: #d6ffe3;
-      border-color: rgba(127,227,161,0.3);
-      background: rgba(127,227,161,0.08);
-    }
-
-    .notice.info {
-      color: #dce8ff;
-      border-color: rgba(122,162,255,0.3);
-      background: rgba(122,162,255,0.08);
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 1.18fr 0.82fr;
-      gap: 16px;
-      align-items: start;
-    }
-
-    .stack {
-      display: grid;
-      gap: 16px;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .section-header p,
-    .section-description {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.93rem;
-    }
-
-    .start-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .start-panel {
-      border: 1px solid var(--border-soft);
-      border-radius: 16px;
-      background: rgba(255,255,255,0.025);
-      padding: 14px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .sub-toolbar {
-      margin-top: 10px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border-soft);
-      display: grid;
-      gap: 12px;
-    }
-
-    .toolbar-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .field {
-      display: grid;
-      gap: 6px;
-      min-width: 0;
-    }
-
-    .field label {
-      font-size: 0.88rem;
-      color: var(--muted);
-    }
-
-    .field .question {
-      font-size: 0.84rem;
-      color: var(--muted-2);
-      margin-top: -2px;
-    }
-
-    select, input[type="text"], textarea, button {
-      font: inherit;
-    }
-
-    select, input[type="text"], textarea {
-      width: 100%;
-      padding: 11px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--panel-2);
-      color: var(--text);
-      outline: none;
-      transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
-    }
-
-    select:focus, input[type="text"]:focus, textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(122,162,255,0.12);
-    }
-
-    button {
-      border: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(122,162,255,0.18), rgba(122,162,255,0.08));
-      color: var(--text);
-      border-radius: 12px;
-      padding: 11px 14px;
-      cursor: pointer;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
-      font-weight: 600;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      border-color: var(--accent);
-    }
-
-    button.secondary {
-      background: rgba(255,255,255,0.03);
-    }
-
-    button.ghost {
-      background: transparent;
-    }
-
-    .section-card {
-      padding: 16px;
-    }
-
-    .progress-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      width: 0%;
-      transition: width .18s ease;
-    }
-
-    .field-grid {
-      display: grid;
-      gap: 12px;
-    }
-
-    .field-card {
-      border: 1px solid var(--border-soft);
-      background: rgba(255,255,255,0.02);
-      border-radius: 16px;
-      padding: 14px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .field-card.required {
-      border-color: rgba(255,207,112,0.28);
-      background: rgba(255,207,112,0.05);
-    }
-
-    .field-card.recommended {
-      border-color: rgba(122,162,255,0.28);
-      background: rgba(122,162,255,0.05);
-    }
-
-    .field-card.conflict {
-      border-color: rgba(255,123,123,0.35);
-      background: rgba(255,123,123,0.06);
-    }
-
-    .field-card.complete {
-      border-color: rgba(127,227,161,0.25);
-    }
-
-    .field-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .field-meta {
-      display: grid;
-      gap: 4px;
-      min-width: 0;
-    }
-
-    .field-slot {
-      font-size: 0.82rem;
-      color: var(--muted-2);
-      word-break: break-word;
-    }
-
-    .field-help {
-      font-size: 0.86rem;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .checkbox-grid {
-      display: grid;
-      gap: 8px;
-      max-height: 240px;
-      overflow: auto;
-      padding-right: 4px;
-    }
-
-    .checkbox-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 8px 10px;
-      border: 1px solid rgba(255,255,255,0.06);
-      background: rgba(255,255,255,0.02);
-      border-radius: 12px;
-    }
-
-    .checkbox-item input {
-      margin-top: 3px;
-    }
-
-    .checkbox-content {
-      display: grid;
-      gap: 2px;
-    }
-
-    .checkbox-content span {
-      color: var(--text);
-      font-size: 0.93rem;
-    }
-
-    .checkbox-content small {
-      color: var(--muted);
-      line-height: 1.35;
-    }
-
-    details.disclosure {
-      border: 1px solid var(--border-soft);
-      border-radius: 16px;
-      background: rgba(255,255,255,0.02);
-      overflow: hidden;
-    }
-
-    details.disclosure > summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      user-select: none;
-    }
-
-    details.disclosure > summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .disclosure-body {
-      padding: 0 16px 16px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      display: grid;
-      gap: 12px;
-    }
-
-    .summary-columns {
-      display: grid;
-      gap: 10px;
-    }
-
-    .summary-item {
-      border: 1px solid var(--border-soft);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.02);
-      padding: 12px;
-      display: grid;
-      gap: 4px;
-    }
-
-    .summary-item strong {
-      font-size: 0.92rem;
-    }
-
-    .summary-item span {
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.45;
-    }
-
-    .output-panel {
-      display: grid;
-      gap: 12px;
-    }
-
-    .output-panel pre {
-      margin: 0;
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.92rem;
-      line-height: 1.45;
-      color: var(--text);
-      background: rgba(255,255,255,0.025);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      min-height: 170px;
-    }
-
-    .subtle-text {
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.45;
-    }
-
-
-    .score-panel {
-      display: grid;
-      gap: 14px;
-    }
-
-    .score-overview {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .score-big {
-      font-size: clamp(2.2rem, 4vw, 3.4rem);
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-    }
-
-    .score-caption {
-      display: grid;
-      gap: 4px;
-    }
-
-    .score-caption strong {
-      font-size: 1rem;
-    }
-
-    .metric-grid,
-    .suggestion-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .metric-item,
-    .suggestion-item {
-      border: 1px solid var(--border-soft);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.02);
-      padding: 12px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .metric-head,
-    .suggestion-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .metric-bar {
-      width: 100%;
-      height: 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
-      overflow: hidden;
-    }
-
-    .metric-fill {
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      width: 0%;
-    }
-
-    .assessment-block {
-      display: grid;
-      gap: 8px;
-    }
-
-    .assessment-block h3 {
-      margin: 0;
-    }
-
-    .suggestion-item small,
-    .metric-item small {
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    .compact-recommendation-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .compact-recommendation-item {
-      border: 1px solid var(--border-soft);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.02);
-      padding: 10px 12px;
-      display: grid;
-      gap: 4px;
-    }
-
-    .compact-recommendation-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .compact-recommendation-main {
-      display: grid;
-      gap: 2px;
-      min-width: 0;
-    }
-
-    .compact-recommendation-main strong {
-      font-size: 0.95rem;
-    }
-
-    .compact-recommendation-value {
-      color: var(--text);
-      font-size: 0.9rem;
-      line-height: 1.35;
-    }
-
-    .compact-recommendation-meta {
-      color: var(--muted);
-      font-size: 0.82rem;
-      line-height: 1.35;
-    }
-
-    .compact-recommendation-reason {
-      display: none;
-    }
-
-    .badge.soft {
-      border-color: rgba(127,227,161,0.26);
-      background: rgba(127,227,161,0.09);
-      color: #d6ffe3;
-    }
-
-    .badge.warn {
-      border-color: rgba(255,207,112,0.26);
-      background: rgba(255,207,112,0.09);
-      color: #ffe9b6;
-    }
-
-    .compact-badges {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .recommendation-split {
-      display: grid;
-      gap: 12px;
-    }
-
-    .score-primary {
-      order: -1;
-      position: sticky;
-      top: 16px;
-    }
-
-    @media (max-width: 1080px) {
-      .score-primary {
-        order: 0;
-        position: static;
-      }
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .muted-panel {
-      opacity: 0.72;
-    }
-
-    @media (max-width: 1080px) {
-      .hero, .layout, .start-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 760px) {
-      .container {
-        width: min(100% - 20px, 1440px);
-        margin-top: 12px;
-      }
-
-      .hero-main,
-      .hero-side,
-      .start-card,
-      .main-card,
-      .side-card,
-      .section-card {
-        padding: 14px;
-      }
-
-      .toolbar-row {
-        grid-template-columns: 1fr;
-      }
-
-      .field-head {
-        flex-direction: column;
-      }
+      min-height:100vh;
+    }
+    code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .container{width:min(1440px,calc(100% - 32px)); margin:24px auto 40px}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
+    }
+    .hero{display:grid; grid-template-columns:1.35fr .95fr; gap:16px; margin-bottom:16px}
+    .hero-main,.hero-side,.start-card,.main-card,.side-card{padding:18px}
+    h1,h2,h3,h4{margin:0 0 10px; line-height:1.15}
+    h1{font-size:clamp(1.9rem,3vw,2.8rem); letter-spacing:-.02em; margin-bottom:8px}
+    h2{font-size:1.16rem} h3{font-size:1rem} h4{font-size:.96rem}
+    p{margin:0 0 10px; color:var(--muted); line-height:1.5}
+    .hero-pills,.button-row,.inline-actions,.compact-badges,.suggestion-actions{display:flex; gap:10px; flex-wrap:wrap}
+    .pill,.badge{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      padding:8px 12px; border-radius:999px; font-size:.88rem;
+    }
+    .pill.subtle,.badge.subtle{color:var(--muted); background:rgba(255,255,255,.02)}
+    .pill.accent,.badge.accent{border-color:rgba(122,162,255,.38); background:rgba(122,162,255,.12); color:#dce8ff}
+    .badge.soft{border-color:rgba(127,227,161,.26); background:rgba(127,227,161,.09); color:#d6ffe3}
+    .badge.warn{border-color:rgba(255,207,112,.26); background:rgba(255,207,112,.09); color:#ffe9b6}
+    .badge.error{border-color:rgba(255,123,123,.26); background:rgba(255,123,123,.09); color:#ffd7d7}
+    .status-stack,.notice-stack,.field-hints,.field-grid,.metric-grid,.suggestion-list,.compact-list,.stack,.score-panel{display:grid; gap:10px}
+    .notice{
+      border-radius:12px; padding:11px 12px; border:1px solid transparent; font-size:.92rem; line-height:1.45;
+    }
+    .notice.error{color:#ffd7d7; border-color:rgba(255,123,123,.3); background:rgba(255,123,123,.08)}
+    .notice.warning{color:#ffe9b6; border-color:rgba(255,207,112,.3); background:rgba(255,207,112,.08)}
+    .notice.success{color:#d6ffe3; border-color:rgba(127,227,161,.3); background:rgba(127,227,161,.08)}
+    .notice.info{color:#dce8ff; border-color:rgba(122,162,255,.3); background:rgba(122,162,255,.08)}
+    .layout{display:grid; grid-template-columns:1.15fr .85fr; gap:16px; align-items:start}
+    .section-header{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px}
+    .section-header p,.section-description{margin:0; color:var(--muted); font-size:.93rem}
+    .start-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    .start-panel{
+      border:1px solid var(--border-soft); border-radius:16px; background:rgba(255,255,255,.025); padding:14px; display:grid; gap:12px;
+    }
+    .sub-toolbar{margin-top:10px; padding-top:12px; border-top:1px solid var(--border-soft); display:grid; gap:12px}
+    .toolbar-row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    .field{display:grid; gap:6px; min-width:0}
+    .field label{font-size:.88rem; color:var(--muted)}
+    select,input[type="text"],textarea,button{font:inherit}
+    select,input[type="text"],textarea{
+      width:100%; padding:11px 12px; border-radius:12px; border:1px solid var(--border);
+      background:var(--panel-2); color:var(--text); outline:none;
+      transition:border-color .15s ease, box-shadow .15s ease;
+    }
+    select:focus,input[type="text"]:focus,textarea:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(122,162,255,.12)}
+    button{
+      border:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(122,162,255,.18), rgba(122,162,255,.08));
+      color:var(--text); border-radius:12px; padding:10px 13px; cursor:pointer; font-weight:600;
+    }
+    button:hover{border-color:var(--accent)}
+    button.secondary{background:rgba(255,255,255,.03)}
+    button.ghost{background:transparent}
+    .progress-row{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px}
+    .progress-bar{width:100%; height:10px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden}
+    .progress-fill,.metric-fill{height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); width:0%; transition:width .18s ease}
+    .field-card{
+      border:1px solid var(--border-soft);
+      background:rgba(255,255,255,.02);
+      border-radius:16px;
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+    .field-card.required{border-color:rgba(255,207,112,.28); background:rgba(255,207,112,.05)}
+    .field-card.recommended{border-color:rgba(122,162,255,.28); background:rgba(122,162,255,.05)}
+    .field-card.conflict{border-color:rgba(255,123,123,.35); background:rgba(255,123,123,.06)}
+    .field-card.complete{border-color:rgba(127,227,161,.25)}
+    .field-card.field-focus{border-color:rgba(122,162,255,.55); box-shadow:0 0 0 3px rgba(122,162,255,.14)}
+    .field-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
+    .field-meta{display:grid; gap:4px; min-width:0}
+    .field-slot{font-size:.82rem; color:var(--muted-2); word-break:break-word}
+    .field-help{font-size:.86rem; color:var(--muted); line-height:1.45}
+    .checkbox-grid{display:grid; gap:8px; max-height:240px; overflow:auto; padding-right:4px}
+    .checkbox-item{display:flex; align-items:flex-start; gap:10px; padding:8px 10px; border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.02); border-radius:12px}
+    .checkbox-item input{margin-top:3px}
+    .checkbox-content{display:grid; gap:2px}
+    .checkbox-content span{color:var(--text); font-size:.93rem}
+    .checkbox-content small{color:var(--muted); line-height:1.35}
+    details.disclosure{border:1px solid var(--border-soft); border-radius:16px; background:rgba(255,255,255,.02); overflow:hidden}
+    details.disclosure>summary{list-style:none; cursor:pointer; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px; user-select:none}
+    details.disclosure>summary::-webkit-details-marker{display:none}
+    .disclosure-body{padding:0 16px 16px; border-top:1px solid rgba(255,255,255,.06); display:grid; gap:12px}
+    .summary-columns{display:grid; gap:10px}
+    .summary-item,.metric-item,.suggestion-item,.compact-item,.inline-editor{
+      border:1px solid var(--border-soft); border-radius:14px; background:rgba(255,255,255,.02); padding:12px; display:grid; gap:8px;
+    }
+    .metric-head,.suggestion-head,.compact-head{display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .metric-bar{width:100%; height:8px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden}
+    .summary-item strong{font-size:.92rem}
+    .summary-item span,.compact-meta,.metric-item small,.suggestion-item small,.subtle-text{color:var(--muted); font-size:.88rem; line-height:1.45}
+    .output-panel{display:grid; gap:12px}
+    .output-panel pre{
+      margin:0; white-space:pre-wrap; word-break:break-word; font-size:.92rem; line-height:1.45;
+      color:var(--text); background:rgba(255,255,255,.025); border:1px solid var(--border); border-radius:14px; padding:14px; min-height:170px;
+    }
+    .score-primary{position:sticky; top:16px}
+    .score-overview{display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center}
+    .score-big{font-size:clamp(2.2rem,4vw,3.4rem); line-height:1; font-weight:800; letter-spacing:-.04em}
+    .assessment-block{display:grid; gap:8px}
+    .assessment-block h3{margin:0}
+    .suggestion-item.primary{border-color:rgba(122,162,255,.34); background:rgba(122,162,255,.06)}
+    .jump-btn{padding:8px 10px; border-radius:10px; border:1px solid rgba(122,162,255,.28); background:rgba(122,162,255,.08); color:var(--text); font-size:.86rem; font-weight:600; cursor:pointer}
+    .compact-item{padding:10px 12px}
+    .compact-main{display:grid; gap:3px; min-width:0}
+    .compact-main strong{font-size:.95rem}
+    .compact-value{font-size:.92rem}
+    .compact-mini{font-size:.83rem; color:var(--muted); line-height:1.35}
+    .inline-editor{padding:0; overflow:hidden}
+    .inline-editor .field-card{border:none; border-radius:0; background:transparent; box-shadow:none}
+    .hidden{display:none !important}
+    .muted-panel{opacity:.72}
+    @media (max-width:1080px){
+      .hero,.layout,.start-grid{grid-template-columns:1fr}
+      .score-primary{position:static}
+    }
+    @media (max-width:760px){
+      .container{width:min(100% - 20px,1440px); margin-top:12px}
+      .hero-main,.hero-side,.start-card,.main-card,.side-card{padding:14px}
+      .toolbar-row{grid-template-columns:1fr}
+      .field-head,.metric-head,.suggestion-head,.compact-head{flex-direction:column; align-items:flex-start}
     }
   </style>
 </head>
@@ -725,9 +203,7 @@
           </div>
           <div class="field">
             <label for="instanceSelect">Beispielinstanz</label>
-            <select id="instanceSelect">
-              <option value="">— bitte wählen —</option>
-            </select>
+            <select id="instanceSelect"><option value="">— bitte wählen —</option></select>
           </div>
           <div class="button-row">
             <button id="loadInstanceBtn" type="button">Beispiel übernehmen</button>
@@ -755,12 +231,9 @@
               <option value="template">Template</option>
             </select>
           </div>
-
           <div class="field" id="templateField">
             <label for="templateSelect">Template</label>
-            <select id="templateSelect">
-              <option value="">— bitte wählen —</option>
-            </select>
+            <select id="templateSelect"><option value="">— bitte wählen —</option></select>
           </div>
         </div>
 
@@ -802,36 +275,34 @@
             </div>
             <span id="requiredProgressBadge" class="badge accent">0 von 0 gesetzt</span>
           </div>
-
           <div class="progress-row">
-            <div class="progress-bar">
-              <div id="requiredProgressFill" class="progress-fill"></div>
-            </div>
+            <div class="progress-bar"><div id="requiredProgressFill" class="progress-fill"></div></div>
           </div>
-
           <div id="requiredHint" class="notice info">Die Pflichtangaben werden geladen …</div>
           <div id="requiredFields" class="field-grid"></div>
         </section>
 
-        <section id="recommendationSection" class="card main-card">
+        <section class="card main-card">
           <div class="section-header">
             <div>
               <h2>2. Sinnvolle Ergänzungen</h2>
-              <p class="section-description">Basierend auf deiner Auswahl sind diese Felder besonders hilfreich.</p>
+              <p class="section-description">Empfehlungen bleiben sichtbar, aber bereits passende Konfigurationen sind weiter bearbeitbar.</p>
             </div>
           </div>
           <div id="recommendationIntro" class="notice info">Sobald die Pflichtangaben gesetzt sind, erscheinen hier kontextabhängige Ergänzungen.</div>
-          <div id="recommendedFields" class="field-grid"></div>
-          <div id="recommendedCoveredWrap" class="recommendation-split hidden">
+          <div id="recommendedActionable" class="field-grid"></div>
+          <div id="recommendedCoveredWrap" class="hidden">
             <details id="recommendedCoveredDetails" class="disclosure">
               <summary>
                 <div>
                   <strong id="recommendedCoveredTitle">Bereits passende Empfehlungen</strong>
-                  <div class="subtle-text">Kompakte Übersicht über gesetzte Empfehlungen. Nur Status und Nutzenhinweis bleiben direkt sichtbar.</div>
+                  <div class="subtle-text">Kompakte Übersicht — per „Bearbeiten“ jederzeit wieder als volle Konfiguration öffnbar.</div>
                 </div>
                 <span id="recommendedCoveredBadge" class="badge subtle">0</span>
               </summary>
-              <div id="recommendedCovered" class="disclosure-body compact-recommendation-list"></div>
+              <div class="disclosure-body">
+                <div id="recommendedCovered" class="compact-list"></div>
+              </div>
             </details>
           </div>
         </section>
@@ -858,18 +329,6 @@
       </div>
 
       <div class="stack">
-        <section class="card side-card">
-          <div class="section-header">
-            <div>
-              <h2>Aktueller Prompt</h2>
-              <p class="section-description">Direkt nutzbare Fassung oder früher Zwischenstand auf Basis deiner Auswahl.</p>
-            </div>
-          </div>
-          <div class="output-panel">
-            <pre id="promptOutput">Noch kein Prompt gerendert.</pre>
-          </div>
-        </section>
-
         <section class="card side-card score-primary">
           <div class="section-header">
             <div>
@@ -885,29 +344,27 @@
                 <span id="overallSubline" class="subtle-text">Setze zuerst die Pflichtangaben, damit die Gesamtbewertung belastbarer wird.</span>
               </div>
             </div>
-
-            <div id="assessmentMetrics" class="metric-grid">
-              <div class="metric-item">
-                <div class="metric-head"><strong>Vollständigkeit</strong><span>0 %</span></div>
-                <div class="metric-bar"><div class="metric-fill" style="width:0%"></div></div>
-                <small>Pflichtfelder, aktuelle Empfehlungen und Feinschliff.</small>
-              </div>
-            </div>
-
+            <div id="assessmentMetrics" class="metric-grid"></div>
             <div class="assessment-block">
               <h3>Interpretation</h3>
               <div id="assessmentInterpretation" class="subtle-text">Noch keine belastbare Interpretation möglich.</div>
             </div>
-
             <div class="assessment-block">
               <h3>So erhöhst du den Score</h3>
-              <div id="scoreSuggestions" class="suggestion-list">
-                <div class="suggestion-item">
-                  <strong>Setze zuerst die Pflichtangaben.</strong>
-                  <small>Danach lassen sich Kohärenz und heuristische Passung deutlich besser einschätzen.</small>
-                </div>
-              </div>
+              <div id="scoreSuggestions" class="suggestion-list"></div>
             </div>
+          </div>
+        </section>
+
+        <section class="card side-card">
+          <div class="section-header">
+            <div>
+              <h2>Aktueller Prompt</h2>
+              <p class="section-description">Direkt nutzbare Fassung oder früher Zwischenstand auf Basis deiner Auswahl.</p>
+            </div>
+          </div>
+          <div class="output-panel">
+            <pre id="promptOutput">Noch kein Prompt gerendert.</pre>
           </div>
         </section>
 
@@ -918,12 +375,7 @@
               <p class="section-description">Lesbare Zusammenfassung der gesetzten Werte.</p>
             </div>
           </div>
-          <div id="summaryOutput" class="summary-columns">
-            <div class="summary-item">
-              <strong>Noch keine Auswahl</strong>
-              <span>Setze zuerst die Pflichtangaben, danach erscheinen hier die wichtigsten Entscheidungen in Klartext.</span>
-            </div>
-          </div>
+          <div id="summaryOutput" class="summary-columns"></div>
         </section>
 
         <section class="card side-card">
@@ -933,9 +385,7 @@
               <p class="section-description">Nur offene Punkte, sinnvolle nächste Schritte und Konflikte.</p>
             </div>
           </div>
-          <div id="statusOutput" class="notice-stack">
-            <div class="notice warning">Noch keine Prüfung durchgeführt.</div>
-          </div>
+          <div id="statusOutput" class="notice-stack"></div>
         </section>
 
         <section class="card side-card">
@@ -964,7 +414,8 @@
       dimensionOrder: [],
       templateIndex: {},
       exampleIndex: {},
-      assignments: {}
+      assignments: {},
+      coveredEditorOpen: {}
     };
 
     const elements = {
@@ -983,9 +434,8 @@
       requiredHint: document.getElementById("requiredHint"),
       requiredProgressBadge: document.getElementById("requiredProgressBadge"),
       requiredProgressFill: document.getElementById("requiredProgressFill"),
-      recommendationSection: document.getElementById("recommendationSection"),
       recommendationIntro: document.getElementById("recommendationIntro"),
-      recommendedFields: document.getElementById("recommendedFields"),
+      recommendedActionable: document.getElementById("recommendedActionable"),
       recommendedCoveredWrap: document.getElementById("recommendedCoveredWrap"),
       recommendedCoveredDetails: document.getElementById("recommendedCoveredDetails"),
       recommendedCoveredTitle: document.getElementById("recommendedCoveredTitle"),
@@ -1028,41 +478,18 @@
       internal_taxonomy: "Interne Taxonomie"
     };
 
-    const EVIDENCE_WEIGHTS = {
-      stark: 1.0,
-      mittel: 0.72,
-      schwach: 0.45
-    };
+    const EVIDENCE_WEIGHTS = { stark: 1.0, mittel: 0.72, schwach: 0.45 };
+    const TIER_PRIORITY = { A: 0, B: 1, C: 2 };
+    const TIER_SCORE = { A: 100, B: 70, C: 40 };
 
-    const TIER_PRIORITY = {
-      A: 0,
-      B: 1,
-      C: 2
-    };
+    function humanizeKey(value){ return String(value).replaceAll("_"," "); }
+    function lowerFirst(text){ return text ? text.charAt(0).toLowerCase() + text.slice(1) : text; }
+    function escapeRegExp(value){ return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+    function unique(arr){ return [...new Set(arr)]; }
+    function clampScore(value){ return Math.max(0, Math.min(100, Math.round(value))); }
+    function normalizeScopeToken(value){ return String(value || "").trim().toLowerCase(); }
 
-    const TIER_SCORE = {
-      A: 100,
-      B: 70,
-      C: 40
-    };
-
-    function humanizeKey(value) {
-      return String(value).replaceAll("_", " ");
-    }
-
-    function lowerFirst(text) {
-      return text ? text.charAt(0).toLowerCase() + text.slice(1) : text;
-    }
-
-    function escapeRegExp(value) {
-      return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    }
-
-    function unique(arr) {
-      return [...new Set(arr)];
-    }
-
-    function setRepoMetaNotices(items) {
+    function setRepoMetaNotices(items){
       elements.repoMeta.innerHTML = "";
       items.forEach(item => {
         const div = document.createElement("div");
@@ -1072,10 +499,10 @@
       });
     }
 
-    async function loadLibrary() {
-      try {
+    async function loadLibrary(){
+      try{
         const response = await fetch("../data/library.json", { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        if(!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         state.libraryData = data;
         buildIndexes(data);
@@ -1083,13 +510,12 @@
         restoreAssignments();
         updateTemplateVisibility();
         updateOutputs();
-
         const meta = data.meta || {};
         setRepoMetaNotices([
           { type: "success", text: `Bibliothek geladen: ${meta.project || "Prompt-Bibliothek"}` },
           { type: "info", text: `Version: ${meta.version || "unbekannt"} · Locale: ${meta.locale || "unbekannt"}` }
         ]);
-      } catch (error) {
+      } catch(error){
         console.error(error);
         setRepoMetaNotices([
           { type: "error", text: `Initialisierung fehlgeschlagen: ${error.message}` },
@@ -1099,16 +525,14 @@
       }
     }
 
-    function buildIndexes(data) {
+    function buildIndexes(data){
       state.slotIndex = {};
       state.slotSchemaIndex = {};
       state.dimensionOrder = [];
       state.templateIndex = {};
       state.exampleIndex = {};
 
-      (data.slot_schema || []).forEach(item => {
-        state.slotSchemaIndex[item.slot] = item;
-      });
+      (data.slot_schema || []).forEach(item => { state.slotSchemaIndex[item.slot] = item; });
 
       const library = data.library || {};
       Object.entries(library).forEach(([dimensionKey, dimensionObj]) => {
@@ -1128,10 +552,7 @@
 
           rawValues.forEach(valueObj => {
             if (typeof valueObj === "string") {
-              allowedValues[valueObj] = {
-                label: humanizeKey(valueObj),
-                description: ""
-              };
+              allowedValues[valueObj] = { label: humanizeKey(valueObj), description: "" };
             } else {
               allowedValues[valueObj.key] = {
                 label: valueObj.label || valueObj.key,
@@ -1164,21 +585,16 @@
         state.dimensionOrder.push(dimInfo);
       });
 
-      (data.templates || []).forEach(template => {
-        state.templateIndex[template.id] = template;
-      });
-
-      (data.example_instances || []).forEach(example => {
-        state.exampleIndex[example.id] = example;
-      });
+      (data.templates || []).forEach(template => { state.templateIndex[template.id] = template; });
+      (data.example_instances || []).forEach(example => { state.exampleIndex[example.id] = example; });
     }
 
-    function populateToolbar() {
+    function populateToolbar(){
       elements.templateSelect.innerHTML = '<option value="">— bitte wählen —</option>';
       Object.values(state.templateIndex).forEach(template => {
         const option = document.createElement("option");
         option.value = template.id;
-        option.textContent = `${template.label || template.id}`;
+        option.textContent = template.label || template.id;
         elements.templateSelect.appendChild(option);
       });
 
@@ -1186,28 +602,28 @@
       Object.values(state.exampleIndex).forEach(example => {
         const option = document.createElement("option");
         option.value = example.id;
-        option.textContent = `${example.label || example.id}`;
+        option.textContent = example.label || example.id;
         elements.instanceSelect.appendChild(option);
       });
     }
 
-    function updateTemplateVisibility() {
+    function updateTemplateVisibility(){
       const isTemplateMode = elements.modeSelect.value === "template";
       elements.templateField.classList.toggle("hidden", !isTemplateMode);
       elements.templateSelect.disabled = !isTemplateMode;
     }
 
-    function getRequiredSlots() {
+    function getRequiredSlots(){
+      return Object.values(state.slotIndex).filter(meta => meta.required).map(meta => meta.slot);
+    }
+
+    function getExclusionSlots(){
       return Object.values(state.slotIndex)
-        .filter(meta => meta.required)
+        .filter(meta => meta.slot.includes("AUSSCHLUESSE") || meta.dimensionKey === "GRENZEN")
         .map(meta => meta.slot);
     }
 
-    function normalizeScopeToken(value) {
-      return String(value || "").trim().toLowerCase();
-    }
-
-    function getSlotProvenance(slot) {
+    function getSlotProvenance(slot){
       const meta = state.slotIndex[slot] || {};
       return {
         origin: Array.isArray(meta.origin) ? meta.origin : [],
@@ -1219,221 +635,21 @@
       };
     }
 
-    function getOriginDisplayText(origins) {
+    function getOriginDisplayText(origins){
       return (origins || []).map(origin => ORIGIN_LABELS[origin] || humanizeKey(origin)).join(", ");
     }
 
-    function getAssignedScopeTokens() {
-      const tokens = [];
-
-      Object.entries(state.assignments).forEach(([slot, value]) => {
-        tokens.push(slot);
-        const meta = state.slotIndex[slot];
-        if (meta?.dimensionKey) tokens.push(meta.dimensionKey);
-
-        if (Array.isArray(value)) value.forEach(item => tokens.push(item));
-        else if (typeof value === "string") tokens.push(value);
-      });
-
-      return new Set(tokens.map(normalizeScopeToken).filter(Boolean));
-    }
-
-    function isCuratedRefinementSlot(slot) {
-      const provenance = getSlotProvenance(slot);
-      return ["A", "B"].includes(provenance.autoRecommendationTier);
-    }
-
-    function getRefinementPriority(slot) {
-      const provenance = getSlotProvenance(slot);
-      if (!provenance.autoRecommendationTier) return 999;
-
-      const tierPriority = TIER_PRIORITY[provenance.autoRecommendationTier] ?? 9;
-      const confidencePenalty = typeof provenance.confidence === "number"
-        ? Math.max(0, 1 - provenance.confidence)
-        : 0.5;
-
-      return tierPriority * 100 + confidencePenalty * 10;
-    }
-
-    function getExclusionSlots() {
-      return Object.values(state.slotIndex)
-        .filter(meta => meta.slot.includes("AUSSCHLUESSE") || meta.dimensionKey === "GRENZEN")
-        .map(meta => meta.slot);
-    }
-
-    function addRecommendation(bucket, slot, reason, values = [], score = 1, source = "soft") {
-      if (!state.slotIndex[slot] || getRequiredSlots().includes(slot) || getExclusionSlots().includes(slot)) return;
-      bucket[slot] = bucket[slot] || {
-        reasons: [],
-        values: [],
-        score: 0,
-        sources: [],
-        provenance: getSlotProvenance(slot)
-      };
-      if (reason) bucket[slot].reasons.push(reason);
-      if (values?.length) bucket[slot].values.push(...values);
-      if (source) bucket[slot].sources.push(source);
-      bucket[slot].score += score;
-    }
-
-    function getProvenanceRecommendationReason(slot, matchDetails) {
-      const provenance = getSlotProvenance(slot);
-      const parts = [];
-
-      if (provenance.recommendationNotes) parts.push(provenance.recommendationNotes);
-      else parts.push(`${getSlotDisplayName(slot)} ist in der Provenienzschicht als relevanter Empfehlungsslot markiert.`);
-
-      if (matchDetails.matches.length) {
-        parts.push(`Scope-Treffer: ${matchDetails.matches.map(humanizeKey).join(", ")}.`);
-      } else if (matchDetails.global) {
-        parts.push("Gilt bibliotheksweit für viele Aufgaben.");
-      }
-
-      const metaBits = [];
-      if (provenance.origin.length) metaBits.push(`Herkunft: ${getOriginDisplayText(provenance.origin)}`);
-      if (provenance.evidenceStrength) metaBits.push(`Evidenz: ${provenance.evidenceStrength}`);
-      if (provenance.autoRecommendationTier) metaBits.push(`Tier: ${provenance.autoRecommendationTier}`);
-      if (typeof provenance.confidence === "number") metaBits.push(`Confidence: ${provenance.confidence.toFixed(2)}`);
-
-      if (metaBits.length) parts.push(metaBits.join(" · "));
-      return parts.join(" ");
-    }
-
-    function applyProvenanceRecommendations(bucket) {
-      const assignedTokens = getAssignedScopeTokens();
-
-      Object.values(state.slotIndex).forEach(meta => {
-        if (meta.required) return;
-        if (getExclusionSlots().includes(meta.slot)) return;
-
-        const provenance = getSlotProvenance(meta.slot);
-        if (!provenance.autoRecommendationTier) return;
-
-        const scopes = provenance.heuristicScope.map(normalizeScopeToken).filter(Boolean);
-        const matches = scopes.filter(scope => scope !== "alle_tasks" && assignedTokens.has(scope));
-        const globalMatch = scopes.includes("alle_tasks");
-
-        if (!globalMatch && !matches.length) return;
-
-        const tierScore = TIER_SCORE[provenance.autoRecommendationTier] ?? 20;
-        const evidenceWeight = EVIDENCE_WEIGHTS[provenance.evidenceStrength] ?? 0.45;
-        const confidence = typeof provenance.confidence === "number" ? provenance.confidence : 0.5;
-        const scopeWeight = matches.length
-          ? 1 + Math.min(matches.length, 3) * 0.2
-          : 0.72;
-
-        const score = tierScore * evidenceWeight * confidence * scopeWeight;
-        if (score <= 0) return;
-
-        const reason = getProvenanceRecommendationReason(meta.slot, {
-          matches,
-          global: globalMatch
-        });
-
-        addRecommendation(bucket, meta.slot, reason, [], score, "provenance");
-      });
-    }
-
-    function getActiveRecommendationData() {
-      const constraints = state.libraryData?.constraints || [];
-      const requiredComplete = isRequiredComplete();
-      const bucket = {};
-
-      if (!requiredComplete) {
-        return { recommendedSlots: [], reasons: {}, recommendedValues: {}, provenanceMeta: {} };
-      }
-
-      constraints.forEach(constraint => {
-        const cond = constraint.if || {};
-        const current = state.assignments[cond.slot];
-        const matches = current === cond.equals;
-        if (!matches || constraint.type !== "recommendation") return;
-
-        const base = `${getSlotDisplayName(cond.slot)} ist auf „${getValueLabel(cond.slot, cond.equals)}“ gesetzt.`;
-
-        (constraint.then?.recommended_slots || []).forEach(slot => {
-          addRecommendation(bucket, slot, `${base} Regelbasierte Empfehlung aus dem Constraint-Modell.`, [], 160, "constraint");
-        });
-
-        Object.entries(constraint.then?.recommended_values || {}).forEach(([slot, values]) => {
-          addRecommendation(bucket, slot, `${base} Passende Ausprägungen sind hier oft schneller anschlussfähig.`, values, 180, "constraint-values");
-        });
-      });
-
-      applyProvenanceRecommendations(bucket);
-
-      const recommendedSlots = Object.entries(bucket)
-        .sort((a, b) => b[1].score - a[1].score || getRefinementPriority(a[0]) - getRefinementPriority(b[0]) || a[0].localeCompare(b[0]))
-        .map(([slot]) => slot)
-        .filter(slot => state.slotIndex[slot]);
-
-      const reasons = {};
-      const recommendedValues = {};
-      const provenanceMeta = {};
-
-      recommendedSlots.forEach(slot => {
-        reasons[slot] = unique((bucket[slot]?.reasons || []).filter(Boolean));
-        recommendedValues[slot] = unique(bucket[slot]?.values || []);
-        provenanceMeta[slot] = bucket[slot]?.provenance || getSlotProvenance(slot);
-      });
-
-      return { recommendedSlots, reasons, recommendedValues, provenanceMeta };
-    }
-
-    function getRefinementGroups(recommendedSlots) {
-      const requiredSlots = getRequiredSlots();
-      const exclusionSlots = getExclusionSlots();
-      const query = elements.searchInput.value.trim().toLowerCase();
-
-      return state.dimensionOrder
-        .map(dimension => {
-          const slots = dimension.slots.filter(slot => {
-            if (requiredSlots.includes(slot)) return false;
-            if (exclusionSlots.includes(slot)) return false;
-            if (recommendedSlots.includes(slot)) return false;
-
-            const meta = state.slotIndex[slot];
-            const haystack = [
-              dimension.dimensionLabel,
-              dimension.dimensionDescription,
-              meta.subdimensionLabel,
-              slot,
-              ...Object.keys(meta.allowedValues),
-              ...Object.values(meta.allowedValues).map(v => v.label),
-              ...Object.values(meta.allowedValues).map(v => v.description)
-            ].join(" ").toLowerCase();
-
-            return !query || haystack.includes(query);
-          });
-
-          slots.sort((a, b) => getRefinementPriority(a) - getRefinementPriority(b) || a.localeCompare(b));
-          return { ...dimension, slots };
-        })
-        .filter(group => group.slots.length);
-    }
-
-    function getValueLabel(slot, value) {
-      const meta = state.slotIndex[slot];
-      if (!meta) return String(value);
-      const entry = meta.allowedValues[value];
-      return entry ? entry.label : humanizeKey(value);
-    }
-
-    function getSlotDisplayName(slot) {
-      return state.slotIndex[slot]?.subdimensionLabel || slot;
-    }
-
-    function isAssigned(slot) {
+    function isAssigned(slot){
       const value = state.assignments[slot];
       if (Array.isArray(value)) return value.length > 0;
       return value !== undefined && value !== null && value !== "";
     }
 
-    function isRequiredComplete() {
+    function isRequiredComplete(){
       return getRequiredSlots().every(isAssigned);
     }
 
-    function getProgressStats() {
+    function getProgressStats(){
       const requiredSlots = getRequiredSlots();
       const setCount = requiredSlots.filter(isAssigned).length;
       return {
@@ -1443,9 +659,121 @@
       };
     }
 
-    function getFieldStatuses() {
+    function getAssignedScopeTokens(){
+      const tokens = [];
+      Object.entries(state.assignments).forEach(([slot, value]) => {
+        tokens.push(slot);
+        const meta = state.slotIndex[slot];
+        if (meta?.dimensionKey) tokens.push(meta.dimensionKey);
+        if (Array.isArray(value)) value.forEach(item => tokens.push(item));
+        else if (typeof value === "string") tokens.push(value);
+      });
+      return new Set(tokens.map(normalizeScopeToken).filter(Boolean));
+    }
+
+    function getRefinementPriority(slot){
+      const provenance = getSlotProvenance(slot);
+      if (!provenance.autoRecommendationTier) return 999;
+      const tierPriority = TIER_PRIORITY[provenance.autoRecommendationTier] ?? 9;
+      const confidencePenalty = typeof provenance.confidence === "number" ? Math.max(0, 1 - provenance.confidence) : 0.5;
+      return tierPriority * 100 + confidencePenalty * 10;
+    }
+
+    function addRecommendation(bucket, slot, reason, values = [], score = 1, source = "soft"){
+      if (!state.slotIndex[slot] || getRequiredSlots().includes(slot) || getExclusionSlots().includes(slot)) return;
+      bucket[slot] = bucket[slot] || { reasons: [], values: [], score: 0, sources: [], provenance: getSlotProvenance(slot) };
+      if (reason) bucket[slot].reasons.push(reason);
+      if (values?.length) bucket[slot].values.push(...values);
+      bucket[slot].sources.push(source);
+      bucket[slot].score += score;
+    }
+
+    function getProvenanceRecommendationReason(slot, matchDetails){
+      const provenance = getSlotProvenance(slot);
+      const parts = [];
+      if (provenance.recommendationNotes) parts.push(provenance.recommendationNotes);
+      else parts.push(`${getSlotDisplayName(slot)} ist in der Provenienzschicht als relevanter Empfehlungsslot markiert.`);
+      if (matchDetails.matches.length) parts.push(`Scope-Treffer: ${matchDetails.matches.map(humanizeKey).join(", ")}.`);
+      else if (matchDetails.global) parts.push("Gilt bibliotheksweit für viele Aufgaben.");
+      const metaBits = [];
+      if (provenance.origin.length) metaBits.push(`Herkunft: ${getOriginDisplayText(provenance.origin)}`);
+      if (provenance.evidenceStrength) metaBits.push(`Evidenz: ${provenance.evidenceStrength}`);
+      if (provenance.autoRecommendationTier) metaBits.push(`Tier: ${provenance.autoRecommendationTier}`);
+      if (typeof provenance.confidence === "number") metaBits.push(`Confidence: ${provenance.confidence.toFixed(2)}`);
+      if (metaBits.length) parts.push(metaBits.join(" · "));
+      return parts.join(" ");
+    }
+
+    function applyProvenanceRecommendations(bucket){
+      const assignedTokens = getAssignedScopeTokens();
+      Object.values(state.slotIndex).forEach(meta => {
+        if (meta.required) return;
+        if (getExclusionSlots().includes(meta.slot)) return;
+        const provenance = getSlotProvenance(meta.slot);
+        if (!provenance.autoRecommendationTier) return;
+        const scopes = provenance.heuristicScope.map(normalizeScopeToken).filter(Boolean);
+        const matches = scopes.filter(scope => scope !== "alle_tasks" && assignedTokens.has(scope));
+        const globalMatch = scopes.includes("alle_tasks");
+        if (!globalMatch && !matches.length) return;
+        const tierScore = TIER_SCORE[provenance.autoRecommendationTier] ?? 20;
+        const evidenceWeight = EVIDENCE_WEIGHTS[provenance.evidenceStrength] ?? 0.45;
+        const confidence = typeof provenance.confidence === "number" ? provenance.confidence : 0.5;
+        const scopeWeight = matches.length ? 1 + Math.min(matches.length, 3) * 0.2 : 0.72;
+        const score = tierScore * evidenceWeight * confidence * scopeWeight;
+        if (score <= 0) return;
+        addRecommendation(bucket, meta.slot, getProvenanceRecommendationReason(meta.slot, { matches, global: globalMatch }), [], score, "provenance");
+      });
+    }
+
+    function getActiveRecommendationData(){
+      const constraints = state.libraryData?.constraints || [];
+      const requiredComplete = isRequiredComplete();
+      const bucket = {};
+      if (!requiredComplete) return { recommendedSlots: [], reasons: {}, recommendedValues: {}, provenanceMeta: {} };
+
+      constraints.forEach(constraint => {
+        const cond = constraint.if || {};
+        const current = state.assignments[cond.slot];
+        const matches = current === cond.equals;
+        if (!matches || constraint.type !== "recommendation") return;
+        const base = `${getSlotDisplayName(cond.slot)} ist auf „${getValueLabel(cond.slot, cond.equals)}“ gesetzt.`;
+        (constraint.then?.recommended_slots || []).forEach(slot => {
+          addRecommendation(bucket, slot, `${base} Regelbasierte Empfehlung aus dem Constraint-Modell.`, [], 160, "constraint");
+        });
+        Object.entries(constraint.then?.recommended_values || {}).forEach(([slot, values]) => {
+          addRecommendation(bucket, slot, `${base} Passende Ausprägungen sind hier oft schneller anschlussfähig.`, values, 180, "constraint-values");
+        });
+      });
+
+      applyProvenanceRecommendations(bucket);
+
+      const recommendedSlots = Object.entries(bucket)
+        .sort((a,b) => b[1].score - a[1].score || getRefinementPriority(a[0]) - getRefinementPriority(b[0]) || a[0].localeCompare(b[0]))
+        .map(([slot]) => slot)
+        .filter(slot => state.slotIndex[slot]);
+
+      const reasons = {}, recommendedValues = {}, provenanceMeta = {};
+      recommendedSlots.forEach(slot => {
+        reasons[slot] = unique((bucket[slot]?.reasons || []).filter(Boolean));
+        recommendedValues[slot] = unique(bucket[slot]?.values || []);
+        provenanceMeta[slot] = bucket[slot]?.provenance || getSlotProvenance(slot);
+      });
+
+      return { recommendedSlots, reasons, recommendedValues, provenanceMeta };
+    }
+
+    function getRecommendationState(slot, recommendedValues = {}){
+      if (!isAssigned(slot)) return "missing";
+      const current = state.assignments[slot];
+      const expectedValues = recommendedValues[slot] || [];
+      if (!expectedValues.length) return "set";
+      if (Array.isArray(current)) return current.some(value => expectedValues.includes(value)) ? "expected" : "abweichend";
+      return expectedValues.includes(current) ? "expected" : "abweichend";
+    }
+
+    function getFieldStatuses(){
       const statuses = {};
-      Object.keys(state.slotIndex).forEach(slot => statuses[slot] = []);
+      Object.keys(state.slotIndex).forEach(slot => { statuses[slot] = []; });
 
       getRequiredSlots().forEach(slot => {
         if (!isAssigned(slot)) statuses[slot].push({ type: "warning", text: "Pflichtangabe fehlt." });
@@ -1455,13 +783,12 @@
       recommendedSlots.forEach(slot => {
         const recommendationState = getRecommendationState(slot, recommendedValues);
         if (recommendationState === "missing") {
-          const reasonText = reasons[slot]?.[0] || "Für deine aktuelle Auswahl empfohlen.";
-          statuses[slot].push({ type: "info", text: `Als Nächstes sinnvoll: ${reasonText}` });
+          statuses[slot].push({ type: "info", text: `Als Nächstes sinnvoll: ${(reasons[slot] || ["Für deine aktuelle Auswahl empfohlen."])[0]}` });
         } else if (recommendationState === "expected") {
           statuses[slot].push({ type: "success", text: "Entspricht der aktuellen Erwartungslogik und passt gut zum Rest der Konfiguration." });
         } else if (recommendationState === "set") {
           statuses[slot].push({ type: "success", text: "Ist gesetzt und aktuell gut anschlussfähig." });
-        } else if (recommendationState === "abweichend") {
+        } else {
           const labels = (recommendedValues[slot] || []).map(value => getValueLabel(slot, value)).join(", ");
           statuses[slot].push({ type: "warning", text: labels ? `Gesetzt, aber weniger erwartbar. Typisch passend wären eher: ${labels}.` : "Gesetzt, aber noch nicht ideal auf den erwarteten Pfad abgestimmt." });
         }
@@ -1470,14 +797,11 @@
       (state.libraryData?.constraints || []).forEach(constraint => {
         if (constraint.type !== "incompatibility") return;
         const cond = constraint.if || {};
-        const sourceMatches = state.assignments[cond.slot] === cond.equals;
-        if (!sourceMatches) return;
-
         const targetSlot = constraint.then_not?.slot;
         const forbidden = constraint.then_not?.contains;
+        const sourceMatches = state.assignments[cond.slot] === cond.equals;
         const targetValue = state.assignments[targetSlot];
-        if (!Array.isArray(targetValue) || !targetValue.includes(forbidden)) return;
-
+        if (!sourceMatches || !Array.isArray(targetValue) || !targetValue.includes(forbidden)) return;
         statuses[cond.slot].push({ type: "error", text: `Diese Auswahl kollidiert mit ${getSlotDisplayName(targetSlot)}.` });
         statuses[targetSlot].push({ type: "error", text: `Diese Auswahl kollidiert mit ${getSlotDisplayName(cond.slot)}.` });
       });
@@ -1485,13 +809,24 @@
       return statuses;
     }
 
-    function renderFieldCard(slot, options = {}) {
+    function getSlotDisplayName(slot){ return state.slotIndex[slot]?.subdimensionLabel || slot; }
+
+    function getValueLabel(slot, value){
+      const meta = state.slotIndex[slot];
+      if (!meta) return String(value);
+      const entry = meta.allowedValues[value];
+      return entry ? entry.label : humanizeKey(value);
+    }
+
+    function renderFieldCard(slot, options = {}){
       const meta = state.slotIndex[slot];
       if (!meta) return document.createElement("div");
-
       const statuses = getFieldStatuses()[slot] || [];
       const card = document.createElement("div");
       card.className = "field-card";
+      if (options.context === "covered") card.classList.add("inline-card");
+      card.id = options.context === "covered" ? `field-card-covered-${slot}` : `field-card-${slot}`;
+      card.dataset.slot = slot;
 
       if (meta.required) card.classList.add("required");
       if (options.recommended) card.classList.add("recommended");
@@ -1500,25 +835,17 @@
 
       const head = document.createElement("div");
       head.className = "field-head";
-
       const metaWrap = document.createElement("div");
       metaWrap.className = "field-meta";
-      metaWrap.innerHTML = `
-        <div><strong>${meta.subdimensionLabel}</strong></div>
-        <div class="field-slot">${slot}</div>
-      `;
-
+      metaWrap.innerHTML = `<div><strong>${meta.subdimensionLabel}</strong></div><div class="field-slot">${slot}</div>`;
       const badgeWrap = document.createElement("div");
       badgeWrap.className = "inline-actions";
       if (meta.required) badgeWrap.innerHTML += '<span class="badge accent">Pflicht</span>';
       else if (options.recommended) {
         badgeWrap.innerHTML += '<span class="badge subtle">Empfohlen</span>';
-        if (options.provenance?.autoRecommendationTier) {
-          badgeWrap.innerHTML += `<span class="badge subtle">Tier ${options.provenance.autoRecommendationTier}</span>`;
-        }
+        if (options.provenance?.autoRecommendationTier) badgeWrap.innerHTML += `<span class="badge subtle">Tier ${options.provenance.autoRecommendationTier}</span>`;
       } else if (options.curated) badgeWrap.innerHTML += '<span class="badge subtle">Häufig genutzt</span>';
       else badgeWrap.innerHTML += '<span class="badge subtle">Optional</span>';
-
       head.appendChild(metaWrap);
       head.appendChild(badgeWrap);
       card.appendChild(head);
@@ -1545,16 +872,13 @@
       if (meta.multi) {
         const checkboxGrid = document.createElement("div");
         checkboxGrid.className = "checkbox-grid";
-
         Object.entries(meta.allowedValues).forEach(([valueKey, valueObj]) => {
           const label = document.createElement("label");
           label.className = "checkbox-item";
-
           const checkbox = document.createElement("input");
           checkbox.type = "checkbox";
           checkbox.value = valueKey;
           checkbox.checked = Array.isArray(currentValue) && currentValue.includes(valueKey);
-
           checkbox.addEventListener("change", () => {
             const next = Array.isArray(state.assignments[slot]) ? [...state.assignments[slot]] : [];
             if (checkbox.checked) {
@@ -1567,54 +891,44 @@
             else delete state.assignments[slot];
             updateOutputs();
           });
-
           const content = document.createElement("div");
           content.className = "checkbox-content";
           content.innerHTML = `<span>${valueObj.label}</span><small>${valueObj.description || ""}</small>`;
-
           label.appendChild(checkbox);
           label.appendChild(content);
           checkboxGrid.appendChild(label);
         });
-
         card.appendChild(checkboxGrid);
       } else {
         const field = document.createElement("div");
         field.className = "field";
-
         const label = document.createElement("label");
         label.textContent = meta.required ? "Diese Angabe ist erforderlich" : "Auswahl";
         field.appendChild(label);
-
         const select = document.createElement("select");
         const emptyOption = document.createElement("option");
         emptyOption.value = "";
         emptyOption.textContent = "— bitte wählen —";
         select.appendChild(emptyOption);
-
         Object.entries(meta.allowedValues).forEach(([valueKey, valueObj]) => {
           const option = document.createElement("option");
           option.value = valueKey;
           option.textContent = valueObj.label;
           select.appendChild(option);
         });
-
         select.value = typeof currentValue === "string" ? currentValue : "";
         select.addEventListener("change", () => {
           if (select.value) state.assignments[slot] = select.value;
           else delete state.assignments[slot];
           updateOutputs();
         });
-
         field.appendChild(select);
-
         if (typeof currentValue === "string" && meta.allowedValues[currentValue]?.description) {
           const desc = document.createElement("div");
           desc.className = "field-help";
           desc.textContent = meta.allowedValues[currentValue].description;
           field.appendChild(desc);
         }
-
         card.appendChild(field);
       }
 
@@ -1633,12 +947,101 @@
       return card;
     }
 
-    function renderRequiredSection() {
+    function getCompactStatusMeta(stateText, provenance = null){
+      const tier = provenance?.autoRecommendationTier || "";
+      const confidence = typeof provenance?.confidence === "number" ? provenance.confidence : null;
+      const highSignal = tier === "A" && (confidence === null || confidence >= 0.8);
+      if (stateText === "expected") return highSignal ? { label: "stark passend", className: "accent" } : { label: "gut passend", className: "soft" };
+      if (stateText === "set") return highSignal ? { label: "gut passend", className: "soft" } : { label: "eher passend", className: "subtle" };
+      return { label: "prüfen", className: "warn" };
+    }
+
+    function getCompactBenefitText(slot){
+      const meta = state.slotIndex[slot] || {};
+      const map = {
+        ZIEL: "stützt Zielschärfe",
+        AUFGABE: "stützt Aufgabenlogik",
+        KONTEXT: "stützt Kontextpassung",
+        OUTPUT_FORM: "stützt Ergebnisform",
+        PROZESS: "stützt Struktur",
+        QUALITAETSKRITERIEN: "stützt Qualität",
+        ROLLE: "stützt Perspektive",
+        ADRESSAT: "stützt Zielgruppenpassung",
+        INTERAKTIONSMODUS: "stützt Arbeitsfluss"
+      };
+      return map[meta.dimensionKey] || "stützt die aktuelle Konfiguration";
+    }
+
+    function renderCompactRecommendationItem(slot, recommendedValues = {}, provenance = null){
+      const stateText = getRecommendationState(slot, recommendedValues);
+      const wrapper = document.createElement("div");
+      wrapper.className = "compact-item";
+      const rawValue = state.assignments[slot];
+      const valueText = Array.isArray(rawValue) ? rawValue.map(item => getValueLabel(slot, item)).join(", ") : getValueLabel(slot, rawValue);
+      const currentStatus = getCompactStatusMeta(stateText, provenance);
+      const expectedValues = recommendedValues[slot] || [];
+      const mini = stateText === "expected"
+        ? `${currentStatus.label} · ${getCompactBenefitText(slot)}`
+        : stateText === "set"
+          ? `${currentStatus.label} · bleibt aktuell stimmig`
+          : expectedValues.length
+            ? `${currentStatus.label} · typischer wäre: ${expectedValues.map(value => getValueLabel(slot, value)).join(", ")}`
+            : `${currentStatus.label} · näher prüfen`;
+
+      const head = document.createElement("div");
+      head.className = "compact-head";
+      const main = document.createElement("div");
+      main.className = "compact-main";
+      main.innerHTML = `<strong>${getSlotDisplayName(slot)}</strong><div class="compact-value">${valueText}</div><div class="compact-mini">${mini}</div>`;
+      const right = document.createElement("div");
+      right.className = "compact-badges";
+      const statusBadge = document.createElement("span");
+      statusBadge.className = `badge ${currentStatus.className}`;
+      statusBadge.textContent = currentStatus.label;
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "secondary";
+      editBtn.textContent = state.coveredEditorOpen[slot] ? "Einklappen" : "Bearbeiten";
+      editBtn.addEventListener("click", () => {
+        state.coveredEditorOpen[slot] = !state.coveredEditorOpen[slot];
+        elements.recommendedCoveredDetails.open = true;
+        updateOutputs();
+        requestAnimationFrame(() => {
+          if (state.coveredEditorOpen[slot]) focusField(slot, true);
+        });
+      });
+      right.appendChild(statusBadge);
+      right.appendChild(editBtn);
+      head.appendChild(main);
+      head.appendChild(right);
+      wrapper.appendChild(head);
+
+      if (state.coveredEditorOpen[slot]) {
+        const editor = document.createElement("div");
+        editor.className = "inline-editor";
+        editor.appendChild(renderFieldCard(slot, {
+          recommended: true,
+          reason: (getActiveRecommendationData().reasons[slot] || []).join(" "),
+          provenance,
+          context: "covered"
+        }));
+        wrapper.appendChild(editor);
+      }
+
+      const titleBits = [];
+      if (provenance?.recommendationNotes) titleBits.push(provenance.recommendationNotes);
+      if (provenance?.autoRecommendationTier) titleBits.push(`Tier ${provenance.autoRecommendationTier}`);
+      if (provenance?.evidenceStrength) titleBits.push(`Evidenz ${provenance.evidenceStrength}`);
+      if (typeof provenance?.confidence === "number") titleBits.push(`Confidence ${provenance.confidence.toFixed(2)}`);
+      wrapper.title = titleBits.join(" · ");
+      return wrapper;
+    }
+
+    function renderRequiredSection(){
       const requiredSlots = getRequiredSlots();
       const stats = getProgressStats();
       elements.requiredProgressBadge.textContent = `${stats.setCount} von ${stats.total} gesetzt`;
       elements.requiredProgressFill.style.width = `${stats.percent}%`;
-
       if (stats.setCount === stats.total) {
         elements.requiredHint.className = "notice success";
         elements.requiredHint.textContent = "Alle Pflichtangaben sind gesetzt. Jetzt kannst du gezielt verfeinern.";
@@ -1646,25 +1049,21 @@
         elements.requiredHint.className = "notice warning";
         elements.requiredHint.textContent = `${stats.setCount} von ${stats.total} Pflichtangaben gesetzt. Ergänze zuerst die fehlenden Angaben.`;
       }
-
       elements.requiredFields.innerHTML = "";
       requiredSlots.forEach(slot => elements.requiredFields.appendChild(renderFieldCard(slot)));
     }
 
-    function renderRecommendationSection() {
+    function renderRecommendationSection(){
       const requiredComplete = isRequiredComplete();
       const { recommendedSlots, reasons, recommendedValues, provenanceMeta } = getActiveRecommendationData();
-
-      elements.recommendedFields.innerHTML = "";
+      elements.recommendedActionable.innerHTML = "";
       elements.recommendedCovered.innerHTML = "";
       elements.recommendedCoveredWrap.classList.add("hidden");
-      elements.recommendedCoveredDetails.open = false;
       if (!requiredComplete) {
         elements.recommendationIntro.className = "notice info";
         elements.recommendationIntro.textContent = "Sobald die Pflichtangaben vollständig sind, erscheinen hier kontextabhängige Ergänzungen.";
         return;
       }
-
       if (!recommendedSlots.length) {
         elements.recommendationIntro.className = "notice success";
         elements.recommendationIntro.textContent = "Für die aktuelle Konfiguration gibt es noch keine zusätzlichen Empfehlungen aus Regeln oder Heuristiken.";
@@ -1680,19 +1079,15 @@
         return stateText === "expected" || stateText === "set";
       });
 
-      if (!actionableSlots.length) {
-        elements.recommendationIntro.className = "notice success";
-        elements.recommendationIntro.textContent = "Die empfohlenen Felder sind bereits gesetzt. Du kannst sie unten kompakt prüfen oder bei Bedarf wieder aufklappen.";
-      } else {
-        elements.recommendationIntro.className = "notice info";
-        elements.recommendationIntro.textContent = "Oben siehst du nur die Empfehlungen mit echtem Handlungsbedarf. Bereits passende Empfehlungen bleiben darunter kompakt sichtbar.";
-      }
+      elements.recommendationIntro.className = actionableSlots.length ? "notice info" : "notice success";
+      elements.recommendationIntro.textContent = actionableSlots.length
+        ? "Oben siehst du Empfehlungen mit echtem Handlungsbedarf. Bereits passende Empfehlungen bleiben darunter kompakt sichtbar und per Klick bearbeitbar."
+        : "Alle empfohlenen Felder sind gesetzt. Du kannst sie unten kompakt prüfen und jederzeit wieder als bearbeitbare Karte öffnen.";
 
       actionableSlots.forEach(slot => {
-        const reason = (reasons[slot] || []).join(" ");
-        elements.recommendedFields.appendChild(renderFieldCard(slot, {
+        elements.recommendedActionable.appendChild(renderFieldCard(slot, {
           recommended: true,
-          reason,
+          reason: (reasons[slot] || []).join(" "),
           provenance: provenanceMeta[slot]
         }));
       });
@@ -1700,23 +1095,45 @@
       if (coveredSlots.length) {
         elements.recommendedCoveredWrap.classList.remove("hidden");
         elements.recommendedCoveredBadge.textContent = `${coveredSlots.length}`;
-        elements.recommendedCoveredTitle.textContent = actionableSlots.length
-          ? "Bereits passende Empfehlungen"
-          : "Alle aktuell passenden Empfehlungen";
-        elements.recommendedCoveredDetails.open = !actionableSlots.length && coveredSlots.length <= 3;
+        elements.recommendedCoveredTitle.textContent = actionableSlots.length ? "Bereits passende Empfehlungen" : "Alle aktuell passenden Empfehlungen";
+        elements.recommendedCoveredDetails.open = coveredSlots.length <= 2 && !actionableSlots.length;
         coveredSlots.forEach(slot => {
-          elements.recommendedCovered.appendChild(
-            renderCompactRecommendationItem(slot, recommendedValues, provenanceMeta[slot])
-          );
+          elements.recommendedCovered.appendChild(renderCompactRecommendationItem(slot, recommendedValues, provenanceMeta[slot]));
         });
       }
     }
 
-    function renderRefinementSections() {
+    function getRefinementGroups(recommendedSlots){
+      const requiredSlots = getRequiredSlots();
+      const exclusionSlots = getExclusionSlots();
+      const query = elements.searchInput.value.trim().toLowerCase();
+
+      return state.dimensionOrder.map(dimension => {
+        const slots = dimension.slots.filter(slot => {
+          if (requiredSlots.includes(slot)) return false;
+          if (exclusionSlots.includes(slot)) return false;
+          if (recommendedSlots.includes(slot)) return false;
+          const meta = state.slotIndex[slot];
+          const haystack = [
+            dimension.dimensionLabel,
+            dimension.dimensionDescription,
+            meta.subdimensionLabel,
+            slot,
+            ...Object.keys(meta.allowedValues),
+            ...Object.values(meta.allowedValues).map(v => v.label),
+            ...Object.values(meta.allowedValues).map(v => v.description)
+          ].join(" ").toLowerCase();
+          return !query || haystack.includes(query);
+        });
+        slots.sort((a,b) => getRefinementPriority(a) - getRefinementPriority(b) || a.localeCompare(b));
+        return { ...dimension, slots };
+      }).filter(group => group.slots.length);
+    }
+
+    function renderRefinementSections(){
       const { recommendedSlots } = getActiveRecommendationData();
       const groups = getRefinementGroups(recommendedSlots);
       const requiredComplete = isRequiredComplete();
-
       elements.refinementSections.innerHTML = "";
       if (!groups.length) {
         const notice = document.createElement("div");
@@ -1730,37 +1147,26 @@
         const details = document.createElement("details");
         details.className = "disclosure";
         if (requiredComplete && group.slots.some(isAssigned)) details.open = true;
-
         const setCount = group.slots.filter(isAssigned).length;
         const summary = document.createElement("summary");
-        summary.innerHTML = `
-          <div>
-            <strong>${group.dimensionLabel}</strong>
-            <div class="subtle-text">${group.dimensionDescription || "Weitere Stellschrauben für diese Konfiguration."}</div>
-          </div>
-          <span class="badge subtle">${setCount ? `${setCount} Auswahl${setCount === 1 ? "" : "en"} gesetzt` : "keine Auswahl"}</span>
-        `;
-
+        summary.innerHTML = `<div><strong>${group.dimensionLabel}</strong><div class="subtle-text">${group.dimensionDescription || "Weitere Stellschrauben für diese Konfiguration."}</div></div><span class="badge subtle">${setCount ? `${setCount} Auswahl${setCount === 1 ? "" : "en"} gesetzt` : "keine Auswahl"}</span>`;
         const body = document.createElement("div");
         body.className = "disclosure-body";
         if (!requiredComplete) body.classList.add("muted-panel");
-
         if (!requiredComplete) {
           const info = document.createElement("div");
           info.className = "notice info";
           info.textContent = "Du kannst diese Felder schon ansehen, sinnvoll werden sie meist erst nach den Pflichtangaben.";
           body.appendChild(info);
         }
-
-        group.slots.forEach(slot => body.appendChild(renderFieldCard(slot, { curated: isCuratedRefinementSlot(slot) })));
-
+        group.slots.forEach(slot => body.appendChild(renderFieldCard(slot, { curated: Boolean(getSlotProvenance(slot).autoRecommendationTier) })));
         details.appendChild(summary);
         details.appendChild(body);
         elements.refinementSections.appendChild(details);
       });
     }
 
-    function renderExclusionFields() {
+    function renderExclusionFields(){
       const slots = getExclusionSlots();
       elements.exclusionFields.innerHTML = "";
       if (!slots.length) {
@@ -1773,189 +1179,7 @@
       slots.forEach(slot => elements.exclusionFields.appendChild(renderFieldCard(slot)));
     }
 
-    function valueToTemplateText(slot, value) {
-      if (Array.isArray(value)) {
-        return value.map(item => {
-          const label = getValueLabel(slot, item);
-          return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(item);
-        }).join(", ");
-      }
-
-      const label = getValueLabel(slot, value);
-      return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(value);
-    }
-
-    function renderStructuredPrompt() {
-      const lines = ["Erstelle eine Antwort anhand der folgenden Vorgaben:"];
-
-      state.dimensionOrder.forEach(dimension => {
-        const slotLines = [];
-
-        dimension.slots.forEach(slot => {
-          if (!(slot in state.assignments)) return;
-          const meta = state.slotIndex[slot];
-          const rawValue = state.assignments[slot];
-          const valueText = Array.isArray(rawValue)
-            ? rawValue.map(item => getValueLabel(slot, item)).join(", ")
-            : getValueLabel(slot, rawValue);
-
-          slotLines.push(`- ${meta.subdimensionLabel}: ${valueText}`);
-        });
-
-        if (slotLines.length) {
-          lines.push("");
-          lines.push(`${dimension.dimensionLabel}:`);
-          lines.push(...slotLines);
-        }
-      });
-
-      return lines.join("\n").trim();
-    }
-
-    function renderTemplatePrompt() {
-      const templateId = elements.templateSelect.value;
-      if (!templateId) {
-        throw new Error("Im Template-Modus muss ein Template gewählt werden.");
-      }
-
-      const template = state.templateIndex[templateId];
-      if (!template) {
-        throw new Error(`Unbekanntes Template: ${templateId}`);
-      }
-
-      const missing = (template.slots_used || []).filter(slot => !isAssigned(slot));
-      if (missing.length) {
-        throw new Error(`Für Template '${template.label || templateId}' fehlen Werte für: ${missing.join(", ")}`);
-      }
-
-      let text = template.text || "";
-      (template.slots_used || []).forEach(slot => {
-        const rawValue = state.assignments[slot];
-        const replacement = valueToTemplateText(slot, rawValue);
-        const pattern = new RegExp(`\\[${escapeRegExp(slot)}\\]`, "g");
-        text = text.replace(pattern, replacement);
-      });
-
-      const unresolved = text.match(/\[[A-Z0-9_]+\]/g);
-      if (unresolved) {
-        throw new Error(`Template enthält noch unaufgelöste Platzhalter: ${[...new Set(unresolved)].join(", ")}`);
-      }
-
-      return text.trim();
-    }
-
-    function renderSlotsNotation() {
-      const lines = [];
-      state.dimensionOrder.forEach(dimension => {
-        dimension.slots.forEach(slot => {
-          if (!(slot in state.assignments)) return;
-          const rawValue = state.assignments[slot];
-          if (Array.isArray(rawValue)) lines.push(`[${slot}:${rawValue.join(",")}]`);
-          else lines.push(`[${slot}:${rawValue}]`);
-        });
-      });
-      return lines.length ? lines.join("\n") : "Noch keine Auswahl.";
-    }
-
-
-    function getRecommendationState(slot, recommendedValues = {}) {
-      if (!isAssigned(slot)) return "missing";
-      const current = state.assignments[slot];
-      const expectedValues = recommendedValues[slot] || [];
-      if (!expectedValues.length) return "set";
-      if (Array.isArray(current)) {
-        const overlap = current.some(value => expectedValues.includes(value));
-        return overlap ? "expected" : "abweichend";
-      }
-      return expectedValues.includes(current) ? "expected" : "abweichend";
-    }
-
-    function shortenText(text, maxLength = 118) {
-      const clean = String(text || "").replace(/\s+/g, " ").trim();
-      if (!clean) return "";
-      return clean.length <= maxLength ? clean : `${clean.slice(0, maxLength - 1).trim()}…`;
-    }
-
-    function getCompactBenefitText(slot) {
-      const meta = state.slotIndex[slot] || {};
-      const map = {
-        ZIEL: "Stützt Zielschärfe und Ausrichtung.",
-        AUFGABE: "Stützt Aufgabenlogik und Bearbeitungsrichtung.",
-        KONTEXT: "Stützt Kontext- und Situationspassung.",
-        OUTPUT_FORM: "Stützt Ergebnisform und Nutzwert.",
-        PROZESS: "Stützt Struktur und Nachvollziehbarkeit.",
-        QUALITAETSKRITERIEN: "Stützt Qualität und Lesbarkeit.",
-        ROLLE: "Stützt Perspektive und Anspruchsniveau.",
-        ADRESSAT: "Stützt Zielgruppenpassung.",
-        INTERAKTIONSMODUS: "Stützt Arbeitsfluss und Iteration."
-      };
-      return map[meta.dimensionKey] || "Stützt die aktuelle Konfiguration.";
-    }
-
-    function getCompactStatusMeta(stateText, provenance = null) {
-      const tier = provenance?.autoRecommendationTier || "";
-      const confidence = typeof provenance?.confidence === "number" ? provenance.confidence : null;
-      const highSignal = tier === "A" && (confidence === null || confidence >= 0.8);
-
-      if (stateText === "expected") {
-        return highSignal
-          ? { label: "stark passend", className: "accent" }
-          : { label: "gut passend", className: "soft" };
-      }
-
-      if (stateText === "set") {
-        return highSignal
-          ? { label: "gut passend", className: "soft" }
-          : { label: "eher passend", className: "subtle" };
-      }
-
-      return { label: "prüfen", className: "warn" };
-    }
-
-    function renderCompactRecommendationItem(slot, recommendedValues = {}, provenance = null) {
-      const stateText = getRecommendationState(slot, recommendedValues);
-      const wrapper = document.createElement("div");
-      wrapper.className = "compact-recommendation-item";
-
-      const rawValue = state.assignments[slot];
-      const valueText = Array.isArray(rawValue)
-        ? rawValue.map(item => getValueLabel(slot, item)).join(", ")
-        : getValueLabel(slot, rawValue);
-
-      const currentStatus = getCompactStatusMeta(stateText, provenance);
-      const benefitText = getCompactBenefitText(slot);
-      const expectedValues = recommendedValues[slot] || [];
-      const supportText = stateText === "expected"
-        ? benefitText
-        : stateText === "set"
-          ? "Bleibt aktuell stimmig."
-          : expectedValues.length
-            ? `Typischer wäre: ${expectedValues.map(value => getValueLabel(slot, value)).join(", ")}.`
-            : "Passt aktuell nur eingeschränkt.";
-
-      const titleParts = [];
-      if (provenance?.recommendationNotes) titleParts.push(provenance.recommendationNotes);
-      if (provenance?.autoRecommendationTier) titleParts.push(`Tier ${provenance.autoRecommendationTier}`);
-      if (provenance?.evidenceStrength) titleParts.push(`Evidenz ${provenance.evidenceStrength}`);
-      if (typeof provenance?.confidence === "number") titleParts.push(`Confidence ${provenance.confidence.toFixed(2)}`);
-      wrapper.title = titleParts.join(" · ");
-
-      wrapper.innerHTML = `
-        <div class="compact-recommendation-head">
-          <div class="compact-recommendation-main">
-            <strong>${getSlotDisplayName(slot)}</strong>
-            <div class="compact-recommendation-value">${valueText}</div>
-            <div class="compact-recommendation-meta">${currentStatus.label} · ${supportText}</div>
-          </div>
-          <div class="compact-badges">
-            <span class="badge ${currentStatus.className}">${currentStatus.label}</span>
-          </div>
-        </div>
-      `;
-      return wrapper;
-    }
-
-    function getConflictDetails() {
+    function getConflictDetails(){
       const conflicts = [];
       (state.libraryData?.constraints || []).forEach(constraint => {
         if (constraint.type !== "incompatibility") return;
@@ -1965,22 +1189,13 @@
         const sourceMatches = state.assignments[cond.slot] === cond.equals;
         const targetAssigned = state.assignments[targetSlot];
         if (sourceMatches && Array.isArray(targetAssigned) && targetAssigned.includes(forbiddenValue)) {
-          conflicts.push({
-            sourceSlot: cond.slot,
-            sourceValue: cond.equals,
-            targetSlot,
-            forbiddenValue
-          });
+          conflicts.push({ sourceSlot: cond.slot, sourceValue: cond.equals, targetSlot, forbiddenValue });
         }
       });
       return conflicts;
     }
 
-    function clampScore(value) {
-      return Math.max(0, Math.min(100, Math.round(value)));
-    }
-
-    function getRecommendationWeight(slot, provenanceMeta = null) {
+    function getRecommendationWeight(slot, provenanceMeta = null){
       const provenance = provenanceMeta || getSlotProvenance(slot);
       const tierWeight = TIER_SCORE[provenance.autoRecommendationTier] ?? 30;
       const evidenceWeight = EVIDENCE_WEIGHTS[provenance.evidenceStrength] ?? 0.45;
@@ -1988,36 +1203,32 @@
       return tierWeight * evidenceWeight * confidenceWeight;
     }
 
-    function getOverallLabel(score) {
+    function getOverallLabel(score){
       if (score >= 85) return "stark";
       if (score >= 70) return "gut";
       if (score >= 50) return "solide";
       return "prüfen";
     }
 
-    function buildAssessmentInterpretation(metrics) {
+    function buildAssessmentInterpretation(metrics){
       if (!Object.keys(state.assignments).some(slot => isAssigned(slot))) {
         return "Noch keine belastbare Bewertung: Setze zuerst die Pflichtangaben, damit die Bibliothek Kohärenz und Anschlussfähigkeit einschätzen kann.";
       }
-
       const parts = [];
       if (metrics.completeness >= 80) parts.push("Die Konfiguration ist weitgehend ausgearbeitet.");
       else if (metrics.completeness >= 55) parts.push("Die Grundkonfiguration steht, aber einige sinnvolle Ergänzungen fehlen noch.");
       else parts.push("Die Konfiguration ist noch früh und profitiert vor allem von weiteren Kernentscheidungen.");
-
       if (metrics.coherence >= 80) parts.push("Die Auswahl wirkt intern stimmig.");
       else if (metrics.coherence >= 60) parts.push("Die Auswahl ist im Wesentlichen konsistent, aber noch nicht überall sauber aufeinander abgestimmt.");
       else parts.push("Die aktuelle Zusammenstellung erzeugt noch merkliche Spannungen oder Konflikte.");
-
       if (metrics.heuristicFit >= 80) parts.push("Die heuristische Passung zur Bibliothekslogik ist hoch.");
       else if (metrics.heuristicFit >= 60) parts.push("Die Bibliothek erkennt einen plausiblen Pfad, aber noch nicht den stärksten Anschlusszustand.");
       else parts.push("Viele aktuelle Empfehlungen sind noch nicht aufgegriffen oder weichen vom erwarteten Pfad ab.");
-
       parts.push(`Eingriffsbedarf aktuell: ${metrics.interventionNeed}.`);
       return parts.join(" ");
     }
 
-    function estimateSuggestionDelta(kind, weight = 1, hasConflict = false) {
+    function estimateSuggestionDelta(kind, weight = 1){
       if (kind === "required") return 10;
       if (kind === "conflict") return 14;
       if (kind === "recommended-missing") return clampScore(3 + weight / 18);
@@ -2025,28 +1236,27 @@
       return 3;
     }
 
-    function buildImprovementSuggestions(assessment) {
+    function buildImprovementSuggestions(assessment){
       const suggestions = [];
       const { recommendationData, requiredMissing, conflicts, recommendedValues } = assessment;
-
       requiredMissing.forEach(slot => {
         suggestions.push({
           kind: "required",
           delta: estimateSuggestionDelta("required"),
           title: `${getSlotDisplayName(slot)} setzen`,
-          detail: `Hebt vor allem die Vollständigkeit an und verbessert die Belastbarkeit der Gesamtbewertung.`
+          detail: "Hebt vor allem die Vollständigkeit an und verbessert die Belastbarkeit der Gesamtbewertung.",
+          targetSlot: slot
         });
       });
-
       conflicts.forEach(conflict => {
         suggestions.push({
           kind: "conflict",
           delta: estimateSuggestionDelta("conflict"),
           title: `Konflikt zwischen ${getSlotDisplayName(conflict.sourceSlot)} und ${getSlotDisplayName(conflict.targetSlot)} auflösen`,
-          detail: `Prüfe ${getSlotDisplayName(conflict.targetSlot)} oder ändere ${getSlotDisplayName(conflict.sourceSlot)}, damit die Kohärenz nicht unnötig gedrückt wird.`
+          detail: `Prüfe ${getSlotDisplayName(conflict.targetSlot)} oder ändere ${getSlotDisplayName(conflict.sourceSlot)}, damit die Kohärenz nicht unnötig gedrückt wird.`,
+          targetSlot: conflict.targetSlot
         });
       });
-
       recommendationData.recommendedSlots.forEach(slot => {
         const weight = getRecommendationWeight(slot, recommendationData.provenanceMeta[slot]);
         const stateText = getRecommendationState(slot, recommendedValues);
@@ -2055,7 +1265,8 @@
             kind: "recommended-missing",
             delta: estimateSuggestionDelta("recommended-missing", weight),
             title: `${getSlotDisplayName(slot)} ergänzen`,
-            detail: `${(recommendationData.reasons[slot] || ["Diese Ergänzung passt gut zum aktuellen Pfad."])[0]}`
+            detail: (recommendationData.reasons[slot] || ["Diese Ergänzung passt gut zum aktuellen Pfad."])[0],
+            targetSlot: slot
           });
         } else if (stateText === "abweichend") {
           const expected = (recommendedValues[slot] || []).map(value => getValueLabel(slot, value)).join(", ");
@@ -2063,16 +1274,16 @@
             kind: "recommended-align",
             delta: estimateSuggestionDelta("recommended-align", weight),
             title: `${getSlotDisplayName(slot)} an erwarteten Pfad anpassen`,
-            detail: expected ? `Typisch passend wären eher: ${expected}.` : `Die aktuelle Ausprägung weicht vom empfohlenen Pfad ab.`
+            detail: expected ? `Typisch passend wären eher: ${expected}.` : "Die aktuelle Ausprägung weicht vom empfohlenen Pfad ab.",
+            targetSlot: slot
           });
         }
       });
-
-      suggestions.sort((a, b) => b.delta - a.delta || a.title.localeCompare(b.title));
+      suggestions.sort((a,b) => b.delta - a.delta || a.title.localeCompare(b.title));
       return suggestions.slice(0, 4);
     }
 
-    function computeAssessmentModel() {
+    function computeAssessmentModel(){
       const recommendationData = getActiveRecommendationData();
       const requiredSlots = getRequiredSlots();
       const requiredMissing = requiredSlots.filter(slot => !isAssigned(slot));
@@ -2085,8 +1296,7 @@
       const requiredRatio = requiredSlots.length ? (requiredSlots.length - requiredMissing.length) / requiredSlots.length : 0;
       let completeness = requiredRatio * 70;
       if (activeRecommended.length) {
-        let recTotal = 0;
-        let recDone = 0;
+        let recTotal = 0, recDone = 0;
         activeRecommended.forEach(slot => {
           const weight = getRecommendationWeight(slot, recommendationData.provenanceMeta[slot]);
           recTotal += weight;
@@ -2111,8 +1321,7 @@
       coherence -= conflicts.length * 32;
       coherence = clampScore(coherence);
 
-      let passTotal = 0;
-      let passAchieved = 0;
+      let passTotal = 0, passAchieved = 0;
       activeRecommended.forEach(slot => {
         const weight = getRecommendationWeight(slot, recommendationData.provenanceMeta[slot]);
         passTotal += weight;
@@ -2127,30 +1336,35 @@
       const overall = clampScore(completeness * 0.25 + coherence * 0.35 + heuristicFit * 0.40);
       const interventionNeed = conflicts.length || requiredMissing.length ? "hoch" : (overall >= 80 ? "niedrig" : "mittel");
       const interpretation = buildAssessmentInterpretation({ completeness, coherence, heuristicFit, interventionNeed });
-      const suggestions = buildImprovementSuggestions({
-        recommendationData,
-        requiredMissing,
-        conflicts,
-        recommendedValues
-      });
+      const suggestions = buildImprovementSuggestions({ recommendationData, requiredMissing, conflicts, recommendedValues });
 
-      return {
-        completeness,
-        coherence,
-        heuristicFit,
-        overall,
-        label: getOverallLabel(overall),
-        interventionNeed,
-        interpretation,
-        suggestions,
-        requiredMissing,
-        conflicts,
-        recommendationData,
-        recommendedValues
-      };
+      return { completeness, coherence, heuristicFit, overall, label: getOverallLabel(overall), interventionNeed, interpretation, suggestions, requiredMissing, conflicts, recommendationData, recommendedValues };
     }
 
-    function renderAssessment() {
+    function focusField(slot, preferCovered = false){
+      let el = null;
+      if (preferCovered) el = document.getElementById(`field-card-covered-${slot}`);
+      if (!el) el = document.getElementById(`field-card-${slot}`);
+      if (!el && state.coveredEditorOpen[slot] !== true) {
+        state.coveredEditorOpen[slot] = true;
+        elements.recommendedCoveredDetails.open = true;
+        updateOutputs();
+        requestAnimationFrame(() => focusField(slot, true));
+        return;
+      }
+      if (!el) return;
+      const disclosure = el.closest("details.disclosure");
+      if (disclosure) disclosure.open = true;
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      const focusable = el.querySelector("select, input, textarea, button");
+      if (focusable) setTimeout(() => { try { focusable.focus({ preventScroll: true }); } catch(_) { focusable.focus(); } }, 180);
+      el.classList.remove("field-focus");
+      void el.offsetWidth;
+      el.classList.add("field-focus");
+      setTimeout(() => el.classList.remove("field-focus"), 1500);
+    }
+
+    function renderAssessment(){
       const model = computeAssessmentModel();
       elements.overallScore.textContent = model.overall;
       elements.overallLabel.textContent = `Gesamtscore: ${model.label}`;
@@ -2158,32 +1372,15 @@
       elements.assessmentInterpretation.textContent = model.interpretation;
 
       const metrics = [
-        {
-          title: "Vollständigkeit",
-          value: model.completeness,
-          text: "Pflichtfelder, aktive Empfehlungen und ein kleiner Feinschliff-Bonus."
-        },
-        {
-          title: "Kohärenz",
-          value: model.coherence,
-          text: "Wie stimmig die bisherige Auswahl intern zusammenpasst."
-        },
-        {
-          title: "Heuristische Passung",
-          value: model.heuristicFit,
-          text: "Wie nah die Konfiguration an der aktuellen Bibliothekslogik liegt."
-        }
+        { title: "Vollständigkeit", value: model.completeness, text: "Pflichtfelder, aktive Empfehlungen und ein kleiner Feinschliff-Bonus." },
+        { title: "Kohärenz", value: model.coherence, text: "Wie stimmig die bisherige Auswahl intern zusammenpasst." },
+        { title: "Heuristische Passung", value: model.heuristicFit, text: "Wie nah die Konfiguration an der aktuellen Bibliothekslogik liegt." }
       ];
-
       elements.assessmentMetrics.innerHTML = "";
       metrics.forEach(metric => {
         const item = document.createElement("div");
         item.className = "metric-item";
-        item.innerHTML = `
-          <div class="metric-head"><strong>${metric.title}</strong><span>${metric.value} %</span></div>
-          <div class="metric-bar"><div class="metric-fill" style="width:${metric.value}%"></div></div>
-          <small>${metric.text}</small>
-        `;
+        item.innerHTML = `<div class="metric-head"><strong>${metric.title}</strong><span>${metric.value} %</span></div><div class="metric-bar"><div class="metric-fill" style="width:${metric.value}%"></div></div><small>${metric.text}</small>`;
         elements.assessmentMetrics.appendChild(item);
       });
 
@@ -2194,106 +1391,146 @@
         item.innerHTML = `<strong>Aktuell kein dringender Hebel</strong><small>Die Konfiguration ist bereits gut anschlussfähig. Prüfe nur noch Feinjustierungen nach Bedarf.</small>`;
         elements.scoreSuggestions.appendChild(item);
       } else {
-        model.suggestions.forEach(suggestion => {
+        model.suggestions.forEach((suggestion, idx) => {
           const item = document.createElement("div");
-          item.className = "suggestion-item";
-          item.innerHTML = `
-            <div class="suggestion-head"><strong>${suggestion.title}</strong><span class="badge subtle">ca. +${suggestion.delta}</span></div>
-            <small>${suggestion.detail}</small>
-          `;
+          item.className = `suggestion-item${idx === 0 ? " primary" : ""}`;
+          const head = document.createElement("div");
+          head.className = "suggestion-head";
+          head.innerHTML = `<strong>${suggestion.title}</strong><div class="inline-actions">${idx === 0 ? '<span class="badge accent">größter Hebel</span>' : ''}<span class="badge subtle">ca. +${suggestion.delta}</span></div>`;
+          const detail = document.createElement("small");
+          detail.textContent = suggestion.detail;
+          const actions = document.createElement("div");
+          actions.className = "suggestion-actions";
+          if (suggestion.targetSlot) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "jump-btn";
+            btn.textContent = "Zum Feld";
+            btn.addEventListener("click", () => focusField(suggestion.targetSlot));
+            actions.appendChild(btn);
+          }
+          item.appendChild(head);
+          item.appendChild(detail);
+          if (actions.childNodes.length) item.appendChild(actions);
           elements.scoreSuggestions.appendChild(item);
         });
       }
     }
 
-    function renderSummary() {
+    function renderSummary(){
       const wrapper = document.createDocumentFragment();
       const orderedSlots = [
         ...getRequiredSlots(),
-        ...unique([
-          ...getActiveRecommendationData().recommendedSlots,
-          ...Object.keys(state.assignments)
-        ])
+        ...unique([...getActiveRecommendationData().recommendedSlots, ...Object.keys(state.assignments)])
       ];
-
       const visibleSlots = unique(orderedSlots).filter(slot => isAssigned(slot));
       if (!visibleSlots.length) {
         const item = document.createElement("div");
         item.className = "summary-item";
-        item.innerHTML = `
-          <strong>Noch keine Auswahl</strong>
-          <span>Setze zuerst die Pflichtangaben, danach erscheinen hier die wichtigsten Entscheidungen in Klartext.</span>
-        `;
+        item.innerHTML = `<strong>Noch keine Auswahl</strong><span>Setze zuerst die Pflichtangaben, danach erscheinen hier die wichtigsten Entscheidungen in Klartext.</span>`;
         wrapper.appendChild(item);
         return wrapper;
       }
-
       visibleSlots.forEach(slot => {
         const rawValue = state.assignments[slot];
-        const valueText = Array.isArray(rawValue)
-          ? rawValue.map(item => getValueLabel(slot, item)).join(", ")
-          : getValueLabel(slot, rawValue);
-
+        const valueText = Array.isArray(rawValue) ? rawValue.map(item => getValueLabel(slot, item)).join(", ") : getValueLabel(slot, rawValue);
         const item = document.createElement("div");
         item.className = "summary-item";
-        item.innerHTML = `
-          <strong>${getSlotDisplayName(slot)}</strong>
-          <span>${valueText}</span>
-        `;
+        item.innerHTML = `<strong>${getSlotDisplayName(slot)}</strong><span>${valueText}</span>`;
         wrapper.appendChild(item);
       });
-
       return wrapper;
     }
 
-    function validateAssignments() {
+    function validateAssignments(){
       const notices = [];
       const assessment = computeAssessmentModel();
-
       if (assessment.requiredMissing.length) {
-        notices.push({
-          type: "warning",
-          text: `Fehlende Pflichtfelder: ${assessment.requiredMissing.map(slot => `${getSlotDisplayName(slot)} (${slot})`).join(", ")}`
-        });
+        notices.push({ type: "warning", text: `Fehlende Pflichtfelder: ${assessment.requiredMissing.map(slot => `${getSlotDisplayName(slot)} (${slot})`).join(", ")}` });
       }
-
       const nextBestFields = assessment.recommendationData.recommendedSlots.filter(slot => getRecommendationState(slot, assessment.recommendedValues) === "missing");
       const tuneableFields = assessment.recommendationData.recommendedSlots.filter(slot => getRecommendationState(slot, assessment.recommendedValues) === "abweichend");
-
       if (nextBestFields.length) {
         const preview = nextBestFields.slice(0, 4).map(getSlotDisplayName).join(", ");
-        notices.push({
-          type: "info",
-          text: `Als Nächstes sinnvoll: ${preview}${nextBestFields.length > 4 ? " …" : ""}`
-        });
+        notices.push({ type: "info", text: `Als Nächstes sinnvoll: ${preview}${nextBestFields.length > 4 ? " …" : ""}` });
       }
-
       if (tuneableFields.length) {
         const preview = tuneableFields.slice(0, 3).map(getSlotDisplayName).join(", ");
-        notices.push({
-          type: "warning",
-          text: `Bereits gesetzt, aber noch ausbaufähig: ${preview}${tuneableFields.length > 3 ? " …" : ""}`
-        });
+        notices.push({ type: "warning", text: `Bereits gesetzt, aber noch ausbaufähig: ${preview}${tuneableFields.length > 3 ? " …" : ""}` });
       }
-
       assessment.conflicts.forEach(conflict => {
-        notices.push({
-          type: "error",
-          text: `${getSlotDisplayName(conflict.sourceSlot)} = ${getValueLabel(conflict.sourceSlot, conflict.sourceValue)} ↔ ${getSlotDisplayName(conflict.targetSlot)} enthält ${getValueLabel(conflict.targetSlot, conflict.forbiddenValue)}`
-        });
+        notices.push({ type: "error", text: `${getSlotDisplayName(conflict.sourceSlot)} = ${getValueLabel(conflict.sourceSlot, conflict.sourceValue)} ↔ ${getSlotDisplayName(conflict.targetSlot)} enthält ${getValueLabel(conflict.targetSlot, conflict.forbiddenValue)}` });
       });
-
       if (!assessment.requiredMissing.length && !nextBestFields.length && !tuneableFields.length && !assessment.conflicts.length) {
-        notices.push({
-          type: "success",
-          text: "Konfiguration ist konsistent und aktuell ohne offene Hinweise."
-        });
+        notices.push({ type: "success", text: "Konfiguration ist konsistent und aktuell ohne offene Hinweise." });
       }
-
       return notices;
     }
 
-    function updateOutputs() {
+    function renderStructuredPrompt(){
+      const lines = ["Erstelle eine Antwort anhand der folgenden Vorgaben:"];
+      state.dimensionOrder.forEach(dimension => {
+        const slotLines = [];
+        dimension.slots.forEach(slot => {
+          if (!(slot in state.assignments)) return;
+          const meta = state.slotIndex[slot];
+          const rawValue = state.assignments[slot];
+          const valueText = Array.isArray(rawValue) ? rawValue.map(item => getValueLabel(slot, item)).join(", ") : getValueLabel(slot, rawValue);
+          slotLines.push(`- ${meta.subdimensionLabel}: ${valueText}`);
+        });
+        if (slotLines.length) {
+          lines.push("");
+          lines.push(`${dimension.dimensionLabel}:`);
+          lines.push(...slotLines);
+        }
+      });
+      return lines.join("\n").trim();
+    }
+
+    function renderTemplatePrompt(){
+      const templateId = elements.templateSelect.value;
+      if (!templateId) throw new Error("Im Template-Modus muss ein Template gewählt werden.");
+      const template = state.templateIndex[templateId];
+      if (!template) throw new Error(`Unbekanntes Template: ${templateId}`);
+      const missing = (template.slots_used || []).filter(slot => !isAssigned(slot));
+      if (missing.length) throw new Error(`Für Template '${template.label || templateId}' fehlen Werte für: ${missing.join(", ")}`);
+      let text = template.text || "";
+      (template.slots_used || []).forEach(slot => {
+        const rawValue = state.assignments[slot];
+        const replacement = valueToTemplateText(slot, rawValue);
+        const pattern = new RegExp(`\\[${escapeRegExp(slot)}\\]`, "g");
+        text = text.replace(pattern, replacement);
+      });
+      const unresolved = text.match(/\[[A-Z0-9_]+\]/g);
+      if (unresolved) throw new Error(`Template enthält noch unaufgelöste Platzhalter: ${[...new Set(unresolved)].join(", ")}`);
+      return text.trim();
+    }
+
+    function valueToTemplateText(slot, value){
+      if (Array.isArray(value)) {
+        return value.map(item => {
+          const label = getValueLabel(slot, item);
+          return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(item);
+        }).join(", ");
+      }
+      const label = getValueLabel(slot, value);
+      return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(value);
+    }
+
+    function renderSlotsNotation(){
+      const lines = [];
+      state.dimensionOrder.forEach(dimension => {
+        dimension.slots.forEach(slot => {
+          if (!(slot in state.assignments)) return;
+          const rawValue = state.assignments[slot];
+          if (Array.isArray(rawValue)) lines.push(`[${slot}:${rawValue.join(",")}]`);
+          else lines.push(`[${slot}:${rawValue}]`);
+        });
+      });
+      return lines.length ? lines.join("\n") : "Noch keine Auswahl.";
+    }
+
+    function updateOutputs(){
       renderRequiredSection();
       renderRecommendationSection();
       renderRefinementSections();
@@ -2306,27 +1543,18 @@
 
       const notices = validateAssignments();
       elements.statusOutput.innerHTML = "";
-
       let prompt = "Noch kein Prompt gerendert.";
       const hasAssignments = Object.keys(state.assignments).some(slot => isAssigned(slot));
       try {
-        prompt = elements.modeSelect.value === "template"
-          ? renderTemplatePrompt()
-          : renderStructuredPrompt();
+        prompt = elements.modeSelect.value === "template" ? renderTemplatePrompt() : renderStructuredPrompt();
       } catch (error) {
         notices.unshift({ type: "error", text: error.message });
       }
 
       if (!isRequiredComplete()) {
-        if (hasAssignments) {
-          prompt = `Vorläufige Vorschau – noch nicht vollständig. Ergänze zuerst die Pflichtangaben.
-
-${renderStructuredPrompt()}`;
-        } else {
-          prompt = "Der Prompt ist noch nicht vollständig. Ergänze zuerst die Pflichtangaben.";
-        }
+        if (hasAssignments) prompt = `Vorläufige Vorschau – noch nicht vollständig. Ergänze zuerst die Pflichtangaben.\n\n${renderStructuredPrompt()}`;
+        else prompt = "Der Prompt ist noch nicht vollständig. Ergänze zuerst die Pflichtangaben.";
       }
-
       elements.promptOutput.textContent = prompt;
 
       notices.forEach(item => {
@@ -2335,37 +1563,37 @@ ${renderStructuredPrompt()}`;
         div.textContent = item.text;
         elements.statusOutput.appendChild(div);
       });
-
       if (!notices.length) {
         const div = document.createElement("div");
         div.className = "notice success";
         div.textContent = "Keine Hinweise.";
         elements.statusOutput.appendChild(div);
       }
-
       persistAssignments();
     }
 
-    function loadInstance(instanceId) {
+    function loadInstance(instanceId){
       if (!instanceId || !state.exampleIndex[instanceId]) return;
       const example = state.exampleIndex[instanceId];
       state.assignments = JSON.parse(JSON.stringify(example.values || {}));
+      state.coveredEditorOpen = {};
       updateOutputs();
     }
 
-    function clearAssignments() {
+    function clearAssignments(){
       state.assignments = {};
+      state.coveredEditorOpen = {};
       updateOutputs();
     }
 
-    async function copyText(text, successMessage) {
-      try {
+    async function copyText(text, successMessage){
+      try{
         await navigator.clipboard.writeText(text);
         const div = document.createElement("div");
         div.className = "notice success";
         div.textContent = successMessage;
         elements.statusOutput.prepend(div);
-      } catch (_) {
+      } catch(_){
         const div = document.createElement("div");
         div.className = "notice error";
         div.textContent = "Kopieren fehlgeschlagen.";
@@ -2373,31 +1601,26 @@ ${renderStructuredPrompt()}`;
       }
     }
 
-    function persistAssignments() {
-      try {
+    function persistAssignments(){
+      try{
         localStorage.setItem("prompt-library-ui.assignments", JSON.stringify(state.assignments));
         localStorage.setItem("prompt-library-ui.mode", elements.modeSelect.value);
         localStorage.setItem("prompt-library-ui.template", elements.templateSelect.value);
-      } catch (_) {}
+      } catch(_){}
     }
 
-    function restoreAssignments() {
-      try {
+    function restoreAssignments(){
+      try{
         const rawAssignments = localStorage.getItem("prompt-library-ui.assignments");
         const rawMode = localStorage.getItem("prompt-library-ui.mode");
         const rawTemplate = localStorage.getItem("prompt-library-ui.template");
-
         if (rawAssignments) state.assignments = JSON.parse(rawAssignments);
         if (rawMode) elements.modeSelect.value = rawMode;
         if (rawTemplate) elements.templateSelect.value = rawTemplate;
-      } catch (_) {}
+      } catch(_){}
     }
 
-    elements.modeSelect.addEventListener("change", () => {
-      updateTemplateVisibility();
-      updateOutputs();
-    });
-
+    elements.modeSelect.addEventListener("change", () => { updateTemplateVisibility(); updateOutputs(); });
     elements.templateSelect.addEventListener("change", updateOutputs);
     elements.searchInput.addEventListener("input", updateOutputs);
     elements.loadInstanceBtn.addEventListener("click", () => loadInstance(elements.instanceSelect.value));
