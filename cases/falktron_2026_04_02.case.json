@@ -489,7 +489,7 @@
         "WISSENSSTAND_ADRESSAT": "fachkundig",
         "SPRACHQUALITAET": "sachlich",
         "RAHMENBEDINGUNG": "sensible_kommunikation",
-        "ERGEBNISORIENTIERUNG": "direkt_nutzbare_fassung",
+        "ERGEBNISORIENTIERUNG": "nur_ergebnis",
         "EXPERTENROLLE": "sparringspartner"
       }
     },
