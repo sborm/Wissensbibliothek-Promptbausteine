@@ -1741,18 +1741,22 @@
     function renderStructuredPrompt(){
       const lines = ["Erstelle eine Antwort anhand der folgenden Vorgaben:"];
       const caseLines = buildCasePromptContextLines();
+
       if (caseLines.length) {
         lines.push("");
         lines.push("Fallkontext:");
         caseLines.forEach(line => lines.push(`- ${line}`));
       }
+
       state.dimensionOrder.forEach(dimension => {
         const slotLines = [];
         dimension.slots.forEach(slot => {
           if (!(slot in state.assignments)) return;
           const meta = state.slotIndex[slot];
           const rawValue = state.assignments[slot];
-          const valueText = Array.isArray(rawValue) ? rawValue.map(item => getValueLabel(slot, item)).join(", ") : getValueLabel(slot, rawValue);
+          const valueText = Array.isArray(rawValue)
+            ? rawValue.map(item => getValueLabel(slot, item)).join(", ")
+            : getValueLabel(slot, rawValue);
           slotLines.push(`- ${meta.subdimensionLabel}: ${valueText}`);
         });
         if (slotLines.length) {
@@ -1761,17 +1765,22 @@
           lines.push(...slotLines);
         }
       });
-      return lines.join("
-").trim();
+
+      return lines.join("\n").trim();
     }
 
     function renderTemplatePrompt(){
       const templateId = elements.templateSelect.value;
       if (!templateId) throw new Error("Im Template-Modus muss ein Template gewählt werden.");
+
       const template = state.templateIndex[templateId];
       if (!template) throw new Error(`Unbekanntes Template: ${templateId}`);
+
       const missing = (template.slots_used || []).filter(slot => !isAssigned(slot));
-      if (missing.length) throw new Error(`Für Template '${template.label || templateId}' fehlen Werte für: ${missing.join(", ")}`);
+      if (missing.length) {
+        throw new Error(`Für Template '${template.label || templateId}' fehlen Werte für: ${missing.join(", ")}`);
+      }
+
       let text = template.text || "";
       (template.slots_used || []).forEach(slot => {
         const rawValue = state.assignments[slot];
@@ -1779,19 +1788,24 @@
         const pattern = new RegExp(`\[${escapeRegExp(slot)}\]`, "g");
         text = text.replace(pattern, replacement);
       });
+
       const unresolved = text.match(/\[[A-Z0-9_]+\]/g);
-      if (unresolved) throw new Error(`Template enthält noch unaufgelöste Platzhalter: ${[...new Set(unresolved)].join(", ")}`);
+      if (unresolved) {
+        throw new Error(`Template enthält noch unaufgelöste Platzhalter: ${[...new Set(unresolved)].join(", ")}`);
+      }
+
       const trimmed = text.trim();
       const caseLines = buildCasePromptContextLines();
+
       if (!caseLines.length) return trimmed;
+
       return [
         "Fallkontext:",
         ...caseLines.map(line => `- ${line}`),
         "",
         "Aufgabe:",
         trimmed
-      ].join("
-").trim();
+      ].join("\n").trim();
     }
 
     function valueToTemplateText(slot, value){
