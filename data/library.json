@@ -1,11 +1,11 @@
 {
   "meta": {
     "project": "Prompt-Bibliothek",
-    "version": "2.3.0",
-    "author": "dein-name",
+    "version": "2.4.0",
+    "author": "Sarah Bormann",
     "created": "2026-03-31T12:00:00Z",
     "locale": "de-DE",
-    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit Hauptdimensionen, Subdimensionen, Slots, Templates, Constraints, Beispielinstanzen und Provenienzmetadaten für Heuristiken (Tier A + B befüllt). Ergänzt um fallübergreifende Kontextintegrationslogik und Registry für separat geführte Fallakten."
+    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit geschärfter Slotlogik für Ziel, Aufgabe, Prozess, Rolle und Grenzen. Die Bibliothek trennt nun klarer zwischen Zweck, Operation, Denklogik, fachlicher Funktion, Interventionsintensität und echten Ausschlüssen. Ergänzt um Templates, Beispielinstanzen, Konfliktregeln und Provenienzmetadaten."
   },
   "library": {
     "ZIEL": {
@@ -22,12 +22,12 @@
             {
               "key": "informieren",
               "label": "Informieren",
-              "description": "Wissen oder Fakten vermitteln."
+              "description": "Wissen oder Fakten vermitteln, damit ein Thema verstanden oder eingeordnet werden kann."
             },
             {
               "key": "erklaeren",
               "label": "Erklären",
-              "description": "Ein Thema verständlich erläutern."
+              "description": "Ein Thema verständlich erläutern und zugänglich machen."
             },
             {
               "key": "zusammenfassen",
@@ -42,7 +42,7 @@
             {
               "key": "vergleichen",
               "label": "Vergleichen",
-              "description": "Optionen, Positionen oder Varianten gegenüberstellen."
+              "description": "Gemeinsamkeiten, Unterschiede oder Optionen sichtbar machen."
             },
             {
               "key": "bewerten",
@@ -52,7 +52,7 @@
             {
               "key": "entscheidung_vorbereiten",
               "label": "Entscheidung vorbereiten",
-              "description": "Eine Entscheidungsgrundlage erarbeiten."
+              "description": "Eine belastbare Grundlage für eine Entscheidung erarbeiten."
             },
             {
               "key": "ideen_generieren",
@@ -77,32 +77,32 @@
           ],
           "evidence_strength": "stark",
           "auto_recommendation_tier": "A",
-          "recommendation_notes": "Zentraler Task-Anker. Früh setzen und als Primärtreiber für Heuristiken behandeln.",
+          "recommendation_notes": "Beantwortet die Frage, wozu das Ergebnis dienen soll. Früh setzen und als Primärtreiber für Heuristiken behandeln.",
           "heuristic_scope": [
             "alle_tasks"
           ],
           "confidence": 0.9
         },
-        "ZIEL_TIEFE": {
+        "ANALYSETIEFE": {
           "id": "A2",
-          "label": "Zieltiefe",
-          "slot": "ZIEL_TIEFE",
+          "label": "Analysetiefe",
+          "slot": "ANALYSETIEFE",
           "required": false,
           "values": [
             {
               "key": "ueberblick",
               "label": "Überblick",
-              "description": "Kurze, orientierende Einordnung."
+              "description": "Kurze, orientierende Einordnung mit geringer Bearbeitungstiefe."
             },
             {
               "key": "mittel",
               "label": "Mittlere Tiefe",
-              "description": "Solide, aber nicht ausufernde Ausarbeitung."
+              "description": "Solide inhaltliche Bearbeitung ohne maximale Ausdifferenzierung."
             },
             {
               "key": "tiefenanalyse",
               "label": "Tiefenanalyse",
-              "description": "Detaillierte, differenzierte Bearbeitung."
+              "description": "Detaillierte, differenzierte Bearbeitung mit hoher analytischer Tiefe."
             }
           ],
           "origin": [
@@ -111,7 +111,7 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "B",
-          "recommendation_notes": "Hilft, den gewünschten Analyse- und Erklärungsgrad zu kalibrieren; besonders nützlich bei komplexeren Aufgaben.",
+          "recommendation_notes": "Steuert die analytische Bearbeitungstiefe, nicht die Textlänge. Besonders nützlich bei Analyse-, Bewertungs- und Erklärungsaufgaben.",
           "heuristic_scope": [
             "analysieren",
             "bewerten",
@@ -121,33 +121,48 @@
           ],
           "confidence": 0.72
         },
-        "ZIEL_STATUS": {
+        "HANDLUNGSREIFE": {
           "id": "A3",
-          "label": "Zielstatus",
-          "slot": "ZIEL_STATUS",
+          "label": "Handlungsreife",
+          "slot": "HANDLUNGSREIFE",
           "required": false,
           "values": [
             {
-              "key": "explorativ",
-              "label": "Explorativ",
-              "description": "Offenes Erkunden eines Themas."
+              "key": "explorieren",
+              "label": "Explorieren",
+              "description": "Offenes Erkunden, um ein Thema zunächst zu verstehen."
             },
             {
-              "key": "vorbereitend",
-              "label": "Vorbereitend",
-              "description": "Vorarbeit für weitere Schritte."
+              "key": "strukturieren",
+              "label": "Strukturieren",
+              "description": "Inhalte so ordnen, dass ein tragfähiger Überblick entsteht."
             },
             {
-              "key": "entscheidungsorientiert",
-              "label": "Entscheidungsorientiert",
-              "description": "Auf Entscheidung oder Auswahl ausgerichtet."
+              "key": "entscheidungsreif",
+              "label": "Entscheidungsreif",
+              "description": "So aufbereiten, dass eine Auswahl oder Entscheidung möglich wird."
             },
             {
-              "key": "umsetzungsorientiert",
-              "label": "Umsetzungsorientiert",
-              "description": "Auf praktische Umsetzung ausgerichtet."
+              "key": "umsetzungsreif",
+              "label": "Umsetzungsreif",
+              "description": "So konkretisieren, dass nächste Schritte direkt ableitbar sind."
             }
-          ]
+          ],
+          "origin": [
+            "repo_practice",
+            "community_guide"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Beschreibt, wie weit die Antwort in Richtung Entscheidung oder Umsetzung tragen soll.",
+          "heuristic_scope": [
+            "analysieren",
+            "bewerten",
+            "entscheidung_vorbereiten",
+            "planen",
+            "verbessern"
+          ],
+          "confidence": 0.74
         }
       }
     },
@@ -175,7 +190,7 @@
             {
               "key": "strukturieren",
               "label": "Strukturieren",
-              "description": "Inhalte ordnen und gliedern."
+              "description": "Inhalte ordnen, gliedern oder in eine klare Form bringen."
             },
             {
               "key": "umschreiben",
@@ -200,7 +215,7 @@
             {
               "key": "entwerfen",
               "label": "Entwerfen",
-              "description": "Einen ersten Entwurf erzeugen."
+              "description": "Einen ersten Entwurf oder eine erste Fassung erzeugen."
             },
             {
               "key": "pruefen",
@@ -210,7 +225,7 @@
             {
               "key": "vergleichen",
               "label": "Vergleichen",
-              "description": "Mehrere Optionen oder Varianten gegenüberstellen."
+              "description": "Mehrere Optionen oder Varianten systematisch gegenüberstellen."
             }
           ],
           "origin": [
@@ -219,32 +234,27 @@
           ],
           "evidence_strength": "stark",
           "auto_recommendation_tier": "A",
-          "recommendation_notes": "Als explizites Handlungsverb modellieren und getrennt vom Zieltyp behandeln.",
+          "recommendation_notes": "Beschreibt die konkrete Operation, die die KI ausführen soll. Getrennt vom Zieltyp behandeln.",
           "heuristic_scope": [
             "alle_tasks"
           ],
           "confidence": 0.88
         },
-        "AUFGABENUMFANG": {
+        "AUFGABENSTRUKTUR": {
           "id": "B2",
-          "label": "Aufgabenumfang",
-          "slot": "AUFGABENUMFANG",
+          "label": "Aufgabenstruktur",
+          "slot": "AUFGABENSTRUKTUR",
           "required": false,
           "values": [
             {
               "key": "einzelschritt",
               "label": "Einzelschritt",
-              "description": "Eine einzelne Operation."
+              "description": "Eine klar begrenzte Operation ohne mehrteilige Bearbeitungslogik."
             },
             {
               "key": "mehrstufig",
               "label": "Mehrstufig",
-              "description": "Mehrere aufeinanderfolgende Schritte."
-            },
-            {
-              "key": "iterativ",
-              "label": "Iterativ",
-              "description": "Schrittweise Verfeinerung in mehreren Runden."
+              "description": "Mehrere aufeinander bezogene Schritte innerhalb derselben Aufgabe."
             }
           ],
           "origin": [
@@ -254,7 +264,7 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "B",
-          "recommendation_notes": "Schrittigkeit und Arbeitsumfang werden besonders relevant, wenn Aufgaben geplant, analysiert, geprüft oder iterativ entworfen werden.",
+          "recommendation_notes": "Beschreibt, ob die Aufgabe als einzelner Schritt oder als mehrteilige Bearbeitung angelegt ist. Iteration wird separat über den Interaktionsmodus gesteuert.",
           "heuristic_scope": [
             "analysieren",
             "pruefen",
@@ -262,10 +272,9 @@
             "entwerfen",
             "verbessern",
             "leitfaden",
-            "checkliste",
-            "iteratives_verfeinern"
+            "checkliste"
           ],
-          "confidence": 0.76
+          "confidence": 0.78
         }
       }
     },
@@ -601,9 +610,19 @@
               "description": "Zuerst Inhalte zusammentragen, danach ordnen."
             },
             {
+              "key": "erst_kriterien_dann_vergleichen",
+              "label": "Erst Kriterien, dann vergleichen",
+              "description": "Zuerst den Bewertungsmaßstab festlegen, danach Optionen gegenüberstellen."
+            },
+            {
               "key": "erst_optionen_dann_empfehlung",
               "label": "Erst Optionen, dann Empfehlung",
               "description": "Mehrere Möglichkeiten zeigen und anschließend empfehlen."
+            },
+            {
+              "key": "erst_befunde_dann_interpretation_dann_empfehlung",
+              "label": "Erst Befunde, dann Interpretation, dann Empfehlung",
+              "description": "Zuerst Beobachtungen sammeln, dann einordnen und erst danach Schlussfolgerungen ziehen."
             },
             {
               "key": "schrittweise_vorgehen",
@@ -618,7 +637,7 @@
           ],
           "evidence_strength": "stark",
           "auto_recommendation_tier": "A",
-          "recommendation_notes": "Besonders relevant bei Analyse-, Vergleichs-, Planungs-, Entwurfs- und Entscheidungsaufgaben, bei denen nachvollziehbare Schrittlogik den Nutzwert erhöht.",
+          "recommendation_notes": "Explizite Denk- und Ablauflogik. Besonders relevant bei Analyse-, Vergleichs-, Prüf-, Planungs- und Entscheidungsaufgaben.",
           "heuristic_scope": [
             "analysieren",
             "vergleichen",
@@ -631,38 +650,48 @@
           ],
           "confidence": 0.9
         },
-        "DENKRICHTUNG": {
+        "DENKMODUS": {
           "id": "E2",
-          "label": "Denkrichtung",
-          "slot": "DENKRICHTUNG",
+          "label": "Denkmodus",
+          "slot": "DENKMODUS",
           "required": false,
           "values": [
             {
               "key": "analytisch",
               "label": "Analytisch",
-              "description": "Strukturiert, logisch, differenzierend."
+              "description": "Strukturiert, logisch und differenzierend denken."
             },
             {
               "key": "kreativ",
               "label": "Kreativ",
-              "description": "Variantenreich, ideenorientiert."
-            },
-            {
-              "key": "kritisch",
-              "label": "Kritisch",
-              "description": "Hinterfragend und prüfend."
+              "description": "Variantenreich, ideenorientiert und explorativ denken."
             },
             {
               "key": "strategisch",
               "label": "Strategisch",
-              "description": "Auf Ziele, Hebel und Konsequenzen ausgerichtet."
+              "description": "Auf Ziele, Hebel, Prioritäten und Konsequenzen ausgerichtet denken."
             },
             {
               "key": "pragmatisch",
               "label": "Pragmatisch",
-              "description": "Umsetzungsorientiert und praktikabel."
+              "description": "Umsetzungsorientiert und praktikabel denken."
             }
-          ]
+          ],
+          "origin": [
+            "repo_practice",
+            "community_guide"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Beschreibt den kognitiven Arbeitsstil, nicht Rolle, Ton oder Qualitätsanspruch.",
+          "heuristic_scope": [
+            "analysieren",
+            "ideen_generieren",
+            "entscheidung_vorbereiten",
+            "planen",
+            "verbessern"
+          ],
+          "confidence": 0.77
         }
       }
     },
@@ -811,6 +840,51 @@
             "semi_professionell"
           ],
           "confidence": 0.73
+        },
+        "STILREGELN": {
+          "id": "F4",
+          "label": "Stilregeln",
+          "slot": "STILREGELN",
+          "required": false,
+          "multi": true,
+          "values": [
+            {
+              "key": "alltagstaugliche_sprache",
+              "label": "Alltagstaugliche Sprache",
+              "description": "Begriffe leicht verständlich und ohne unnötigen Jargon formulieren."
+            },
+            {
+              "key": "direkt_zum_punkt",
+              "label": "Direkt zum Punkt",
+              "description": "Ohne lange Vorrede oder ausgedehnte Einleitung antworten."
+            },
+            {
+              "key": "ohne_wiederholungen",
+              "label": "Ohne Wiederholungen",
+              "description": "Dopplungen und unnötige Schleifen vermeiden."
+            },
+            {
+              "key": "ohne_meta_erklaerungen",
+              "label": "Ohne Meta-Erklärungen",
+              "description": "Nicht das eigene Vorgehen oder die interne Arbeitsweise erläutern."
+            }
+          ],
+          "origin": [
+            "repo_practice",
+            "community_guide"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Stilregeln bündeln sprachliche und darstellerische Präferenzen, die keine echten Inhaltsverbote sind.",
+          "heuristic_scope": [
+            "umformulieren",
+            "verbessern",
+            "email",
+            "kunden",
+            "laien",
+            "semi_professionell"
+          ],
+          "confidence": 0.75
         }
       }
     },
@@ -819,26 +893,21 @@
       "label": "Rolle",
       "description": "Aus welcher Rolle oder Perspektive soll geantwortet werden?",
       "subdimensions": {
-        "EXPERTENROLLE": {
+        "FUNKTIONSROLLE": {
           "id": "G1",
-          "label": "Expertenrolle",
-          "slot": "EXPERTENROLLE",
+          "label": "Funktionsrolle",
+          "slot": "FUNKTIONSROLLE",
           "required": false,
           "values": [
             {
-              "key": "coach",
-              "label": "Coach",
-              "description": "Unterstützend und entwicklungsorientiert."
-            },
-            {
               "key": "analyst",
               "label": "Analyst",
-              "description": "Strukturiert und faktenorientiert."
+              "description": "Analytisch, strukturierend und faktenorientiert."
             },
             {
               "key": "strategieberater",
               "label": "Strategieberater",
-              "description": "Ziel-, Optionen- und entscheidungsorientiert."
+              "description": "Auf Ziele, Optionen und Entscheidungsvorbereitung ausgerichtet."
             },
             {
               "key": "lektor",
@@ -848,12 +917,7 @@
             {
               "key": "lehrer",
               "label": "Lehrer",
-              "description": "Didaktisch und verständlich erklärend."
-            },
-            {
-              "key": "sparringspartner",
-              "label": "Sparringspartner",
-              "description": "Kritisch mitdenkend und hinterfragend."
+              "description": "Didaktisch, erklärend und verständlich vermittelnd."
             }
           ],
           "origin": [
@@ -861,7 +925,7 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "B",
-          "recommendation_notes": "Rollenprompting hilft vor allem dort, wo Perspektive oder Qualitätsmaßstab die Antwortform stark prägen, etwa bei Analyse, Bewertung, Entscheidungsvorbereitung oder Textverbesserung.",
+          "recommendation_notes": "Beschreibt die fachliche Funktion, aus der heraus geantwortet wird. Interventionsintensität separat steuern.",
           "heuristic_scope": [
             "analysieren",
             "bewerten",
@@ -869,38 +933,52 @@
             "pruefen",
             "verbessern",
             "strategieberater",
-            "lektor",
-            "sparringspartner"
+            "lektor"
           ],
-          "confidence": 0.7
+          "confidence": 0.74
         },
-        "PERSPEKTIVTIEFE": {
+        "INTERVENTIONSTIEFE": {
           "id": "G2",
-          "label": "Perspektivtiefe",
-          "slot": "PERSPEKTIVTIEFE",
+          "label": "Interventionstiefe",
+          "slot": "INTERVENTIONSTIEFE",
           "required": false,
           "values": [
             {
               "key": "neutral",
               "label": "Neutral",
-              "description": "Zurückhaltend und nüchtern."
+              "description": "Zurückhaltend, nüchtern und beschreibend."
             },
             {
               "key": "beratend",
               "label": "Beratend",
-              "description": "Empfehlend und unterstützend."
+              "description": "Empfehlend und unterstützend, ohne stark zu konfrontieren."
             },
             {
               "key": "hinterfragend",
               "label": "Hinterfragend",
-              "description": "Annahmen und Schwachstellen prüfend."
+              "description": "Annahmen, Lücken und Schwachstellen aktiv prüfend."
             },
             {
               "key": "herausfordernd",
               "label": "Herausfordernd",
-              "description": "Deutlich kritisch und fordernd."
+              "description": "Deutlich kritisch, druckvoll und konfrontativ hinterfragend."
             }
-          ]
+          ],
+          "origin": [
+            "repo_practice",
+            "community_guide"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Steuert, wie direktiv, kritisch oder konfrontativ die Antwort eingreifen soll.",
+          "heuristic_scope": [
+            "analysieren",
+            "bewerten",
+            "entscheidung_vorbereiten",
+            "pruefen",
+            "sparringsmodus"
+          ],
+          "confidence": 0.78
         }
       }
     },
@@ -919,24 +997,34 @@
             {
               "key": "keine_spekulation",
               "label": "Keine Spekulation",
-              "description": "Nur begründete Aussagen."
+              "description": "Nur Aussagen machen, die begründet oder nachvollziehbar ableitbar sind."
             },
             {
-              "key": "keine_fachsprache",
-              "label": "Keine Fachsprache",
-              "description": "Alltagstaugliche Sprache verwenden."
+              "key": "keine_unbelegten_behauptungen",
+              "label": "Keine unbelegten Behauptungen",
+              "description": "Keine Tatsachenbehauptungen ohne erkennbare Grundlage formulieren."
             },
             {
-              "key": "keine_wiederholungen",
-              "label": "Keine Wiederholungen",
-              "description": "Dopplungen vermeiden."
-            },
-            {
-              "key": "keine_langen_einleitungen",
-              "label": "Keine langen Einleitungen",
-              "description": "Direkt zum Punkt kommen."
+              "key": "keine_ueberdehnung_der_datenlage",
+              "label": "Keine Überdehnung der Datenlage",
+              "description": "Lücken oder Unsicherheiten nicht künstlich mit Sicherheit überdecken."
             }
-          ]
+          ],
+          "origin": [
+            "community_guide",
+            "repo_practice"
+          ],
+          "evidence_strength": "stark",
+          "auto_recommendation_tier": "A",
+          "recommendation_notes": "Nur echte Inhaltsverbote und Absicherungen aufnehmen, keine Stilwünsche.",
+          "heuristic_scope": [
+            "analysieren",
+            "bewerten",
+            "pruefen",
+            "erklaeren",
+            "begrenzte_datenlage"
+          ],
+          "confidence": 0.86
         },
         "FORMALE_AUSSCHLUESSE": {
           "id": "H2",
@@ -948,24 +1036,34 @@
             {
               "key": "keine_tabellen",
               "label": "Keine Tabellen",
-              "description": "Keine tabellarische Darstellung."
+              "description": "Keine tabellarische Darstellung verwenden."
             },
             {
               "key": "keine_listen",
               "label": "Keine Listen",
-              "description": "Keine Aufzählungen verwenden."
+              "description": "Keine Aufzählungen oder Listen verwenden."
             },
             {
               "key": "keine_beispiele",
               "label": "Keine Beispiele",
-              "description": "Ohne illustrative Beispiele."
-            },
-            {
-              "key": "keine_meta_erklaerungen",
-              "label": "Keine Meta-Erklärungen",
-              "description": "Nicht das Vorgehen selbst erklären."
+              "description": "Ohne illustrative oder erfundene Beispiele arbeiten."
             }
-          ]
+          ],
+          "origin": [
+            "repo_practice",
+            "community_guide"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Formale Verbote nur setzen, wenn sie dem gewünschten Ausgabeformat nicht widersprechen.",
+          "heuristic_scope": [
+            "fliesstext",
+            "tabelle",
+            "liste",
+            "email",
+            "leitfaden"
+          ],
+          "confidence": 0.8
         }
       }
     },
@@ -1166,16 +1264,16 @@
       ],
       "evidence_strength": "stark",
       "auto_recommendation_tier": "A",
-      "recommendation_notes": "Zentraler Task-Anker. Früh setzen und als Primärtreiber für Heuristiken behandeln.",
+      "recommendation_notes": "Beantwortet die Frage, wozu das Ergebnis dienen soll. Früh setzen und als Primärtreiber für Heuristiken behandeln.",
       "heuristic_scope": [
         "alle_tasks"
       ],
       "confidence": 0.9
     },
     {
-      "slot": "ZIEL_TIEFE",
+      "slot": "ANALYSETIEFE",
       "dimension": "ZIEL",
-      "subdimension": "ZIEL_TIEFE",
+      "subdimension": "ANALYSETIEFE",
       "required": false,
       "multi": false,
       "origin": [
@@ -1184,7 +1282,7 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "B",
-      "recommendation_notes": "Hilft, den gewünschten Analyse- und Erklärungsgrad zu kalibrieren; besonders nützlich bei komplexeren Aufgaben.",
+      "recommendation_notes": "Steuert die analytische Bearbeitungstiefe, nicht die Textlänge. Besonders nützlich bei Analyse-, Bewertungs- und Erklärungsaufgaben.",
       "heuristic_scope": [
         "analysieren",
         "bewerten",
@@ -1195,11 +1293,26 @@
       "confidence": 0.72
     },
     {
-      "slot": "ZIEL_STATUS",
+      "slot": "HANDLUNGSREIFE",
       "dimension": "ZIEL",
-      "subdimension": "ZIEL_STATUS",
+      "subdimension": "HANDLUNGSREIFE",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "repo_practice",
+        "community_guide"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Beschreibt, wie weit die Antwort in Richtung Entscheidung oder Umsetzung tragen soll.",
+      "heuristic_scope": [
+        "analysieren",
+        "bewerten",
+        "entscheidung_vorbereiten",
+        "planen",
+        "verbessern"
+      ],
+      "confidence": 0.74
     },
     {
       "slot": "AUFGABENTYP",
@@ -1213,16 +1326,16 @@
       ],
       "evidence_strength": "stark",
       "auto_recommendation_tier": "A",
-      "recommendation_notes": "Als explizites Handlungsverb modellieren und getrennt vom Zieltyp behandeln.",
+      "recommendation_notes": "Beschreibt die konkrete Operation, die die KI ausführen soll. Getrennt vom Zieltyp behandeln.",
       "heuristic_scope": [
         "alle_tasks"
       ],
       "confidence": 0.88
     },
     {
-      "slot": "AUFGABENUMFANG",
+      "slot": "AUFGABENSTRUKTUR",
       "dimension": "AUFGABE",
-      "subdimension": "AUFGABENUMFANG",
+      "subdimension": "AUFGABENSTRUKTUR",
       "required": false,
       "multi": false,
       "origin": [
@@ -1232,7 +1345,7 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "B",
-      "recommendation_notes": "Schrittigkeit und Arbeitsumfang werden besonders relevant, wenn Aufgaben geplant, analysiert, geprüft oder iterativ entworfen werden.",
+      "recommendation_notes": "Beschreibt, ob die Aufgabe als einzelner Schritt oder als mehrteilige Bearbeitung angelegt ist. Iteration wird separat über den Interaktionsmodus gesteuert.",
       "heuristic_scope": [
         "analysieren",
         "pruefen",
@@ -1240,10 +1353,9 @@
         "entwerfen",
         "verbessern",
         "leitfaden",
-        "checkliste",
-        "iteratives_verfeinern"
+        "checkliste"
       ],
-      "confidence": 0.76
+      "confidence": 0.78
     },
     {
       "slot": "SITUATIONSKONTEXT",
@@ -1403,7 +1515,7 @@
       ],
       "evidence_strength": "stark",
       "auto_recommendation_tier": "A",
-      "recommendation_notes": "Besonders relevant bei Analyse-, Vergleichs-, Planungs-, Entwurfs- und Entscheidungsaufgaben, bei denen nachvollziehbare Schrittlogik den Nutzwert erhöht.",
+      "recommendation_notes": "Explizite Denk- und Ablauflogik. Besonders relevant bei Analyse-, Vergleichs-, Prüf-, Planungs- und Entscheidungsaufgaben.",
       "heuristic_scope": [
         "analysieren",
         "vergleichen",
@@ -1417,11 +1529,26 @@
       "confidence": 0.9
     },
     {
-      "slot": "DENKRICHTUNG",
+      "slot": "DENKMODUS",
       "dimension": "PROZESS",
-      "subdimension": "DENKRICHTUNG",
+      "subdimension": "DENKMODUS",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "repo_practice",
+        "community_guide"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Beschreibt den kognitiven Arbeitsstil, nicht Rolle, Ton oder Qualitätsanspruch.",
+      "heuristic_scope": [
+        "analysieren",
+        "ideen_generieren",
+        "entscheidung_vorbereiten",
+        "planen",
+        "verbessern"
+      ],
+      "confidence": 0.77
     },
     {
       "slot": "SPRACHQUALITAET",
@@ -1492,9 +1619,32 @@
       "confidence": 0.73
     },
     {
-      "slot": "EXPERTENROLLE",
+      "slot": "STILREGELN",
+      "dimension": "QUALITAETSKRITERIEN",
+      "subdimension": "STILREGELN",
+      "required": false,
+      "multi": true,
+      "origin": [
+        "repo_practice",
+        "community_guide"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Stilregeln bündeln sprachliche und darstellerische Präferenzen, die keine echten Inhaltsverbote sind.",
+      "heuristic_scope": [
+        "umformulieren",
+        "verbessern",
+        "email",
+        "kunden",
+        "laien",
+        "semi_professionell"
+      ],
+      "confidence": 0.75
+    },
+    {
+      "slot": "FUNKTIONSROLLE",
       "dimension": "ROLLE",
-      "subdimension": "EXPERTENROLLE",
+      "subdimension": "FUNKTIONSROLLE",
       "required": false,
       "multi": false,
       "origin": [
@@ -1502,7 +1652,7 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "B",
-      "recommendation_notes": "Rollenprompting hilft vor allem dort, wo Perspektive oder Qualitätsmaßstab die Antwortform stark prägen, etwa bei Analyse, Bewertung, Entscheidungsvorbereitung oder Textverbesserung.",
+      "recommendation_notes": "Beschreibt die fachliche Funktion, aus der heraus geantwortet wird. Interventionsintensität separat steuern.",
       "heuristic_scope": [
         "analysieren",
         "bewerten",
@@ -1510,31 +1660,75 @@
         "pruefen",
         "verbessern",
         "strategieberater",
-        "lektor",
-        "sparringspartner"
+        "lektor"
       ],
-      "confidence": 0.7
+      "confidence": 0.74
     },
     {
-      "slot": "PERSPEKTIVTIEFE",
+      "slot": "INTERVENTIONSTIEFE",
       "dimension": "ROLLE",
-      "subdimension": "PERSPEKTIVTIEFE",
+      "subdimension": "INTERVENTIONSTIEFE",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "repo_practice",
+        "community_guide"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Steuert, wie direktiv, kritisch oder konfrontativ die Antwort eingreifen soll.",
+      "heuristic_scope": [
+        "analysieren",
+        "bewerten",
+        "entscheidung_vorbereiten",
+        "pruefen",
+        "sparringsmodus"
+      ],
+      "confidence": 0.78
     },
     {
       "slot": "INHALTLICHE_AUSSCHLUESSE",
       "dimension": "GRENZEN",
       "subdimension": "INHALTLICHE_AUSSCHLUESSE",
       "required": false,
-      "multi": true
+      "multi": true,
+      "origin": [
+        "community_guide",
+        "repo_practice"
+      ],
+      "evidence_strength": "stark",
+      "auto_recommendation_tier": "A",
+      "recommendation_notes": "Nur echte Inhaltsverbote und Absicherungen aufnehmen, keine Stilwünsche.",
+      "heuristic_scope": [
+        "analysieren",
+        "bewerten",
+        "pruefen",
+        "erklaeren",
+        "begrenzte_datenlage"
+      ],
+      "confidence": 0.86
     },
     {
       "slot": "FORMALE_AUSSCHLUESSE",
       "dimension": "GRENZEN",
       "subdimension": "FORMALE_AUSSCHLUESSE",
       "required": false,
-      "multi": true
+      "multi": true,
+      "origin": [
+        "repo_practice",
+        "community_guide"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Formale Verbote nur setzen, wenn sie dem gewünschten Ausgabeformat nicht widersprechen.",
+      "heuristic_scope": [
+        "fliesstext",
+        "tabelle",
+        "liste",
+        "email",
+        "leitfaden"
+      ],
+      "confidence": 0.8
     },
     {
       "slot": "ZIELGRUPPE",
@@ -1625,7 +1819,7 @@
     {
       "id": "default_v1",
       "label": "Standard-Template",
-      "description": "Allgemeines Prompt-Schema für viele Aufgaben.",
+      "description": "Allgemeines Prompt-Schema für viele Aufgaben mit klarer Trennung von Ziel und Operation.",
       "slots_used": [
         "ZIEL_TYP",
         "AUFGABENTYP",
@@ -1639,28 +1833,30 @@
     {
       "id": "decision_table_v1",
       "label": "Entscheidungsvorbereitung als Tabelle",
-      "description": "Für Vergleiche und Entscheidungsvorbereitung.",
+      "description": "Für Vergleiche und Entscheidungsvorbereitung mit klarer Handlungsreife.",
       "slots_used": [
         "ZIEL_TYP",
+        "HANDLUNGSREIFE",
         "FORMAT",
         "ERGEBNISORIENTIERUNG",
         "PROZESSLOGIK",
         "ZIELGRUPPE"
       ],
-      "text": "Bitte unterstütze mich dabei, [ZIEL_TYP]. Gehe so vor: [PROZESSLOGIK]. Gib das Ergebnis als [FORMAT] aus. Liefere [ERGEBNISORIENTIERUNG]. Das Ergebnis ist gedacht für [ZIELGRUPPE]."
+      "text": "Bitte unterstütze mich dabei, [ZIEL_TYP], damit das Ergebnis [HANDLUNGSREIFE] wird. Gehe so vor: [PROZESSLOGIK]. Gib das Ergebnis als [FORMAT] aus. Liefere [ERGEBNISORIENTIERUNG]. Das Ergebnis ist gedacht für [ZIELGRUPPE]."
     },
     {
       "id": "rewrite_v1",
       "label": "Umformulieren",
-      "description": "Für sprachliche Überarbeitung bestehender Texte.",
+      "description": "Für sprachliche Überarbeitung bestehender Texte mit sauber getrennten Stilregeln.",
       "slots_used": [
         "ZIEL_TYP",
         "AUFGABENTYP",
         "SPRACHQUALITAET",
-        "INHALTLICHE_AUSSCHLUESSE",
-        "FORMAT"
+        "STILREGELN",
+        "FORMAT",
+        "FUNKTIONSROLLE"
       ],
-      "text": "Bitte [AUFGABENTYP], um [ZIEL_TYP]. Formuliere sprachlich [SPRACHQUALITAET]. Vermeide [INHALTLICHE_AUSSCHLUESSE]. Gib das Ergebnis als [FORMAT] aus."
+      "text": "Bitte [AUFGABENTYP], um [ZIEL_TYP]. Formuliere sprachlich [SPRACHQUALITAET]. Beachte dabei [STILREGELN]. Antworte aus der Funktion [FUNKTIONSROLLE]. Gib das Ergebnis als [FORMAT] aus."
     }
   ],
   "constraints": [
@@ -1675,7 +1871,8 @@
         "recommended_slots": [
           "FORMAT",
           "ERGEBNISORIENTIERUNG",
-          "PROZESSLOGIK"
+          "PROZESSLOGIK",
+          "HANDLUNGSREIFE"
         ],
         "recommended_values": {
           "FORMAT": [
@@ -1685,6 +1882,13 @@
           "ERGEBNISORIENTIERUNG": [
             "ergebnis_plus_begruendung",
             "ergebnis_plus_naechste_schritte"
+          ],
+          "PROZESSLOGIK": [
+            "erst_kriterien_dann_vergleichen",
+            "erst_optionen_dann_empfehlung"
+          ],
+          "HANDLUNGSREIFE": [
+            "entscheidungsreif"
           ]
         }
       }
@@ -1699,19 +1903,50 @@
       "then": {
         "recommended_slots": [
           "SPRACHQUALITAET",
-          "INHALTLICHE_AUSSCHLUESSE",
-          "FORMAT"
+          "STILREGELN",
+          "FORMAT",
+          "FUNKTIONSROLLE"
         ],
         "recommended_values": {
           "FORMAT": [
             "fliesstext",
             "liste"
+          ],
+          "FUNKTIONSROLLE": [
+            "lektor"
+          ],
+          "STILREGELN": [
+            "alltagstaugliche_sprache",
+            "ohne_wiederholungen"
           ]
         }
       }
     },
     {
       "id": "c3",
+      "type": "recommendation",
+      "if": {
+        "slot": "AUFGABENSTRUKTUR",
+        "equals": "mehrstufig"
+      },
+      "then": {
+        "recommended_slots": [
+          "PROZESSLOGIK",
+          "MODUS"
+        ],
+        "recommended_values": {
+          "MODUS": [
+            "iteratives_verfeinern"
+          ],
+          "PROZESSLOGIK": [
+            "schrittweise_vorgehen",
+            "erst_befunde_dann_interpretation_dann_empfehlung"
+          ]
+        }
+      }
+    },
+    {
+      "id": "c4",
       "type": "incompatibility",
       "if": {
         "slot": "FORMAT",
@@ -1723,7 +1958,7 @@
       }
     },
     {
-      "id": "c4",
+      "id": "c5",
       "type": "incompatibility",
       "if": {
         "slot": "FORMAT",
@@ -1741,32 +1976,35 @@
       "label": "Entscheidungsgrundlage für Teammeeting",
       "values": {
         "ZIEL_TYP": "entscheidung_vorbereiten",
-        "ZIEL_TIEFE": "mittel",
-        "ZIEL_STATUS": "entscheidungsorientiert",
         "AUFGABENTYP": "vergleichen",
-        "AUFGABENUMFANG": "mehrstufig",
         "SITUATIONSKONTEXT": "meetingvorbereitung",
         "WISSENSKONTEXT": "gemischte_zielgruppe",
         "RAHMENBEDINGUNG": "zeitdruck",
         "FORMAT": "tabelle",
         "UMFANG": "kurz",
         "ERGEBNISORIENTIERUNG": "ergebnis_plus_begruendung",
-        "PROZESSLOGIK": "erst_optionen_dann_empfehlung",
-        "DENKRICHTUNG": "strategisch",
+        "PROZESSLOGIK": "erst_kriterien_dann_vergleichen",
         "SPRACHQUALITAET": "klar",
         "INHALTSQUALITAET": "praxisnah",
         "PRIORISIERUNG": "praktikabilitaet_vor_theorie",
-        "EXPERTENROLLE": "strategieberater",
-        "PERSPEKTIVTIEFE": "beratend",
         "INHALTLICHE_AUSSCHLUESSE": [
-          "keine_fachsprache",
-          "keine_langen_einleitungen"
+          "keine_spekulation"
         ],
         "FORMALE_AUSSCHLUESSE": [],
         "ZIELGRUPPE": "team",
         "WISSENSSTAND_ADRESSAT": "semi_professionell",
         "MODUS": "einmalige_antwort",
-        "STEUERUNGSGRAD": "eng_gefuehrt"
+        "STEUERUNGSGRAD": "eng_gefuehrt",
+        "ANALYSETIEFE": "mittel",
+        "HANDLUNGSREIFE": "entscheidungsreif",
+        "AUFGABENSTRUKTUR": "mehrstufig",
+        "DENKMODUS": "strategisch",
+        "FUNKTIONSROLLE": "strategieberater",
+        "INTERVENTIONSTIEFE": "beratend",
+        "STILREGELN": [
+          "alltagstaugliche_sprache",
+          "direkt_zum_punkt"
+        ]
       }
     },
     {
@@ -1774,10 +2012,7 @@
       "label": "Text verständlicher umformulieren",
       "values": {
         "ZIEL_TYP": "umformulieren",
-        "ZIEL_TIEFE": "ueberblick",
-        "ZIEL_STATUS": "umsetzungsorientiert",
         "AUFGABENTYP": "umschreiben",
-        "AUFGABENUMFANG": "einzelschritt",
         "SITUATIONSKONTEXT": "kundengespraech",
         "WISSENSKONTEXT": "anfaenger",
         "RAHMENBEDINGUNG": "sensible_kommunikation",
@@ -1785,23 +2020,26 @@
         "UMFANG": "kurz",
         "ERGEBNISORIENTIERUNG": "nur_ergebnis",
         "PROZESSLOGIK": "schrittweise_vorgehen",
-        "DENKRICHTUNG": "pragmatisch",
         "SPRACHQUALITAET": "einfach",
         "INHALTSQUALITAET": "relevant",
         "PRIORISIERUNG": "klarheit_vor_vollstaendigkeit",
-        "EXPERTENROLLE": "lektor",
-        "PERSPEKTIVTIEFE": "beratend",
-        "INHALTLICHE_AUSSCHLUESSE": [
-          "keine_fachsprache",
-          "keine_wiederholungen"
-        ],
-        "FORMALE_AUSSCHLUESSE": [
-          "keine_meta_erklaerungen"
-        ],
+        "INHALTLICHE_AUSSCHLUESSE": [],
+        "FORMALE_AUSSCHLUESSE": [],
         "ZIELGRUPPE": "kunden",
         "WISSENSSTAND_ADRESSAT": "laien",
         "MODUS": "iteratives_verfeinern",
-        "STEUERUNGSGRAD": "mit_zwischenstaenden"
+        "STEUERUNGSGRAD": "mit_zwischenstaenden",
+        "ANALYSETIEFE": "ueberblick",
+        "HANDLUNGSREIFE": "umsetzungsreif",
+        "AUFGABENSTRUKTUR": "einzelschritt",
+        "DENKMODUS": "pragmatisch",
+        "FUNKTIONSROLLE": "lektor",
+        "INTERVENTIONSTIEFE": "beratend",
+        "STILREGELN": [
+          "alltagstaugliche_sprache",
+          "ohne_wiederholungen",
+          "ohne_meta_erklaerungen"
+        ]
       }
     }
   ],
