@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prompt-Bibliothek UI – Fallkontext-Anbindung</title>
+  <title>Prompt-Bibliothek UI</title>
   <style>
     :root {
       --bg: #0b1020;
       --panel: #121933;
       --panel-2: #182246;
-      --panel-3: #1f2b57;
       --text: #e9eefc;
       --muted: #a8b3d1;
       --muted-2: #8f9bc0;
@@ -36,13 +35,7 @@
     }
     code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
     .container{width:min(1440px,calc(100% - 32px)); margin:24px auto 40px}
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(8px);
-    }
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); backdrop-filter:blur(8px)}
     .hero{display:grid; grid-template-columns:1.35fr .95fr; gap:16px; margin-bottom:16px}
     .hero-main,.hero-side,.start-card,.main-card,.side-card{padding:18px}
     h1,h2,h3,h4{margin:0 0 10px; line-height:1.15}
@@ -50,22 +43,14 @@
     h2{font-size:1.16rem} h3{font-size:1rem} h4{font-size:.96rem}
     p{margin:0 0 10px; color:var(--muted); line-height:1.5}
     .hero-pills,.button-row,.inline-actions,.compact-badges,.suggestion-actions{display:flex; gap:10px; flex-wrap:wrap}
-    .pill,.badge{
-      display:inline-flex; align-items:center; gap:8px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.03);
-      color:var(--text);
-      padding:8px 12px; border-radius:999px; font-size:.88rem;
-    }
+    .pill,.badge{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--border); background:rgba(255,255,255,.03); color:var(--text); padding:8px 12px; border-radius:999px; font-size:.88rem}
     .pill.subtle,.badge.subtle{color:var(--muted); background:rgba(255,255,255,.02)}
     .pill.accent,.badge.accent{border-color:rgba(122,162,255,.38); background:rgba(122,162,255,.12); color:#dce8ff}
     .badge.soft{border-color:rgba(127,227,161,.26); background:rgba(127,227,161,.09); color:#d6ffe3}
     .badge.warn{border-color:rgba(255,207,112,.26); background:rgba(255,207,112,.09); color:#ffe9b6}
     .badge.error{border-color:rgba(255,123,123,.26); background:rgba(255,123,123,.09); color:#ffd7d7}
-    .status-stack,.notice-stack,.field-hints,.field-grid,.metric-grid,.suggestion-list,.compact-list,.stack,.score-panel{display:grid; gap:10px}
-    .notice{
-      border-radius:12px; padding:11px 12px; border:1px solid transparent; font-size:.92rem; line-height:1.45;
-    }
+    .status-stack,.notice-stack,.field-hints,.field-grid,.metric-grid,.suggestion-list,.compact-list,.stack{display:grid; gap:10px}
+    .notice{border-radius:12px; padding:11px 12px; border:1px solid transparent; font-size:.92rem; line-height:1.45}
     .notice.error{color:#ffd7d7; border-color:rgba(255,123,123,.3); background:rgba(255,123,123,.08)}
     .notice.warning{color:#ffe9b6; border-color:rgba(255,207,112,.3); background:rgba(255,207,112,.08)}
     .notice.success{color:#d6ffe3; border-color:rgba(127,227,161,.3); background:rgba(127,227,161,.08)}
@@ -74,39 +59,21 @@
     .section-header{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px}
     .section-header p,.section-description{margin:0; color:var(--muted); font-size:.93rem}
     .start-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    .start-panel{
-      border:1px solid var(--border-soft); border-radius:16px; background:rgba(255,255,255,.025); padding:14px; display:grid; gap:12px;
-    }
+    .start-panel{border:1px solid var(--border-soft); border-radius:16px; background:rgba(255,255,255,.025); padding:14px; display:grid; gap:12px}
     .sub-toolbar{margin-top:10px; padding-top:12px; border-top:1px solid var(--border-soft); display:grid; gap:12px}
     .toolbar-row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
     .field{display:grid; gap:6px; min-width:0}
     .field label{font-size:.88rem; color:var(--muted)}
     select,input[type="text"],textarea,button{font:inherit}
-    select,input[type="text"],textarea{
-      width:100%; padding:11px 12px; border-radius:12px; border:1px solid var(--border);
-      background:var(--panel-2); color:var(--text); outline:none;
-      transition:border-color .15s ease, box-shadow .15s ease;
-    }
+    select,input[type="text"],textarea{width:100%; padding:11px 12px; border-radius:12px; border:1px solid var(--border); background:var(--panel-2); color:var(--text); outline:none; transition:border-color .15s ease, box-shadow .15s ease}
     select:focus,input[type="text"]:focus,textarea:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(122,162,255,.12)}
-    button{
-      border:1px solid var(--border);
-      background:linear-gradient(180deg, rgba(122,162,255,.18), rgba(122,162,255,.08));
-      color:var(--text); border-radius:12px; padding:10px 13px; cursor:pointer; font-weight:600;
-    }
+    button{border:1px solid var(--border); background:linear-gradient(180deg, rgba(122,162,255,.18), rgba(122,162,255,.08)); color:var(--text); border-radius:12px; padding:10px 13px; cursor:pointer; font-weight:600}
     button:hover{border-color:var(--accent)}
     button.secondary{background:rgba(255,255,255,.03)}
-    button.ghost{background:transparent}
     .progress-row{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px}
     .progress-bar{width:100%; height:10px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden}
     .progress-fill,.metric-fill{height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); width:0%; transition:width .18s ease}
-    .field-card{
-      border:1px solid var(--border-soft);
-      background:rgba(255,255,255,.02);
-      border-radius:16px;
-      padding:14px;
-      display:grid;
-      gap:10px;
-    }
+    .field-card{border:1px solid var(--border-soft); background:rgba(255,255,255,.02); border-radius:16px; padding:14px; display:grid; gap:10px}
     .field-card.required{border-color:rgba(255,207,112,.28); background:rgba(255,207,112,.05)}
     .field-card.recommended{border-color:rgba(122,162,255,.28); background:rgba(122,162,255,.05)}
     .field-card.conflict{border-color:rgba(255,123,123,.35); background:rgba(255,123,123,.06)}
@@ -127,23 +94,17 @@
     details.disclosure>summary::-webkit-details-marker{display:none}
     .disclosure-body{padding:0 16px 16px; border-top:1px solid rgba(255,255,255,.06); display:grid; gap:12px}
     .summary-columns{display:grid; gap:10px}
-    .summary-item,.metric-item,.suggestion-item,.compact-item,.inline-editor{
-      border:1px solid var(--border-soft); border-radius:14px; background:rgba(255,255,255,.02); padding:12px; display:grid; gap:8px;
-    }
+    .summary-item,.metric-item,.suggestion-item,.compact-item,.inline-editor{border:1px solid var(--border-soft); border-radius:14px; background:rgba(255,255,255,.02); padding:12px; display:grid; gap:8px}
     .metric-head,.suggestion-head,.compact-head{display:flex; align-items:center; justify-content:space-between; gap:10px}
     .metric-bar{width:100%; height:8px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden}
     .summary-item strong{font-size:.92rem}
     .summary-item span,.compact-meta,.metric-item small,.suggestion-item small,.subtle-text{color:var(--muted); font-size:.88rem; line-height:1.45}
     .output-panel{display:grid; gap:12px}
-    .output-panel pre{
-      margin:0; white-space:pre-wrap; word-break:break-word; font-size:.92rem; line-height:1.45;
-      color:var(--text); background:rgba(255,255,255,.025); border:1px solid var(--border); border-radius:14px; padding:14px; min-height:170px;
-    }
+    .output-panel pre{margin:0; white-space:pre-wrap; word-break:break-word; font-size:.92rem; line-height:1.45; color:var(--text); background:rgba(255,255,255,.025); border:1px solid var(--border); border-radius:14px; padding:14px; min-height:170px}
     .score-primary{position:sticky; top:16px}
     .score-overview{display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center}
     .score-big{font-size:clamp(2.2rem,4vw,3.4rem); line-height:1; font-weight:800; letter-spacing:-.04em}
     .assessment-block{display:grid; gap:8px}
-    .assessment-block h3{margin:0}
     .suggestion-item.primary{border-color:rgba(122,162,255,.34); background:rgba(122,162,255,.06)}
     .jump-btn{padding:8px 10px; border-radius:10px; border:1px solid rgba(122,162,255,.28); background:rgba(122,162,255,.08); color:var(--text); font-size:.86rem; font-weight:600; cursor:pointer}
     .compact-item{padding:10px 12px}
@@ -153,19 +114,10 @@
     .compact-mini{font-size:.83rem; color:var(--muted); line-height:1.35}
     .inline-editor{padding:0; overflow:hidden}
     .inline-editor .field-card{border:none; border-radius:0; background:transparent; box-shadow:none}
-    .case-chip{border-color:rgba(155,140,255,.35); background:rgba(155,140,255,.12); color:#ece7ff}
     .hidden{display:none !important}
     .muted-panel{opacity:.72}
-    @media (max-width:1080px){
-      .hero,.layout,.start-grid{grid-template-columns:1fr}
-      .score-primary{position:static}
-    }
-    @media (max-width:760px){
-      .container{width:min(100% - 20px,1440px); margin-top:12px}
-      .hero-main,.hero-side,.start-card,.main-card,.side-card{padding:14px}
-      .toolbar-row{grid-template-columns:1fr}
-      .field-head,.metric-head,.suggestion-head,.compact-head{flex-direction:column; align-items:flex-start}
-    }
+    @media (max-width:1080px){.hero,.layout,.start-grid{grid-template-columns:1fr}.score-primary{position:static}}
+    @media (max-width:760px){.container{width:min(100% - 20px,1440px); margin-top:12px}.hero-main,.hero-side,.start-card,.main-card,.side-card{padding:14px}.toolbar-row{grid-template-columns:1fr}.field-head,.metric-head,.suggestion-head,.compact-head{flex-direction:column; align-items:flex-start}}
   </style>
 </head>
 <body>
@@ -173,11 +125,11 @@
     <section class="hero">
       <div class="hero-main card">
         <h1>Prompt systematisch zusammenstellen</h1>
-        <p>Mit wenigen Pflichtangaben starten, dann gezielt verfeinern. Die Bibliothek bleibt vollständig nutzbar, aber die Oberfläche führt dich jetzt in einer sinnvollen Reihenfolge durch die wichtigsten Entscheidungen.</p>
+        <p>Core-only-Version der Prompt-Bibliothek: Pflichtangaben zuerst, dann Empfehlungen, Verfeinerung und direkte Prompt-Vorschau. Kein Fallpfad, keine Sonderlogik im generischen Editor.</p>
         <div class="hero-pills">
           <div class="pill accent">Pflichtangaben zuerst</div>
-          <div class="pill">Empfehlungen kontextabhängig</div>
-          <div class="pill">Expertenansicht optional</div>
+          <div class="pill">Empfehlungen aus Bibliothekslogik</div>
+          <div class="pill">Ohne Case-Sonderpfad</div>
         </div>
       </div>
       <div class="hero-side card">
@@ -192,7 +144,7 @@
       <div class="section-header">
         <div>
           <h2>So möchtest du starten</h2>
-          <p class="section-description">Mit Beispielinstanz starten oder eine leere Konfiguration aufbauen. Structured und Template bleiben erhalten, sind aber nachgeordnet.</p>
+          <p class="section-description">Mit Beispielinstanz starten oder eine leere Konfiguration aufbauen. Structured und Template bleiben erhalten.</p>
         </div>
       </div>
 
@@ -238,41 +190,11 @@
           </div>
         </div>
 
-        <div class="toolbar-row">
-          <div class="field">
-            <label for="caseSelect">Fallakte</label>
-            <select id="caseSelect"><option value="">— keine Fallakte —</option></select>
-          </div>
-          <div class="field">
-            <label>&nbsp;</label>
-            <div class="button-row">
-              <button id="loadCaseBtn" type="button">Fall laden</button>
-              <button id="clearCaseBtn" class="secondary" type="button">Fall trennen</button>
-            </div>
-          </div>
-        </div>
-        <div id="caseInlineNotice" class="notice info hidden">Keine Fallakte geladen.</div>
-
-        <div class="toolbar-row">
-          <div class="field">
-            <label for="casePromptModeSelect">Fallkontext im Prompt</label>
-            <select id="casePromptModeSelect">
-              <option value="off">Aus</option>
-              <option value="compact">Kompakt</option>
-              <option value="focus">Mit Fokusblöcken</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>&nbsp;</label>
-            <div id="casePromptModeHint" class="notice info">Nur aktiv, wenn eine Fallakte geladen ist.</div>
-          </div>
-        </div>
-
         <details class="disclosure">
           <summary>
             <div>
               <strong>Erweiterte Startoptionen</strong>
-              <div class="subtle-text">Modus, Filter und technische Hilfen nur bei Bedarf.</div>
+              <div class="subtle-text">Filter und technische Hilfen nur bei Bedarf.</div>
             </div>
             <span class="badge subtle">Optional</span>
           </summary>
@@ -367,12 +289,12 @@
               <p class="section-description">Interner Bibliotheks-Score auf Basis von Vollständigkeit, Kohärenz und heuristischer Passung.</p>
             </div>
           </div>
-          <div class="score-panel">
+          <div class="stack">
             <div class="score-overview">
               <div id="overallScore" class="score-big">0</div>
-              <div class="score-caption">
+              <div>
                 <strong id="overallLabel">Noch unvollständig</strong>
-                <span id="overallSubline" class="subtle-text">Setze zuerst die Pflichtangaben, damit die Gesamtbewertung belastbarer wird.</span>
+                <div id="overallSubline" class="subtle-text">Setze zuerst die Pflichtangaben, damit die Gesamtbewertung belastbarer wird.</div>
               </div>
             </div>
             <div id="assessmentMetrics" class="metric-grid"></div>
@@ -385,16 +307,6 @@
               <div id="scoreSuggestions" class="suggestion-list"></div>
             </div>
           </div>
-        </section>
-
-        <section id="casePanel" class="card side-card hidden">
-          <div class="section-header">
-            <div>
-              <h2>Aktive Fallakte</h2>
-              <p class="section-description">Optional geladene Fallinformationen und verknüpfte Presets.</p>
-            </div>
-          </div>
-          <div id="casePanelContent" class="summary-columns"></div>
         </section>
 
         <section class="card side-card">
@@ -451,18 +363,11 @@
     const state = {
       libraryData: null,
       slotIndex: {},
-      slotSchemaIndex: {},
       dimensionOrder: [],
       templateIndex: {},
-      baseExampleIndex: {},
       exampleIndex: {},
       assignments: {},
-      coveredEditorOpen: {},
-      caseSourceIndex: {},
-      activeCaseId: "",
-      activeCaseData: null,
-      activePresetKey: "",
-      activePresetMeta: null
+      coveredEditorOpen: {}
     };
 
     const elements = {
@@ -471,14 +376,6 @@
       templateField: document.getElementById("templateField"),
       templateSelect: document.getElementById("templateSelect"),
       instanceSelect: document.getElementById("instanceSelect"),
-      caseSelect: document.getElementById("caseSelect"),
-      casePromptModeSelect: document.getElementById("casePromptModeSelect"),
-      casePromptModeHint: document.getElementById("casePromptModeHint"),
-      loadCaseBtn: document.getElementById("loadCaseBtn"),
-      clearCaseBtn: document.getElementById("clearCaseBtn"),
-      caseInlineNotice: document.getElementById("caseInlineNotice"),
-      casePanel: document.getElementById("casePanel"),
-      casePanelContent: document.getElementById("casePanelContent"),
       searchInput: document.getElementById("searchInput"),
       loadInstanceBtn: document.getElementById("loadInstanceBtn"),
       startEmptyBtn: document.getElementById("startEmptyBtn"),
@@ -537,7 +434,7 @@
     const TIER_PRIORITY = { A: 0, B: 1, C: 2 };
     const TIER_SCORE = { A: 100, B: 70, C: 40 };
 
-    function humanizeKey(value){ return String(value).replaceAll("_"," "); }
+    function humanizeKey(value){ return String(value || "").replaceAll("_"," "); }
     function lowerFirst(text){ return text ? text.charAt(0).toLowerCase() + text.slice(1) : text; }
     function escapeRegExp(value){ return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
     function unique(arr){ return [...new Set(arr)]; }
@@ -554,37 +451,27 @@
       });
     }
 
-    function resolveRelativePath(path){
-      if (!path) return "";
-      if (path.startsWith("../") || path.startsWith("./") || path.startsWith("/") || path.startsWith("http")) return path;
-      return `../${path}`;
-    }
-
     async function loadLibrary(){
-      try{
+      try {
         const response = await fetch("../data/library.json", { cache: "no-store" });
-        if(!response.ok) throw new Error(`HTTP ${response.status}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         state.libraryData = data;
         buildIndexes(data);
         populateToolbar();
         restoreAssignments();
-        await restoreCaseIfNeeded();
         updateTemplateVisibility();
-        updateCasePromptControls();
         updateOutputs();
-        const meta = data.meta || {};
-        const caseCount = Object.keys(state.caseSourceIndex).length;
         setRepoMetaNotices([
-          { type: "success", text: `Bibliothek geladen: ${meta.project || "Prompt-Bibliothek"}` },
-          { type: "info", text: `Version: ${meta.version || "unbekannt"} · Locale: ${meta.locale || "unbekannt"}` },
-          { type: caseCount ? "info" : "warning", text: caseCount ? `${caseCount} verknüpfte Fallakte(n) gefunden.` : "Keine verknüpften Fallakten registriert." }
+          { type: "success", text: `Bibliothek geladen: ${data.meta?.project || "Prompt-Bibliothek"}` },
+          { type: "info", text: `Version: ${data.meta?.version || "unbekannt"} · Locale: ${data.meta?.locale || "unbekannt"}` },
+          { type: "info", text: `Core-only-Modus aktiv: keine Fallakte, keine Sonderpfad-Logik in der UI.` }
         ]);
-      } catch(error){
+      } catch (error) {
         console.error(error);
         setRepoMetaNotices([
           { type: "error", text: `Initialisierung fehlgeschlagen: ${error.message}` },
-          { type: "warning", text: "Wenn die Datei existiert, liegt meist ein JS-/Renderfehler oder ein Problem mit dem JSON-Schema vor." }
+          { type: "warning", text: "Prüfe ../data/library.json oder den JSON-Aufbau des Core-Modells." }
         ]);
         elements.promptOutput.textContent = "Fehler beim Laden von ../data/library.json";
       }
@@ -592,14 +479,9 @@
 
     function buildIndexes(data){
       state.slotIndex = {};
-      state.slotSchemaIndex = {};
       state.dimensionOrder = [];
       state.templateIndex = {};
-      state.baseExampleIndex = {};
       state.exampleIndex = {};
-      state.caseSourceIndex = {};
-
-      (data.slot_schema || []).forEach(item => { state.slotSchemaIndex[item.slot] = item; });
 
       const library = data.library || {};
       Object.entries(library).forEach(([dimensionKey, dimensionObj]) => {
@@ -613,19 +495,12 @@
         const subdimensions = dimensionObj.subdimensions || {};
         Object.entries(subdimensions).forEach(([subKey, subObj]) => {
           const slot = subObj.slot || subKey;
-          const rawValues = subObj.values || [];
           const allowedValues = {};
-          const provenanceSource = { ...(state.slotSchemaIndex[slot] || {}), ...subObj };
-
-          rawValues.forEach(valueObj => {
-            if (typeof valueObj === "string") {
-              allowedValues[valueObj] = { label: humanizeKey(valueObj), description: "" };
-            } else {
-              allowedValues[valueObj.key] = {
-                label: valueObj.label || valueObj.key,
-                description: valueObj.description || ""
-              };
-            }
+          (subObj.values || []).forEach(valueObj => {
+            allowedValues[valueObj.key] = {
+              label: valueObj.label || valueObj.key,
+              description: valueObj.description || ""
+            };
           });
 
           state.slotIndex[slot] = {
@@ -638,14 +513,13 @@
             required: Boolean(subObj.required),
             multi: Boolean(subObj.multi),
             allowedValues,
-            origin: Array.isArray(provenanceSource.origin) ? provenanceSource.origin : [],
-            evidenceStrength: provenanceSource.evidence_strength || "",
-            autoRecommendationTier: provenanceSource.auto_recommendation_tier || "",
-            recommendationNotes: provenanceSource.recommendation_notes || "",
-            heuristicScope: Array.isArray(provenanceSource.heuristic_scope) ? provenanceSource.heuristic_scope : [],
-            confidence: typeof provenanceSource.confidence === "number" ? provenanceSource.confidence : null
+            origin: Array.isArray(subObj.origin) ? subObj.origin : [],
+            evidenceStrength: subObj.evidence_strength || "",
+            autoRecommendationTier: subObj.auto_recommendation_tier || "",
+            recommendationNotes: subObj.recommendation_notes || "",
+            heuristicScope: Array.isArray(subObj.heuristic_scope) ? subObj.heuristic_scope : [],
+            confidence: typeof subObj.confidence === "number" ? subObj.confidence : null
           };
-
           dimInfo.slots.push(slot);
         });
 
@@ -653,23 +527,10 @@
       });
 
       (data.templates || []).forEach(template => { state.templateIndex[template.id] = template; });
-      (data.example_instances || []).forEach(example => {
-        state.baseExampleIndex[example.id] = { ...example, __source: "library" };
-      });
-      state.exampleIndex = { ...state.baseExampleIndex };
-
-      (data.linked_case_sources || []).forEach(source => {
-        state.caseSourceIndex[source.id] = source;
-      });
+      (data.example_instances || []).forEach(example => { state.exampleIndex[example.id] = example; });
     }
 
     function populateToolbar(){
-      populateTemplateSelect();
-      populateCaseSelect();
-      populateInstanceSelect();
-    }
-
-    function populateTemplateSelect(){
       elements.templateSelect.innerHTML = '<option value="">— bitte wählen —</option>';
       Object.values(state.templateIndex).forEach(template => {
         const option = document.createElement("option");
@@ -677,177 +538,20 @@
         option.textContent = template.label || template.id;
         elements.templateSelect.appendChild(option);
       });
-    }
 
-    function populateCaseSelect(){
-      elements.caseSelect.innerHTML = '<option value="">— keine Fallakte —</option>';
-      Object.values(state.caseSourceIndex).forEach(source => {
-        const option = document.createElement("option");
-        option.value = source.id;
-        option.textContent = source.label || source.id;
-        elements.caseSelect.appendChild(option);
-      });
-      elements.caseSelect.value = state.activeCaseId || "";
-    }
-
-    function populateInstanceSelect(){
       elements.instanceSelect.innerHTML = '<option value="">— bitte wählen —</option>';
-      const libraryExamples = Object.values(state.exampleIndex).filter(item => item.__source !== "case");
-      const caseExamples = Object.values(state.exampleIndex).filter(item => item.__source === "case");
-
-      libraryExamples.forEach(example => {
+      Object.values(state.exampleIndex).forEach(example => {
         const option = document.createElement("option");
-        option.value = example.__instanceKey || example.id;
+        option.value = example.id;
         option.textContent = example.label || example.id;
         elements.instanceSelect.appendChild(option);
       });
-
-      if (caseExamples.length) {
-        const separator = document.createElement("option");
-        separator.disabled = true;
-        separator.textContent = "──────── Fallpresets ────────";
-        elements.instanceSelect.appendChild(separator);
-        caseExamples.forEach(example => {
-          const option = document.createElement("option");
-          option.value = example.__instanceKey;
-          option.textContent = `Fall · ${example.label || example.id}`;
-          elements.instanceSelect.appendChild(option);
-        });
-      }
     }
 
     function updateTemplateVisibility(){
       const isTemplateMode = elements.modeSelect.value === "template";
       elements.templateField.classList.toggle("hidden", !isTemplateMode);
       elements.templateSelect.disabled = !isTemplateMode;
-    }
-
-    function updateCasePromptControls(){
-      const hasActiveCase = Boolean(state.activeCaseData && state.activeCaseId);
-      const mode = elements.casePromptModeSelect.value;
-      elements.casePromptModeSelect.disabled = !hasActiveCase;
-      if (!hasActiveCase) {
-        elements.casePromptModeSelect.value = "off";
-        elements.casePromptModeHint.className = "notice info";
-        elements.casePromptModeHint.textContent = "Nur aktiv, wenn eine Fallakte geladen ist.";
-        return;
-      }
-      const hasCasePreset = Boolean(state.activePresetMeta && state.activePresetMeta.__source === "case");
-      elements.casePromptModeHint.className = mode === "off" ? "notice warning" : "notice success";
-      if (mode === "off") {
-        elements.casePromptModeHint.textContent = "Fallakte geladen, aber aktuell nicht in den Prompt eingezogen.";
-      } else if (mode === "compact") {
-        elements.casePromptModeHint.textContent = "Der Prompt erhält eine kompakte Fallzusammenfassung.";
-      } else {
-        elements.casePromptModeHint.textContent = hasCasePreset
-          ? "Der Prompt nutzt die Fokusblöcke des geladenen Fall-Presets."
-          : "Der Prompt nutzt priorisierte Fallblöcke der aktiven Fallakte.";
-      }
-    }
-
-    function getCurrentCaseSource(){
-      return state.caseSourceIndex[state.activeCaseId] || null;
-    }
-
-    function getCurrentPresetFocusBlocks(){
-      if (!state.activePresetMeta || state.activePresetMeta.__source !== "case") return [];
-      return Array.isArray(state.activePresetMeta.focus_blocks) ? state.activePresetMeta.focus_blocks : [];
-    }
-
-    function getCaseBlockById(blockId){
-      return (state.activeCaseData?.context_blocks || []).find(block => block.id === blockId) || null;
-    }
-
-    function summarizeCaseBlock(blockId){
-      const block = getCaseBlockById(blockId);
-      if (!block) return "";
-      const content = block.content || {};
-      switch (blockId) {
-        case "case_parties_and_timeline": {
-          const claimant = content.claimant?.name || "Anspruchstellerin";
-          const defendant = content.defendant?.name || "Arbeitgeberseite";
-          const period = content.employment_period ? `${content.employment_period.from} bis ${content.employment_period.to}` : "Arbeitsverhältnis dokumentiert";
-          return `${claimant} gegen ${defendant}; Arbeitsverhältnis ${period}; heute Rückgabe- und Klagekontext.`;
-        }
-        case "case_claims_open": {
-          const claims = Array.isArray(content.claims) ? content.claims.slice(0, 3).map(item => item.type).filter(Boolean) : [];
-          const suffix = Array.isArray(content.claims) && content.claims.length > 3 ? ` plus ${content.claims.length - 3} weitere Ansprüche` : "";
-          const linkage = content.employer_linkage_issue ? ` Streitpunkt: ${content.employer_linkage_issue}.` : "";
-          return `Offene Ansprüche: ${claims.join("; ")}${suffix}.${linkage}`.trim();
-        }
-        case "case_legal_strengths": {
-          const strengths = Array.isArray(content.strengths) ? content.strengths.slice(0, 3).map(item => item.title).filter(Boolean) : [];
-          const track = content.personality_rights_track?.status === "offen_zu_pruefen" ? " Zusätzlicher Prüfungspfad bleibt offen." : "";
-          return `Dokumentierte Stärken: ${strengths.join("; ")}.${track}`.trim();
-        }
-        case "case_evidence_registry": {
-          const count = Array.isArray(content.evidence_items) ? content.evidence_items.length : 0;
-          return `Beweismittel: ${count} Anlagen oder Belege erfasst.`;
-        }
-        case "case_laptop_exit_status": {
-          const remaining = Array.isArray(content.remaining_checks) ? content.remaining_checks.length : 0;
-          const complete = content.formal_exit_complete ? "formal weitgehend abgeschlossen" : "noch offen";
-          return `Laptop-Exit ${complete}; noch ${remaining} Prüfpunkte; Exportzugriff gesichert.`;
-        }
-        case "case_today_plan": {
-          const tasks = Array.isArray(content.tasks) ? content.tasks.slice(0, 4).map(item => item.task).filter(Boolean) : [];
-          return `Heutige Prioritäten: ${tasks.join(" → ")}.`;
-        }
-        case "user_operating_profile": {
-          const prefs = Array.isArray(content.response_preference) ? content.response_preference.slice(0, 3).join(", ") : "direkt, strukturiert, handlungsorientiert";
-          return `Arbeitsmodus: ${prefs}; Zeitdruck ${content.time_pressure || "hoch"}.`;
-        }
-        case "session_role_instruction": {
-          const role = content.role || "Berater, Analyst und Denkpartner";
-          const priorities = Array.isArray(content.priority_order) ? content.priority_order.join(" → ") : "Prioritäten dokumentiert";
-          return `Rollenmodell: ${role}; Prioritäten: ${priorities}.`;
-        }
-        default:
-          return `${block.label}: fallbezogener Kontextblock aktiv.`;
-      }
-    }
-
-    function summarizeRelevantDependencies(focusBlocks){
-      const deps = (state.activeCaseData?.dependencies || []).filter(dep => focusBlocks.includes(dep.from) || focusBlocks.includes(dep.to));
-      return deps.slice(0, 2).map(dep => {
-        const from = getCaseBlockById(dep.from)?.label || dep.from;
-        const to = getCaseBlockById(dep.to)?.label || dep.to;
-        return `${from} → ${to} (${humanizeKey(dep.type)})`;
-      });
-    }
-
-    function buildCasePromptContextLines(){
-      if (!state.activeCaseData || !state.activeCaseId) return [];
-      const mode = elements.casePromptModeSelect.value;
-      if (mode === "off") return [];
-      const caseMeta = state.activeCaseData.case_meta || {};
-      const baseContext = (state.activeCaseData.case_contexts || [])[0] || {};
-      const focusBlocks = getCurrentPresetFocusBlocks();
-      let selectedBlocks = [];
-      if (mode === "focus") {
-        selectedBlocks = focusBlocks.length ? focusBlocks : (baseContext.shared_blocks || []).slice(0, 5);
-      } else {
-        selectedBlocks = [
-          "case_parties_and_timeline",
-          "case_claims_open",
-          "case_laptop_exit_status",
-          "case_today_plan",
-          "user_operating_profile"
-        ].filter(blockId => getCaseBlockById(blockId));
-      }
-      const uniqueBlocks = [...new Set(selectedBlocks)].slice(0, mode === "focus" ? 6 : 5);
-      const lines = [`Aktive Fallakte: ${caseMeta.label || state.activeCaseId}.`];
-      uniqueBlocks.forEach(blockId => {
-        const block = getCaseBlockById(blockId);
-        if (!block) return;
-        const summary = summarizeCaseBlock(blockId);
-        if (summary) lines.push(`${block.label}: ${summary}`);
-      });
-      if (mode === "focus") {
-        const depLines = summarizeRelevantDependencies(uniqueBlocks);
-        depLines.forEach(dep => lines.push(`Wichtige Abhängigkeit: ${dep}.`));
-      }
-      return lines;
     }
 
     function getRequiredSlots(){
@@ -858,6 +562,37 @@
       return Object.values(state.slotIndex)
         .filter(meta => meta.slot.includes("AUSSCHLUESSE") || meta.dimensionKey === "GRENZEN")
         .map(meta => meta.slot);
+    }
+
+    function isAssigned(slot){
+      const value = state.assignments[slot];
+      if (Array.isArray(value)) return value.length > 0;
+      return value !== undefined && value !== null && value !== "";
+    }
+
+    function getProgressStats(){
+      const requiredSlots = getRequiredSlots();
+      const setCount = requiredSlots.filter(isAssigned).length;
+      return {
+        total: requiredSlots.length,
+        setCount,
+        percent: requiredSlots.length ? Math.round((setCount / requiredSlots.length) * 100) : 0
+      };
+    }
+
+    function isRequiredComplete(){
+      return getRequiredSlots().every(isAssigned);
+    }
+
+    function getSlotDisplayName(slot){
+      return state.slotIndex[slot]?.subdimensionLabel || slot;
+    }
+
+    function getValueLabel(slot, value){
+      const meta = state.slotIndex[slot];
+      if (!meta) return String(value);
+      const entry = meta.allowedValues[value];
+      return entry ? entry.label : humanizeKey(value);
     }
 
     function getSlotProvenance(slot){
@@ -874,26 +609,6 @@
 
     function getOriginDisplayText(origins){
       return (origins || []).map(origin => ORIGIN_LABELS[origin] || humanizeKey(origin)).join(", ");
-    }
-
-    function isAssigned(slot){
-      const value = state.assignments[slot];
-      if (Array.isArray(value)) return value.length > 0;
-      return value !== undefined && value !== null && value !== "";
-    }
-
-    function isRequiredComplete(){
-      return getRequiredSlots().every(isAssigned);
-    }
-
-    function getProgressStats(){
-      const requiredSlots = getRequiredSlots();
-      const setCount = requiredSlots.filter(isAssigned).length;
-      return {
-        total: requiredSlots.length,
-        setCount,
-        percent: requiredSlots.length ? Math.round((setCount / requiredSlots.length) * 100) : 0
-      };
     }
 
     function getAssignedScopeTokens(){
@@ -916,12 +631,11 @@
       return tierPriority * 100 + confidencePenalty * 10;
     }
 
-    function addRecommendation(bucket, slot, reason, values = [], score = 1, source = "soft"){
+    function addRecommendation(bucket, slot, reason, values = [], score = 1){
       if (!state.slotIndex[slot] || getRequiredSlots().includes(slot) || getExclusionSlots().includes(slot)) return;
-      bucket[slot] = bucket[slot] || { reasons: [], values: [], score: 0, sources: [], provenance: getSlotProvenance(slot) };
+      bucket[slot] = bucket[slot] || { reasons: [], values: [], score: 0, provenance: getSlotProvenance(slot) };
       if (reason) bucket[slot].reasons.push(reason);
       if (values?.length) bucket[slot].values.push(...values);
-      bucket[slot].sources.push(source);
       bucket[slot].score += score;
     }
 
@@ -958,15 +672,14 @@
         const scopeWeight = matches.length ? 1 + Math.min(matches.length, 3) * 0.2 : 0.72;
         const score = tierScore * evidenceWeight * confidence * scopeWeight;
         if (score <= 0) return;
-        addRecommendation(bucket, meta.slot, getProvenanceRecommendationReason(meta.slot, { matches, global: globalMatch }), [], score, "provenance");
+        addRecommendation(bucket, meta.slot, getProvenanceRecommendationReason(meta.slot, { matches, global: globalMatch }), [], score);
       });
     }
 
     function getActiveRecommendationData(){
       const constraints = state.libraryData?.constraints || [];
-      const requiredComplete = isRequiredComplete();
       const bucket = {};
-      if (!requiredComplete) return { recommendedSlots: [], reasons: {}, recommendedValues: {}, provenanceMeta: {} };
+      if (!isRequiredComplete()) return { recommendedSlots: [], reasons: {}, recommendedValues: {}, provenanceMeta: {} };
 
       constraints.forEach(constraint => {
         const cond = constraint.if || {};
@@ -975,10 +688,10 @@
         if (!matches || constraint.type !== "recommendation") return;
         const base = `${getSlotDisplayName(cond.slot)} ist auf „${getValueLabel(cond.slot, cond.equals)}“ gesetzt.`;
         (constraint.then?.recommended_slots || []).forEach(slot => {
-          addRecommendation(bucket, slot, `${base} Regelbasierte Empfehlung aus dem Constraint-Modell.`, [], 160, "constraint");
+          addRecommendation(bucket, slot, `${base} Regelbasierte Empfehlung aus dem Constraint-Modell.`, [], 160);
         });
         Object.entries(constraint.then?.recommended_values || {}).forEach(([slot, values]) => {
-          addRecommendation(bucket, slot, `${base} Passende Ausprägungen sind hier oft schneller anschlussfähig.`, values, 180, "constraint-values");
+          addRecommendation(bucket, slot, `${base} Passende Ausprägungen sind hier oft schneller anschlussfähig.`, values, 180);
         });
       });
 
@@ -1008,6 +721,22 @@
       return expectedValues.includes(current) ? "expected" : "abweichend";
     }
 
+    function getConflictDetails(){
+      const conflicts = [];
+      (state.libraryData?.constraints || []).forEach(constraint => {
+        if (constraint.type !== "incompatibility") return;
+        const cond = constraint.if || {};
+        const targetSlot = constraint.then_not?.slot;
+        const forbiddenValue = constraint.then_not?.contains;
+        const sourceMatches = state.assignments[cond.slot] === cond.equals;
+        const targetAssigned = state.assignments[targetSlot];
+        if (sourceMatches && Array.isArray(targetAssigned) && targetAssigned.includes(forbiddenValue)) {
+          conflicts.push({ sourceSlot: cond.slot, sourceValue: cond.equals, targetSlot, forbiddenValue });
+        }
+      });
+      return conflicts;
+    }
+
     function getFieldStatuses(){
       const statuses = {};
       Object.keys(state.slotIndex).forEach(slot => { statuses[slot] = []; });
@@ -1018,12 +747,12 @@
 
       const { recommendedSlots, reasons, recommendedValues } = getActiveRecommendationData();
       recommendedSlots.forEach(slot => {
-        const recommendationState = getRecommendationState(slot, recommendedValues);
-        if (recommendationState === "missing") {
+        const stateText = getRecommendationState(slot, recommendedValues);
+        if (stateText === "missing") {
           statuses[slot].push({ type: "info", text: `Als Nächstes sinnvoll: ${(reasons[slot] || ["Für deine aktuelle Auswahl empfohlen."])[0]}` });
-        } else if (recommendationState === "expected") {
+        } else if (stateText === "expected") {
           statuses[slot].push({ type: "success", text: "Entspricht der aktuellen Erwartungslogik und passt gut zum Rest der Konfiguration." });
-        } else if (recommendationState === "set") {
+        } else if (stateText === "set") {
           statuses[slot].push({ type: "success", text: "Ist gesetzt und aktuell gut anschlussfähig." });
         } else {
           const labels = (recommendedValues[slot] || []).map(value => getValueLabel(slot, value)).join(", ");
@@ -1031,28 +760,12 @@
         }
       });
 
-      (state.libraryData?.constraints || []).forEach(constraint => {
-        if (constraint.type !== "incompatibility") return;
-        const cond = constraint.if || {};
-        const targetSlot = constraint.then_not?.slot;
-        const forbidden = constraint.then_not?.contains;
-        const sourceMatches = state.assignments[cond.slot] === cond.equals;
-        const targetValue = state.assignments[targetSlot];
-        if (!sourceMatches || !Array.isArray(targetValue) || !targetValue.includes(forbidden)) return;
-        statuses[cond.slot].push({ type: "error", text: `Diese Auswahl kollidiert mit ${getSlotDisplayName(targetSlot)}.` });
-        statuses[targetSlot].push({ type: "error", text: `Diese Auswahl kollidiert mit ${getSlotDisplayName(cond.slot)}.` });
+      getConflictDetails().forEach(conflict => {
+        statuses[conflict.sourceSlot].push({ type: "error", text: `Diese Auswahl kollidiert mit ${getSlotDisplayName(conflict.targetSlot)}.` });
+        statuses[conflict.targetSlot].push({ type: "error", text: `Diese Auswahl kollidiert mit ${getSlotDisplayName(conflict.sourceSlot)}.` });
       });
 
       return statuses;
-    }
-
-    function getSlotDisplayName(slot){ return state.slotIndex[slot]?.subdimensionLabel || slot; }
-
-    function getValueLabel(slot, value){
-      const meta = state.slotIndex[slot];
-      if (!meta) return String(value);
-      const entry = meta.allowedValues[value];
-      return entry ? entry.label : humanizeKey(value);
     }
 
     function renderFieldCard(slot, options = {}){
@@ -1077,10 +790,8 @@
       const badgeWrap = document.createElement("div");
       badgeWrap.className = "inline-actions";
       if (meta.required) badgeWrap.innerHTML += '<span class="badge accent">Pflicht</span>';
-      else if (options.recommended) {
-        badgeWrap.innerHTML += '<span class="badge subtle">Empfohlen</span>';
-        if (options.provenance?.autoRecommendationTier) badgeWrap.innerHTML += `<span class="badge subtle">Tier ${options.provenance.autoRecommendationTier}</span>`;
-      } else if (options.curated) badgeWrap.innerHTML += '<span class="badge subtle">Häufig genutzt</span>';
+      else if (options.recommended) badgeWrap.innerHTML += '<span class="badge subtle">Empfohlen</span>';
+      else if (options.curated) badgeWrap.innerHTML += '<span class="badge subtle">Häufig genutzt</span>';
       else badgeWrap.innerHTML += '<span class="badge subtle">Optional</span>';
       head.appendChild(metaWrap);
       head.appendChild(badgeWrap);
@@ -1104,7 +815,6 @@
       }
 
       const currentValue = state.assignments[slot];
-
       if (meta.multi) {
         const checkboxGrid = document.createElement("div");
         checkboxGrid.className = "checkbox-grid";
@@ -1183,43 +893,37 @@
       return card;
     }
 
-    function getCompactStatusMeta(stateText, provenance = null){
-      const tier = provenance?.autoRecommendationTier || "";
-      const confidence = typeof provenance?.confidence === "number" ? provenance.confidence : null;
-      const highSignal = tier === "A" && (confidence === null || confidence >= 0.8);
-      if (stateText === "expected") return highSignal ? { label: "stark passend", className: "accent" } : { label: "gut passend", className: "soft" };
-      if (stateText === "set") return highSignal ? { label: "gut passend", className: "soft" } : { label: "eher passend", className: "subtle" };
+    function renderRequiredSection(){
+      const requiredSlots = getRequiredSlots();
+      const stats = getProgressStats();
+      elements.requiredProgressBadge.textContent = `${stats.setCount} von ${stats.total} gesetzt`;
+      elements.requiredProgressFill.style.width = `${stats.percent}%`;
+      elements.requiredHint.className = stats.setCount === stats.total ? "notice success" : "notice warning";
+      elements.requiredHint.textContent = stats.setCount === stats.total
+        ? "Alle Pflichtangaben sind gesetzt. Jetzt kannst du gezielt verfeinern."
+        : `${stats.setCount} von ${stats.total} Pflichtangaben gesetzt. Ergänze zuerst die fehlenden Angaben.`;
+      elements.requiredFields.innerHTML = "";
+      requiredSlots.forEach(slot => elements.requiredFields.appendChild(renderFieldCard(slot)));
+    }
+
+    function getCompactStatusMeta(stateText){
+      if (stateText === "expected") return { label: "gut passend", className: "soft" };
+      if (stateText === "set") return { label: "gesetzt", className: "subtle" };
       return { label: "prüfen", className: "warn" };
     }
 
-    function getCompactBenefitText(slot){
-      const meta = state.slotIndex[slot] || {};
-      const map = {
-        ZIEL: "stützt Zielschärfe",
-        AUFGABE: "stützt Aufgabenlogik",
-        KONTEXT: "stützt Kontextpassung",
-        OUTPUT_FORM: "stützt Ergebnisform",
-        PROZESS: "stützt Struktur",
-        QUALITAETSKRITERIEN: "stützt Qualität",
-        ROLLE: "stützt Perspektive",
-        ADRESSAT: "stützt Zielgruppenpassung",
-        INTERAKTIONSMODUS: "stützt Arbeitsfluss"
-      };
-      return map[meta.dimensionKey] || "stützt die aktuelle Konfiguration";
-    }
-
-    function renderCompactRecommendationItem(slot, recommendedValues = {}, provenance = null){
+    function renderCompactRecommendationItem(slot, recommendedValues = {}, reasons = []){
       const stateText = getRecommendationState(slot, recommendedValues);
       const wrapper = document.createElement("div");
       wrapper.className = "compact-item";
       const rawValue = state.assignments[slot];
       const valueText = Array.isArray(rawValue) ? rawValue.map(item => getValueLabel(slot, item)).join(", ") : getValueLabel(slot, rawValue);
-      const currentStatus = getCompactStatusMeta(stateText, provenance);
+      const currentStatus = getCompactStatusMeta(stateText);
       const expectedValues = recommendedValues[slot] || [];
       const mini = stateText === "expected"
-        ? `${currentStatus.label} · ${getCompactBenefitText(slot)}`
+        ? `${currentStatus.label} · entspricht dem erwarteten Pfad`
         : stateText === "set"
-          ? `${currentStatus.label} · bleibt aktuell stimmig`
+          ? `${currentStatus.label} · aktuell anschlussfähig`
           : expectedValues.length
             ? `${currentStatus.label} · typischer wäre: ${expectedValues.map(value => getValueLabel(slot, value)).join(", ")}`
             : `${currentStatus.label} · näher prüfen`;
@@ -1255,43 +959,17 @@
       if (state.coveredEditorOpen[slot]) {
         const editor = document.createElement("div");
         editor.className = "inline-editor";
-        editor.appendChild(renderFieldCard(slot, {
-          recommended: true,
-          reason: (getActiveRecommendationData().reasons[slot] || []).join(" "),
-          provenance,
-          context: "covered"
-        }));
+        editor.appendChild(renderFieldCard(slot, { recommended: true, reason: reasons.join(" "), context: "covered" }));
         wrapper.appendChild(editor);
       }
 
-      const titleBits = [];
-      if (provenance?.recommendationNotes) titleBits.push(provenance.recommendationNotes);
-      if (provenance?.autoRecommendationTier) titleBits.push(`Tier ${provenance.autoRecommendationTier}`);
-      if (provenance?.evidenceStrength) titleBits.push(`Evidenz ${provenance.evidenceStrength}`);
-      if (typeof provenance?.confidence === "number") titleBits.push(`Confidence ${provenance.confidence.toFixed(2)}`);
-      wrapper.title = titleBits.join(" · ");
+      if (reasons.length) wrapper.title = reasons.join(" ");
       return wrapper;
-    }
-
-    function renderRequiredSection(){
-      const requiredSlots = getRequiredSlots();
-      const stats = getProgressStats();
-      elements.requiredProgressBadge.textContent = `${stats.setCount} von ${stats.total} gesetzt`;
-      elements.requiredProgressFill.style.width = `${stats.percent}%`;
-      if (stats.setCount === stats.total) {
-        elements.requiredHint.className = "notice success";
-        elements.requiredHint.textContent = "Alle Pflichtangaben sind gesetzt. Jetzt kannst du gezielt verfeinern.";
-      } else {
-        elements.requiredHint.className = "notice warning";
-        elements.requiredHint.textContent = `${stats.setCount} von ${stats.total} Pflichtangaben gesetzt. Ergänze zuerst die fehlenden Angaben.`;
-      }
-      elements.requiredFields.innerHTML = "";
-      requiredSlots.forEach(slot => elements.requiredFields.appendChild(renderFieldCard(slot)));
     }
 
     function renderRecommendationSection(){
       const requiredComplete = isRequiredComplete();
-      const { recommendedSlots, reasons, recommendedValues, provenanceMeta } = getActiveRecommendationData();
+      const { recommendedSlots, reasons, recommendedValues } = getActiveRecommendationData();
       elements.recommendedActionable.innerHTML = "";
       elements.recommendedCovered.innerHTML = "";
       elements.recommendedCoveredWrap.classList.add("hidden");
@@ -1323,8 +1001,7 @@
       actionableSlots.forEach(slot => {
         elements.recommendedActionable.appendChild(renderFieldCard(slot, {
           recommended: true,
-          reason: (reasons[slot] || []).join(" "),
-          provenance: provenanceMeta[slot]
+          reason: (reasons[slot] || []).join(" ")
         }));
       });
 
@@ -1334,7 +1011,7 @@
         elements.recommendedCoveredTitle.textContent = actionableSlots.length ? "Bereits passende Empfehlungen" : "Alle aktuell passenden Empfehlungen";
         elements.recommendedCoveredDetails.open = coveredSlots.length <= 2 && !actionableSlots.length;
         coveredSlots.forEach(slot => {
-          elements.recommendedCovered.appendChild(renderCompactRecommendationItem(slot, recommendedValues, provenanceMeta[slot]));
+          elements.recommendedCovered.appendChild(renderCompactRecommendationItem(slot, recommendedValues, reasons[slot] || []));
         });
       }
     }
@@ -1378,7 +1055,6 @@
         elements.refinementSections.appendChild(notice);
         return;
       }
-
       groups.forEach(group => {
         const details = document.createElement("details");
         details.className = "disclosure";
@@ -1413,22 +1089,6 @@
         return;
       }
       slots.forEach(slot => elements.exclusionFields.appendChild(renderFieldCard(slot)));
-    }
-
-    function getConflictDetails(){
-      const conflicts = [];
-      (state.libraryData?.constraints || []).forEach(constraint => {
-        if (constraint.type !== "incompatibility") return;
-        const cond = constraint.if || {};
-        const targetSlot = constraint.then_not?.slot;
-        const forbiddenValue = constraint.then_not?.contains;
-        const sourceMatches = state.assignments[cond.slot] === cond.equals;
-        const targetAssigned = state.assignments[targetSlot];
-        if (sourceMatches && Array.isArray(targetAssigned) && targetAssigned.includes(forbiddenValue)) {
-          conflicts.push({ sourceSlot: cond.slot, sourceValue: cond.equals, targetSlot, forbiddenValue });
-        }
-      });
-      return conflicts;
     }
 
     function getRecommendationWeight(slot, provenanceMeta = null){
@@ -1476,43 +1136,19 @@
       const suggestions = [];
       const { recommendationData, requiredMissing, conflicts, recommendedValues } = assessment;
       requiredMissing.forEach(slot => {
-        suggestions.push({
-          kind: "required",
-          delta: estimateSuggestionDelta("required"),
-          title: `${getSlotDisplayName(slot)} setzen`,
-          detail: "Hebt vor allem die Vollständigkeit an und verbessert die Belastbarkeit der Gesamtbewertung.",
-          targetSlot: slot
-        });
+        suggestions.push({ kind: "required", delta: estimateSuggestionDelta("required"), title: `${getSlotDisplayName(slot)} setzen`, detail: "Hebt vor allem die Vollständigkeit an und verbessert die Belastbarkeit der Gesamtbewertung.", targetSlot: slot });
       });
       conflicts.forEach(conflict => {
-        suggestions.push({
-          kind: "conflict",
-          delta: estimateSuggestionDelta("conflict"),
-          title: `Konflikt zwischen ${getSlotDisplayName(conflict.sourceSlot)} und ${getSlotDisplayName(conflict.targetSlot)} auflösen`,
-          detail: `Prüfe ${getSlotDisplayName(conflict.targetSlot)} oder ändere ${getSlotDisplayName(conflict.sourceSlot)}, damit die Kohärenz nicht unnötig gedrückt wird.`,
-          targetSlot: conflict.targetSlot
-        });
+        suggestions.push({ kind: "conflict", delta: estimateSuggestionDelta("conflict"), title: `Konflikt zwischen ${getSlotDisplayName(conflict.sourceSlot)} und ${getSlotDisplayName(conflict.targetSlot)} auflösen`, detail: `Prüfe ${getSlotDisplayName(conflict.targetSlot)} oder ändere ${getSlotDisplayName(conflict.sourceSlot)}, damit die Kohärenz nicht unnötig gedrückt wird.`, targetSlot: conflict.targetSlot });
       });
       recommendationData.recommendedSlots.forEach(slot => {
         const weight = getRecommendationWeight(slot, recommendationData.provenanceMeta[slot]);
         const stateText = getRecommendationState(slot, recommendedValues);
         if (stateText === "missing") {
-          suggestions.push({
-            kind: "recommended-missing",
-            delta: estimateSuggestionDelta("recommended-missing", weight),
-            title: `${getSlotDisplayName(slot)} ergänzen`,
-            detail: (recommendationData.reasons[slot] || ["Diese Ergänzung passt gut zum aktuellen Pfad."])[0],
-            targetSlot: slot
-          });
+          suggestions.push({ kind: "recommended-missing", delta: estimateSuggestionDelta("recommended-missing", weight), title: `${getSlotDisplayName(slot)} ergänzen`, detail: (recommendationData.reasons[slot] || ["Diese Ergänzung passt gut zum aktuellen Pfad."])[0], targetSlot: slot });
         } else if (stateText === "abweichend") {
           const expected = (recommendedValues[slot] || []).map(value => getValueLabel(slot, value)).join(", ");
-          suggestions.push({
-            kind: "recommended-align",
-            delta: estimateSuggestionDelta("recommended-align", weight),
-            title: `${getSlotDisplayName(slot)} an erwarteten Pfad anpassen`,
-            detail: expected ? `Typisch passend wären eher: ${expected}.` : "Die aktuelle Ausprägung weicht vom empfohlenen Pfad ab.",
-            targetSlot: slot
-          });
+          suggestions.push({ kind: "recommended-align", delta: estimateSuggestionDelta("recommended-align", weight), title: `${getSlotDisplayName(slot)} an erwarteten Pfad anpassen`, detail: expected ? `Typisch passend wären eher: ${expected}.` : "Die aktuelle Ausprägung weicht vom empfohlenen Pfad ab.", targetSlot: slot });
         }
       });
       suggestions.sort((a,b) => b.delta - a.delta || a.title.localeCompare(b.title));
@@ -1573,7 +1209,6 @@
       const interventionNeed = conflicts.length || requiredMissing.length ? "hoch" : (overall >= 80 ? "niedrig" : "mittel");
       const interpretation = buildAssessmentInterpretation({ completeness, coherence, heuristicFit, interventionNeed });
       const suggestions = buildImprovementSuggestions({ recommendationData, requiredMissing, conflicts, recommendedValues });
-
       return { completeness, coherence, heuristicFit, overall, label: getOverallLabel(overall), interventionNeed, interpretation, suggestions, requiredMissing, conflicts, recommendationData, recommendedValues };
     }
 
@@ -1630,42 +1265,33 @@
         model.suggestions.forEach((suggestion, idx) => {
           const item = document.createElement("div");
           item.className = `suggestion-item${idx === 0 ? " primary" : ""}`;
-          const head = document.createElement("div");
-          head.className = "suggestion-head";
-          head.innerHTML = `<strong>${suggestion.title}</strong><div class="inline-actions">${idx === 0 ? '<span class="badge accent">größter Hebel</span>' : ''}<span class="badge subtle">ca. +${suggestion.delta}</span></div>`;
-          const detail = document.createElement("small");
-          detail.textContent = suggestion.detail;
-          const actions = document.createElement("div");
-          actions.className = "suggestion-actions";
+          item.innerHTML = `<div class="suggestion-head"><strong>${suggestion.title}</strong><div class="inline-actions">${idx === 0 ? '<span class="badge accent">größter Hebel</span>' : ''}<span class="badge subtle">ca. +${suggestion.delta}</span></div></div><small>${suggestion.detail}</small>`;
           if (suggestion.targetSlot) {
+            const actions = document.createElement("div");
+            actions.className = "suggestion-actions";
             const btn = document.createElement("button");
             btn.type = "button";
             btn.className = "jump-btn";
             btn.textContent = "Zum Feld";
             btn.addEventListener("click", () => focusField(suggestion.targetSlot));
             actions.appendChild(btn);
+            item.appendChild(actions);
           }
-          item.appendChild(head);
-          item.appendChild(detail);
-          if (actions.childNodes.length) item.appendChild(actions);
           elements.scoreSuggestions.appendChild(item);
         });
       }
     }
 
     function renderSummary(){
-      const wrapper = document.createDocumentFragment();
-      const orderedSlots = [
-        ...getRequiredSlots(),
-        ...unique([...getActiveRecommendationData().recommendedSlots, ...Object.keys(state.assignments)])
-      ];
+      const fragment = document.createDocumentFragment();
+      const orderedSlots = [...getRequiredSlots(), ...unique([...getActiveRecommendationData().recommendedSlots, ...Object.keys(state.assignments)])];
       const visibleSlots = unique(orderedSlots).filter(slot => isAssigned(slot));
       if (!visibleSlots.length) {
         const item = document.createElement("div");
         item.className = "summary-item";
         item.innerHTML = `<strong>Noch keine Auswahl</strong><span>Setze zuerst die Pflichtangaben, danach erscheinen hier die wichtigsten Entscheidungen in Klartext.</span>`;
-        wrapper.appendChild(item);
-        return wrapper;
+        fragment.appendChild(item);
+        return fragment;
       }
       visibleSlots.forEach(slot => {
         const rawValue = state.assignments[slot];
@@ -1673,44 +1299,9 @@
         const item = document.createElement("div");
         item.className = "summary-item";
         item.innerHTML = `<strong>${getSlotDisplayName(slot)}</strong><span>${valueText}</span>`;
-        wrapper.appendChild(item);
+        fragment.appendChild(item);
       });
-      return wrapper;
-    }
-
-    function renderCasePanel(){
-      if (!state.activeCaseData || !state.activeCaseId) {
-        elements.casePanel.classList.add("hidden");
-        elements.casePanelContent.innerHTML = "";
-        elements.caseInlineNotice.classList.add("hidden");
-        return;
-      }
-      const source = state.caseSourceIndex[state.activeCaseId] || {};
-      const contexts = state.activeCaseData.case_contexts || [];
-      const baseContext = contexts[0] || {};
-      const linkedExamples = state.activeCaseData.linked_example_instances || [];
-
-      elements.casePanel.classList.remove("hidden");
-      elements.caseInlineNotice.classList.remove("hidden");
-      elements.caseInlineNotice.className = "notice success";
-      elements.caseInlineNotice.innerHTML = `Fallakte aktiv: <strong>${source.label || state.activeCaseId}</strong> · ${linkedExamples.length} verknüpfte Presets`;
-
-      elements.casePanelContent.innerHTML = "";
-      const modeMap = { off: "Aus", compact: "Kompakt", focus: "Mit Fokusblöcken" };
-      const blocks = [
-        { title: "Aktive Fallakte", text: source.label || state.activeCaseId },
-        { title: "Datei", text: source.path || "unbekannt" },
-        { title: "Gemeinsame Blöcke", text: String((baseContext.shared_blocks || []).length) },
-        { title: "Verknüpfte Presets", text: String(linkedExamples.length) },
-        { title: "Fallkontext im Prompt", text: modeMap[elements.casePromptModeSelect.value] || "Aus" },
-        { title: "Kontextbasis", text: baseContext.description || state.activeCaseData.case_meta?.description || "" }
-      ];
-      blocks.forEach(block => {
-        const item = document.createElement("div");
-        item.className = "summary-item";
-        item.innerHTML = `<strong>${block.title}</strong><span>${block.text}</span>`;
-        elements.casePanelContent.appendChild(item);
-      });
+      return fragment;
     }
 
     function validateAssignments(){
@@ -1722,12 +1313,10 @@
       const nextBestFields = assessment.recommendationData.recommendedSlots.filter(slot => getRecommendationState(slot, assessment.recommendedValues) === "missing");
       const tuneableFields = assessment.recommendationData.recommendedSlots.filter(slot => getRecommendationState(slot, assessment.recommendedValues) === "abweichend");
       if (nextBestFields.length) {
-        const preview = nextBestFields.slice(0, 4).map(getSlotDisplayName).join(", ");
-        notices.push({ type: "info", text: `Als Nächstes sinnvoll: ${preview}${nextBestFields.length > 4 ? " …" : ""}` });
+        notices.push({ type: "info", text: `Als Nächstes sinnvoll: ${nextBestFields.slice(0, 4).map(getSlotDisplayName).join(", ")}${nextBestFields.length > 4 ? " …" : ""}` });
       }
       if (tuneableFields.length) {
-        const preview = tuneableFields.slice(0, 3).map(getSlotDisplayName).join(", ");
-        notices.push({ type: "warning", text: `Bereits gesetzt, aber noch ausbaufähig: ${preview}${tuneableFields.length > 3 ? " …" : ""}` });
+        notices.push({ type: "warning", text: `Bereits gesetzt, aber noch ausbaufähig: ${tuneableFields.slice(0, 3).map(getSlotDisplayName).join(", ")}${tuneableFields.length > 3 ? " …" : ""}` });
       }
       assessment.conflicts.forEach(conflict => {
         notices.push({ type: "error", text: `${getSlotDisplayName(conflict.sourceSlot)} = ${getValueLabel(conflict.sourceSlot, conflict.sourceValue)} ↔ ${getSlotDisplayName(conflict.targetSlot)} enthält ${getValueLabel(conflict.targetSlot, conflict.forbiddenValue)}` });
@@ -1740,24 +1329,15 @@
 
     function renderStructuredPrompt(){
       const lines = ["Erstelle eine Antwort anhand der folgenden Vorgaben:"];
-      const caseLines = buildCasePromptContextLines();
-
-      if (caseLines.length) {
-        lines.push("");
-        lines.push("Fallkontext:");
-        caseLines.forEach(line => lines.push(`- ${line}`));
-      }
-
       state.dimensionOrder.forEach(dimension => {
         const slotLines = [];
         dimension.slots.forEach(slot => {
           if (!(slot in state.assignments)) return;
-          const meta = state.slotIndex[slot];
           const rawValue = state.assignments[slot];
           const valueText = Array.isArray(rawValue)
             ? rawValue.map(item => getValueLabel(slot, item)).join(", ")
             : getValueLabel(slot, rawValue);
-          slotLines.push(`- ${meta.subdimensionLabel}: ${valueText}`);
+          slotLines.push(`- ${getSlotDisplayName(slot)}: ${valueText}`);
         });
         if (slotLines.length) {
           lines.push("");
@@ -1765,58 +1345,33 @@
           lines.push(...slotLines);
         }
       });
-
       return lines.join("\n").trim();
     }
 
     function renderTemplatePrompt(){
       const templateId = elements.templateSelect.value;
       if (!templateId) throw new Error("Im Template-Modus muss ein Template gewählt werden.");
-
       const template = state.templateIndex[templateId];
       if (!template) throw new Error(`Unbekanntes Template: ${templateId}`);
-
       const missing = (template.slots_used || []).filter(slot => !isAssigned(slot));
-      if (missing.length) {
-        throw new Error(`Für Template '${template.label || templateId}' fehlen Werte für: ${missing.join(", ")}`);
-      }
-
+      if (missing.length) throw new Error(`Für Template '${template.label || templateId}' fehlen Werte für: ${missing.join(", ")}`);
       let text = template.text || "";
       (template.slots_used || []).forEach(slot => {
         const rawValue = state.assignments[slot];
-        const replacement = valueToTemplateText(slot, rawValue);
-        const pattern = new RegExp(`\[${escapeRegExp(slot)}\]`, "g");
-        text = text.replace(pattern, replacement);
+        const replacement = Array.isArray(rawValue)
+          ? rawValue.map(item => {
+              const label = getValueLabel(slot, item);
+              return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(item);
+            }).join(", ")
+          : (() => {
+              const label = getValueLabel(slot, rawValue);
+              return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(rawValue);
+            })();
+        text = text.replace(new RegExp(`\\[${escapeRegExp(slot)}\\]`, "g"), replacement);
       });
-
       const unresolved = text.match(/\[[A-Z0-9_]+\]/g);
-      if (unresolved) {
-        throw new Error(`Template enthält noch unaufgelöste Platzhalter: ${[...new Set(unresolved)].join(", ")}`);
-      }
-
-      const trimmed = text.trim();
-      const caseLines = buildCasePromptContextLines();
-
-      if (!caseLines.length) return trimmed;
-
-      return [
-        "Fallkontext:",
-        ...caseLines.map(line => `- ${line}`),
-        "",
-        "Aufgabe:",
-        trimmed
-      ].join("\n").trim();
-    }
-
-    function valueToTemplateText(slot, value){
-      if (Array.isArray(value)) {
-        return value.map(item => {
-          const label = getValueLabel(slot, item);
-          return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(item);
-        }).join(", ");
-      }
-      const label = getValueLabel(slot, value);
-      return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(value);
+      if (unresolved) throw new Error(`Template enthält noch unaufgelöste Platzhalter: ${[...new Set(unresolved)].join(", ")}`);
+      return text.trim();
     }
 
     function renderSlotsNotation(){
@@ -1825,8 +1380,7 @@
         dimension.slots.forEach(slot => {
           if (!(slot in state.assignments)) return;
           const rawValue = state.assignments[slot];
-          if (Array.isArray(rawValue)) lines.push(`[${slot}:${rawValue.join(",")}]`);
-          else lines.push(`[${slot}:${rawValue}]`);
+          lines.push(Array.isArray(rawValue) ? `[${slot}:${rawValue.join(",")}]` : `[${slot}:${rawValue}]`);
         });
       });
       return lines.length ? lines.join("\n") : "Noch keine Auswahl.";
@@ -1837,8 +1391,6 @@
       renderRecommendationSection();
       renderRefinementSections();
       renderExclusionFields();
-      renderCasePanel();
-
       elements.slotsOutput.textContent = renderSlotsNotation();
       elements.summaryOutput.innerHTML = "";
       elements.summaryOutput.appendChild(renderSummary());
@@ -1853,105 +1405,23 @@
       } catch (error) {
         notices.unshift({ type: "error", text: error.message });
       }
-
       if (!isRequiredComplete()) {
         if (hasAssignments) prompt = `Vorläufige Vorschau – noch nicht vollständig. Ergänze zuerst die Pflichtangaben.\n\n${renderStructuredPrompt()}`;
         else prompt = "Der Prompt ist noch nicht vollständig. Ergänze zuerst die Pflichtangaben.";
       }
       elements.promptOutput.textContent = prompt;
-
       notices.forEach(item => {
         const div = document.createElement("div");
         div.className = `notice ${item.type === "info" ? "info" : item.type}`;
         div.textContent = item.text;
         elements.statusOutput.appendChild(div);
       });
-      if (!notices.length) {
-        const div = document.createElement("div");
-        div.className = "notice success";
-        div.textContent = "Keine Hinweise.";
-        elements.statusOutput.appendChild(div);
-      }
       persistAssignments();
-    }
-
-    function mergeCaseExamples(caseData, caseId){
-      state.exampleIndex = { ...state.baseExampleIndex };
-      (caseData.linked_example_instances || []).forEach(example => {
-        const key = `case:${caseId}:${example.id}`;
-        state.exampleIndex[key] = { ...example, __source: "case", __instanceKey: key };
-      });
-      populateInstanceSelect();
-    }
-
-    async function loadCase(caseId, { silent = false } = {}){
-      if (!caseId) {
-        clearCase({ silent });
-        return;
-      }
-      const source = state.caseSourceIndex[caseId];
-      if (!source) {
-        if (!silent) {
-          const div = document.createElement("div");
-          div.className = "notice error";
-          div.textContent = "Ausgewählte Fallakte ist nicht registriert.";
-          elements.statusOutput.prepend(div);
-        }
-        return;
-      }
-      try {
-        const response = await fetch(resolveRelativePath(source.path), { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const caseData = await response.json();
-        state.activeCaseId = caseId;
-        state.activeCaseData = caseData;
-        elements.caseSelect.value = caseId;
-        mergeCaseExamples(caseData, caseId);
-        updateCasePromptControls();
-        persistCaseSelection();
-        if (!silent) {
-          const div = document.createElement("div");
-          div.className = "notice success";
-          div.textContent = `Fallakte geladen: ${source.label || caseId}`;
-          elements.statusOutput.prepend(div);
-        }
-        updateOutputs();
-      } catch (error) {
-        console.error(error);
-        if (!silent) {
-          const div = document.createElement("div");
-          div.className = "notice error";
-          div.textContent = `Fallakte konnte nicht geladen werden: ${error.message}`;
-          elements.statusOutput.prepend(div);
-        }
-      }
-    }
-
-    function clearCase({ silent = false } = {}){
-      state.activeCaseId = "";
-      state.activeCaseData = null;
-      state.activePresetKey = "";
-      state.activePresetMeta = null;
-      state.exampleIndex = { ...state.baseExampleIndex };
-      elements.caseSelect.value = "";
-      populateInstanceSelect();
-      updateCasePromptControls();
-      persistCaseSelection();
-      if (!silent) {
-        const div = document.createElement("div");
-        div.className = "notice info";
-        div.textContent = "Fallakte getrennt. Die allgemeine Bibliothek bleibt aktiv.";
-        elements.statusOutput.prepend(div);
-      }
-      updateOutputs();
     }
 
     function loadInstance(instanceId){
       if (!instanceId || !state.exampleIndex[instanceId]) return;
-      const example = state.exampleIndex[instanceId];
-      state.activePresetKey = instanceId;
-      state.activePresetMeta = example;
-      state.assignments = JSON.parse(JSON.stringify(example.values || {}));
+      state.assignments = JSON.parse(JSON.stringify(state.exampleIndex[instanceId].values || {}));
       state.coveredEditorOpen = {};
       updateOutputs();
     }
@@ -1959,19 +1429,17 @@
     function clearAssignments(){
       state.assignments = {};
       state.coveredEditorOpen = {};
-      state.activePresetKey = "";
-      state.activePresetMeta = null;
       updateOutputs();
     }
 
     async function copyText(text, successMessage){
-      try{
+      try {
         await navigator.clipboard.writeText(text);
         const div = document.createElement("div");
         div.className = "notice success";
         div.textContent = successMessage;
         elements.statusOutput.prepend(div);
-      } catch(_){
+      } catch (_) {
         const div = document.createElement("div");
         div.className = "notice error";
         div.textContent = "Kopieren fehlgeschlagen.";
@@ -1980,49 +1448,28 @@
     }
 
     function persistAssignments(){
-      try{
+      try {
         localStorage.setItem("prompt-library-ui.assignments", JSON.stringify(state.assignments));
         localStorage.setItem("prompt-library-ui.mode", elements.modeSelect.value);
         localStorage.setItem("prompt-library-ui.template", elements.templateSelect.value);
-        localStorage.setItem("prompt-library-ui.casePromptMode", elements.casePromptModeSelect.value);
-      } catch(_){}
-    }
-
-    function persistCaseSelection(){
-      try {
-        localStorage.setItem("prompt-library-ui.activeCaseId", state.activeCaseId || "");
-      } catch(_) {}
+      } catch (_) {}
     }
 
     function restoreAssignments(){
-      try{
+      try {
         const rawAssignments = localStorage.getItem("prompt-library-ui.assignments");
         const rawMode = localStorage.getItem("prompt-library-ui.mode");
         const rawTemplate = localStorage.getItem("prompt-library-ui.template");
-        const rawCasePromptMode = localStorage.getItem("prompt-library-ui.casePromptMode");
         if (rawAssignments) state.assignments = JSON.parse(rawAssignments);
         if (rawMode) elements.modeSelect.value = rawMode;
         if (rawTemplate) elements.templateSelect.value = rawTemplate;
-        if (rawCasePromptMode) elements.casePromptModeSelect.value = rawCasePromptMode;
-      } catch(_){}
-    }
-
-    async function restoreCaseIfNeeded(){
-      try {
-        const rawCaseId = localStorage.getItem("prompt-library-ui.activeCaseId");
-        if (rawCaseId && state.caseSourceIndex[rawCaseId]) {
-          await loadCase(rawCaseId, { silent: true });
-        }
-      } catch(_){}
+      } catch (_) {}
     }
 
     elements.modeSelect.addEventListener("change", () => { updateTemplateVisibility(); updateOutputs(); });
     elements.templateSelect.addEventListener("change", updateOutputs);
-    elements.casePromptModeSelect.addEventListener("change", () => { updateCasePromptControls(); updateOutputs(); });
     elements.searchInput.addEventListener("input", updateOutputs);
     elements.loadInstanceBtn.addEventListener("click", () => loadInstance(elements.instanceSelect.value));
-    elements.loadCaseBtn.addEventListener("click", () => loadCase(elements.caseSelect.value));
-    elements.clearCaseBtn.addEventListener("click", () => clearCase({ silent: false }));
     elements.startEmptyBtn.addEventListener("click", clearAssignments);
     elements.clearBtn.addEventListener("click", clearAssignments);
     elements.copyPromptBtn.addEventListener("click", () => copyText(elements.promptOutput.textContent, "Prompt in die Zwischenablage kopiert."));
