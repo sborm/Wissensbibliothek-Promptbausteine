@@ -1,18 +1,21 @@
 # Wissensbibliothek Promptbausteine
 
-Eine taxonomisch strukturierte Prompt-Bibliothek für wiederverwendbare Prompt-Bausteine, validiert per JSON Schema, ergänzt um Prompt-Rendering, eine lokale UI und einen Generator für VS-Code-Snippets.
+Eine taxonomisch strukturierte Prompt-Bibliothek für wiederverwendbare Prompt-Bausteine, validiert per JSON Schema, ergänzt um Integritätsprüfung, Prompt-Rendering, eine lokale UI und einen Generator für VS-Code-Snippets.
 
 ## Ziel
 
-Dieses Repository ist der **Core** der Prompt-Bibliothek. Es enthält nur die allgemeine Bibliothekslogik:
+Dieses Repository ist der **Core** der Prompt-Bibliothek.
+
+Es enthält die allgemeine Bibliothekslogik und die zentralen Werkzeuge zur Pflege, Prüfung und Nutzung:
 
 - `data/library.json` als zentrale Bibliotheksquelle
 - `schema/prompt-library.schema.json` zur Schema-Validierung
+- `scripts/validate_integrity.py` zur Integritätsprüfung zwischen Bibliothek, Slots, Templates, Constraints und Beispielinstanzen
 - `scripts/render_prompt.py` zum Rendern vollständiger Prompts
 - `scripts/build_vscode_snippets.py` zum Generieren von VS-Code-Snippets
 - `ui/index.html` als lokale Konfigurationsoberfläche
 
-Nicht mehr Teil des Core-Repos sind fall- oder projektspezifische Sonderpfade.
+Nicht Teil des Core-Repos sind fall- oder projektspezifische Sonderpfade.
 
 ## Projektstruktur
 
@@ -26,7 +29,8 @@ Nicht mehr Teil des Core-Repos sind fall- oder projektspezifische Sonderpfade.
 │   └── prompt-library.schema.json
 ├── scripts/
 │   ├── build_vscode_snippets.py
-│   └── render_prompt.py
+│   ├── render_prompt.py
+│   └── validate_integrity.py
 └── ui/
     └── index.html
 ~~~
@@ -62,13 +66,20 @@ git clone https://github.com/sborm/Wissensbibliothek-Promptbausteine.git
 cd Wissensbibliothek-Promptbausteine
 ~~~
 
-### 2. Git-Hooks installieren
+### 2. Benötigte Tools installieren
+
+~~~bash
+npm install -g ajv-cli
+pip install pre-commit
+~~~
+
+### 3. Git-Hooks installieren
 
 ~~~bash
 pre-commit install
 ~~~
 
-### 3. Bibliothek validieren
+### 4. Bibliothek per Schema validieren
 
 ~~~bash
 ajv validate -s schema/prompt-library.schema.json -d data/library.json
@@ -80,13 +91,19 @@ Erwartetes Ergebnis:
 data/library.json valid
 ~~~
 
-### 4. VS-Code-Snippets erzeugen
+### 5. Bibliotheksintegrität prüfen
+
+~~~bash
+python scripts/validate_integrity.py
+~~~
+
+### 6. VS-Code-Snippets erzeugen
 
 ~~~bash
 python scripts/build_vscode_snippets.py
 ~~~
 
-### 5. Prompt rendern
+### 7. Prompt rendern
 
 Beispiel mit Example-Instance:
 
@@ -98,12 +115,12 @@ Beispiel mit manuell gesetzten Slots:
 
 ~~~bash
 python scripts/render_prompt.py \
-  --set ZIEL_TYP=entscheidung_vorbereiten \
+  --set ZIEL_TYP=entscheiden \
   --set AUFGABENTYP=vergleichen \
   --set FORMAT=tabelle
 ~~~
 
-### 6. UI lokal starten
+### 8. UI lokal starten
 
 Im Repo-Stammverzeichnis:
 
@@ -125,7 +142,7 @@ Nach dem Build liegt die generierte Datei hier:
 .vscode/prompt-library.code-snippets
 ~~~
 
-Diese Datei wird lokal erzeugt und kann im Workspace verwendet werden.
+Diese Datei wird lokal erzeugt und kann direkt im Workspace verwendet werden.
 
 ## Was generiert wird
 
@@ -135,8 +152,8 @@ Der Snippet-Generator erzeugt drei Arten von Snippets.
 
 Beispiel:
 
-- Prefix: `ziel_typ.analysieren`
-- Ausgabe: `[ZIEL_TYP:analysieren]`
+- Prefix: `ziel_typ.entscheiden`
+- Ausgabe: `[ZIEL_TYP:entscheiden]`
 
 ### 2. Slot-Snippets
 
@@ -157,9 +174,9 @@ Beispiel:
 ### Beispiel: direkte Prompt-Bausteine
 
 ~~~text
-[ZIEL_TYP:entscheidung_vorbereiten]
+[ZIEL_TYP:entscheiden]
+[AUFGABENTYP:vergleichen]
 [FORMAT:tabelle]
-[UMFANG:kurz]
 ~~~
 
 ### Beispiel: mit Snippets in VS Code
@@ -167,20 +184,20 @@ Beispiel:
 Einfach nacheinander tippen:
 
 ~~~text
-ziel_typ.entscheidung_vorbereiten
+ziel_typ.entscheiden
+aufgabentyp.vergleichen
 format.tabelle
-umfang.kurz
 ~~~
 
 und mit Tab vervollständigen.
 
 ## Workflow bei Änderungen
 
-Wenn du die Bibliothek erweiterst oder änderst:
+Wenn du die Bibliothek erweiterst oder änderst, halte diese Reihenfolge ein:
 
 ### 1. `data/library.json` bearbeiten
 
-Hier pflegst du neue:
+Hier pflegst du insbesondere:
 
 - Dimensionen
 - Subdimensionen
@@ -189,19 +206,25 @@ Hier pflegst du neue:
 - Constraints
 - Beispielinstanzen
 
-### 2. JSON validieren
+### 2. JSON per Schema validieren
 
 ~~~bash
 ajv validate -s schema/prompt-library.schema.json -d data/library.json
 ~~~
 
-### 3. Snippets neu generieren
+### 3. Bibliotheksintegrität prüfen
+
+~~~bash
+python scripts/validate_integrity.py
+~~~
+
+### 4. Snippets neu generieren
 
 ~~~bash
 python scripts/build_vscode_snippets.py
 ~~~
 
-### 4. Renderer prüfen
+### 5. Rendering prüfen
 
 ~~~bash
 python scripts/render_prompt.py --list-slots
@@ -209,7 +232,13 @@ python scripts/render_prompt.py --list-templates
 python scripts/render_prompt.py --instance example_01
 ~~~
 
-### 5. Änderungen committen
+### 6. Alle Hooks lokal ausführen
+
+~~~bash
+pre-commit run --all-files
+~~~
+
+### 7. Änderungen committen
 
 ~~~bash
 git add .
@@ -221,6 +250,7 @@ git commit -m "Update prompt library core"
 Die Git-Hooks führen aktuell aus:
 
 - Schema-Validierung für `data/library.json`
+- Integritätsprüfung der Bibliothek
 - Neuaufbau der VS-Code-Snippets
 
 ## Datenmodell
@@ -269,6 +299,12 @@ Zusätzlich zeigt sie:
 
 ~~~bash
 ajv validate -s schema/prompt-library.schema.json -d data/library.json
+~~~
+
+### Integrität prüfen
+
+~~~bash
+python scripts/validate_integrity.py
 ~~~
 
 ### Snippets bauen
@@ -325,16 +361,27 @@ Prüfen:
 
 ### JSON ist ungültig
 
-Dann zeigt `ajv` einen Validierungsfehler.
-In diesem Fall zuerst `data/library.json` korrigieren und dann erneut validieren.
+Dann zeigt `ajv` einen Validierungsfehler. In diesem Fall zuerst `data/library.json` korrigieren und dann erneut validieren.
 
-## Empfohlene nächste technische Runde
+### Integritätsprüfung schlägt fehl
 
-Der nächste sinnvolle Ausbau im Core ist **Integritätsprüfung statt weiterer Sonderpfade**:
+Dann liegt ein inhaltlicher Widerspruch im Modell vor, zum Beispiel zwischen:
 
-- Konsistenz zwischen `library`, `slot_schema`, `templates` und `example_instances`
-- Smoke-Tests für `render_prompt.py`
-- optional ein dediziertes `scripts/validate_integrity.py`
+- `slot_schema` und tatsächlichen Slots
+- `templates` und `slots_used`
+- `constraints` und referenzierten Slots
+- `example_instances` und definierten Schlüsselwerten
+
+In diesem Fall zuerst die gemeldete Referenz oder Inkonsistenz in `data/library.json` korrigieren und dann erneut prüfen.
+
+## Nächste sinnvolle Ausbaurichtung
+
+Der nächste sinnvolle Ausbau im Core ist **nicht weitere Sonderlogik**, sondern die **Kanonisierung und Härtung des bestehenden Kerns**:
+
+- Referenzfälle in `example_instances` als belastbare Goldstandards schärfen
+- Templates enger auf die tatsächlich relevanten Kernslots rückbinden
+- Smoke-Tests für mehrere Referenzinstanzen ergänzen
+- Dokumentation, Beispiele und Modelllogik konsequent synchron halten
 
 ## Lizenz
 
