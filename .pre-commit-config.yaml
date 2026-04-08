@@ -6,11 +6,18 @@ repos:
         entry: ajv validate -s schema/prompt-library.schema.json -d data/library.json
         language: system
         pass_filenames: false
-        files: ^data/library\.json$
+        files: ^(data/library\.json|schema/prompt-library\.schema\.json)$
+
+      - id: validate-library-integrity
+        name: Validate Library Integrity
+        entry: python scripts/validate_integrity.py
+        language: system
+        pass_filenames: false
+        files: ^(data/library\.json|schema/prompt-library\.schema\.json|scripts/validate_integrity\.py)$
 
       - id: build-vscode-snippets
         name: Build VS Code Snippets
         entry: python scripts/build_vscode_snippets.py
         language: system
         pass_filenames: false
-        files: ^data/library\.json$
+        files: ^(data/library\.json|scripts/build_vscode_snippets\.py)$
