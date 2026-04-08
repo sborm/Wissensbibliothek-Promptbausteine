@@ -1,11 +1,11 @@
 {
   "meta": {
     "project": "Prompt-Bibliothek",
-    "version": "2.4.0",
+    "version": "2.5.0",
     "author": "Sarah Bormann",
-    "created": "2026-03-31T12:00:00Z",
+    "created": "2026-04-08T00:36:36Z",
     "locale": "de-DE",
-    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit geschärfter Slotlogik für Ziel, Aufgabe, Prozess, Rolle und Grenzen. Die Bibliothek trennt nun klarer zwischen Zweck, Operation, Denklogik, fachlicher Funktion, Interventionsintensität und echten Ausschlüssen. Ergänzt um Templates, Beispielinstanzen, Konfliktregeln und Provenienzmetadaten."
+    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit geschärfter Slotlogik für Ziel, Aufgabe, Kontext, Output-Form, Prozess, Qualitätskriterien, Rolle, Grenzen, Adressat und Interaktionsmodus. Die Bibliothek trennt klar zwischen Ziel, Operation, Denklogik, fachlicher Funktion, Interventionsintensität und echten Ausschlüssen. Ergänzt um Templates, Beispielinstanzen, Konfliktregeln und Provenienzmetadaten."
   },
   "library": {
     "ZIEL": {
@@ -2041,89 +2041,6 @@
           "ohne_meta_erklaerungen"
         ]
       }
-    }
-  ],
-  "context_integration": {
-    "version": "1.0.0",
-    "purpose": "Fallübergreifende Logik für gemeinsam nutzbare Kontextbasen, modulare Kontextblöcke, Abhängigkeiten und separat geführte Fallakten.",
-    "separation_principle": "Generische Bibliothekslogik bleibt in library.json; konkrete Fallinhalte werden in separaten case-Dateien geführt und nur referenziert.",
-    "loading_strategy": {
-      "base_context": "Aktiviert eine gemeinsame Kontextbasis für mehrere task-spezifische Presets.",
-      "shared_blocks": "Werden für alle Presets eines Falls mitgeladen.",
-      "focus_blocks": "Werden pro Preset zusätzlich priorisiert oder hervorgehoben.",
-      "dependencies": "Dürfen zur Querprüfung, Kontextverdichtung und Ableitungsmarkierung ausgewertet werden."
-    },
-    "status_model": {
-      "values": [
-        {
-          "key": "gesichert",
-          "label": "Gesichert",
-          "description": "Durch Dokumente, Primärquellen oder klar bestätigte Fallfakten getragen."
-        },
-        {
-          "key": "abgeleitet",
-          "label": "Abgeleitet",
-          "description": "Interpretation oder Schluss aus gesicherten Fakten; nicht mit Primärfakt gleichsetzen."
-        },
-        {
-          "key": "offen_zu_pruefen",
-          "label": "Offen zu prüfen",
-          "description": "Plausibler Prüfpfad oder Hypothese, aber noch nicht gesichert."
-        }
-      ]
-    },
-    "dependency_model": {
-      "supported_types": [
-        {
-          "key": "gestuetzt_durch",
-          "label": "Gestützt durch",
-          "description": "Ein Block oder Aspekt wird durch einen anderen belegt oder getragen."
-        },
-        {
-          "key": "beweisrelevant",
-          "label": "Beweisrelevant",
-          "description": "Ein Block hat unmittelbare Relevanz für Beweis- oder Sicherungsfragen."
-        },
-        {
-          "key": "priorisiert",
-          "label": "Priorisiert",
-          "description": "Ein Block bestimmt Reihenfolge oder operative Vorrangigkeit."
-        },
-        {
-          "key": "steuert_antwortmodus",
-          "label": "Steuert Antwortmodus",
-          "description": "Ein Block beeinflusst Stil, Ton, Detaillierung oder Interaktionsverhalten."
-        },
-        {
-          "key": "sensibler_kontext",
-          "label": "Sensibler Kontext",
-          "description": "Ein Block verlangt erhöhte Sorgfalt in Einordnung, Sprache oder Handlungsableitung."
-        }
-      ]
-    },
-    "case_file_contract": {
-      "required_top_level_keys": [
-        "case_meta",
-        "case_contexts",
-        "context_blocks",
-        "dependencies",
-        "linked_example_instances"
-      ],
-      "linked_example_rules": [
-        "linked_example_instances referenzieren genau einen base_context",
-        "focus_blocks müssen Teil der im base_context genannten shared_blocks oder zusätzlicher fallinterner Kontextblöcke sein",
-        "linked_example_instances dürfen dieselben Slotnamen wie example_instances in library.json verwenden"
-      ]
-    }
-  },
-  "linked_case_sources": [
-    {
-      "id": "falktron_2026_04_02",
-      "label": "Falktron-Fall 02.04.2026",
-      "path": "cases/falktron_2026_04_02.case.json",
-      "status": "active",
-      "schema_ref": "schema/case-context.schema.json",
-      "description": "Separat geführte Fallakte mit gemeinsamer Kontextbasis, Kontextblöcken, Abhängigkeiten und fallbezogenen Presets."
     }
   ]
 }
