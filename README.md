@@ -1,37 +1,34 @@
 # Wissensbibliothek Promptbausteine
 
-Eine taxonomisch strukturierte Prompt-Bibliothek für wiederverwendbare Prompt-Bausteine, validiert per JSON Schema und ergänzt um einen Generator für VS-Code-Snippets.
+Eine taxonomisch strukturierte Prompt-Bibliothek für wiederverwendbare Prompt-Bausteine, validiert per JSON Schema, ergänzt um Prompt-Rendering, eine lokale UI und einen Generator für VS-Code-Snippets.
 
 ## Ziel
 
-Dieses Projekt stellt eine kleine, saubere und lokal nutzbare Pipeline für Prompt-Bausteine bereit:
+Dieses Repository ist der **Core** der Prompt-Bibliothek. Es enthält nur die allgemeine Bibliothekslogik:
 
-- `data/library.json` als Single Source of Truth
+- `data/library.json` als zentrale Bibliotheksquelle
 - `schema/prompt-library.schema.json` zur Schema-Validierung
+- `scripts/render_prompt.py` zum Rendern vollständiger Prompts
 - `scripts/build_vscode_snippets.py` zum Generieren von VS-Code-Snippets
-- `.pre-commit-config.yaml` für automatische Checks beim Commit
+- `ui/index.html` als lokale Konfigurationsoberfläche
 
-## Variante A
-
-Dieses Repository nutzt **Variante A**:
-
-- die Snippets werden **lokal erzeugt**
-- die generierte Datei `.vscode/prompt-library.code-snippets` wird **nicht als Quellbestandteil gepflegt**
-- `library.json` bleibt die zentrale Datenquelle
-
-Das hält das Repository schlank und vermeidet unnötige Merge-Konflikte.
+Nicht mehr Teil des Core-Repos sind fall- oder projektspezifische Sonderpfade.
 
 ## Projektstruktur
 
 ~~~text
 .
 ├── .pre-commit-config.yaml
+├── README.md
 ├── data/
 │   └── library.json
 ├── schema/
 │   └── prompt-library.schema.json
-└── scripts/
-    └── build_vscode_snippets.py
+├── scripts/
+│   ├── build_vscode_snippets.py
+│   └── render_prompt.py
+└── ui/
+    └── index.html
 ~~~
 
 ## Voraussetzungen
@@ -50,72 +47,11 @@ Das hält das Repository schlank und vermeidet unnötige Merge-Konflikte.
 | Tool | Zweck |
 |---|---|
 | Git | Versionsverwaltung |
-| Python | Ausführung des Snippet-Generators |
+| Python | Skripte und lokale Hilfstools |
 | Node.js | Installation von `ajv-cli` |
 | `ajv-cli` | JSON-Schema-Validierung |
 | `pre-commit` | Git-Hooks |
 | VS Code | Nutzung der generierten Snippets |
-
-## Installation unter macOS / Linux
-
-### 1. Grundtools installieren
-
-Beispiel mit Homebrew:
-
-~~~bash
-brew install git python node
-npm install -g ajv-cli
-pip install pre-commit
-~~~
-
-## Installation unter Windows
-
-Beispiel mit Chocolatey:
-
-~~~bash
-choco install git python nodejs
-npm install -g ajv-cli
-pip install pre-commit
-~~~
-
-## Installation unter Android (Termux)
-
-Für Android empfiehlt sich die Nutzung über **Termux**.
-
-### 1. Termux vorbereiten
-
-~~~bash
-pkg update && pkg upgrade -y
-pkg install -y git python nodejs
-python -m pip install --upgrade pip
-pip install pre-commit
-npm install -g ajv-cli
-~~~
-
-### 2. Repository klonen
-
-~~~bash
-git clone https://github.com/sborm/Wissensbibliothek-Promptbausteine.git
-cd Wissensbibliothek-Promptbausteine
-~~~
-
-### 3. Git-Hooks aktivieren
-
-~~~bash
-pre-commit install
-~~~
-
-### 4. JSON validieren
-
-~~~bash
-ajv validate -s schema/prompt-library.schema.json -d data/library.json
-~~~
-
-### 5. Snippets erzeugen
-
-~~~bash
-python scripts/build_vscode_snippets.py
-~~~
 
 ## Schnellstart
 
@@ -150,17 +86,35 @@ data/library.json valid
 python scripts/build_vscode_snippets.py
 ~~~
 
-Erwartetes Ergebnis:
+### 5. Prompt rendern
 
-~~~text
-✔ Snippets erstellt
-  Datei: .vscode/prompt-library.code-snippets
-~~~
-
-### 5. Optional: alle Hooks manuell ausführen
+Beispiel mit Example-Instance:
 
 ~~~bash
-pre-commit run --all-files
+python scripts/render_prompt.py --instance example_01
+~~~
+
+Beispiel mit manuell gesetzten Slots:
+
+~~~bash
+python scripts/render_prompt.py \
+  --set ZIEL_TYP=entscheidung_vorbereiten \
+  --set AUFGABENTYP=vergleichen \
+  --set FORMAT=tabelle
+~~~
+
+### 6. UI lokal starten
+
+Im Repo-Stammverzeichnis:
+
+~~~bash
+python -m http.server 8080
+~~~
+
+Danach im Browser öffnen:
+
+~~~text
+http://localhost:8080/ui/
 ~~~
 
 ## Verwendung in VS Code
@@ -172,12 +126,6 @@ Nach dem Build liegt die generierte Datei hier:
 ~~~
 
 Diese Datei wird lokal erzeugt und kann im Workspace verwendet werden.
-
-Falls VS Code die Snippets nicht sofort erkennt:
-
-- VS Code neu laden
-- prüfen, ob die Datei wirklich existiert
-- prüfen, ob der Generator erfolgreich gelaufen ist
 
 ## Was generiert wird
 
@@ -253,14 +201,20 @@ ajv validate -s schema/prompt-library.schema.json -d data/library.json
 python scripts/build_vscode_snippets.py
 ~~~
 
-### 4. Änderungen committen
+### 4. Renderer prüfen
+
+~~~bash
+python scripts/render_prompt.py --list-slots
+python scripts/render_prompt.py --list-templates
+python scripts/render_prompt.py --instance example_01
+~~~
+
+### 5. Änderungen committen
 
 ~~~bash
 git add .
-git commit -m "Update prompt library"
+git commit -m "Update prompt library core"
 ~~~
-
-Durch `pre-commit` werden die konfigurierten Prüfungen automatisch ausgeführt.
 
 ## Pre-commit-Verhalten
 
@@ -268,8 +222,6 @@ Die Git-Hooks führen aktuell aus:
 
 - Schema-Validierung für `data/library.json`
 - Neuaufbau der VS-Code-Snippets
-
-Damit werden ungültige Änderungen früh erkannt.
 
 ## Datenmodell
 
@@ -295,17 +247,21 @@ Die Bibliothek enthält diese Hauptbereiche:
 - `ADRESSAT`
 - `INTERAKTIONSMODUS`
 
-## Beispiel-System-Prompt
+## UI-Grundidee
 
-Ein möglicher System-Prompt für die Nutzung dieser Bibliothek:
+Die UI führt in vier Schritten durch die Bibliothek:
 
-~~~text
-Du arbeitest mit einer festen Prompt-Bibliothek.
-Verwende nur die definierten Slots und Werte aus der Bibliothek.
-Wenn ein notwendiger Slot fehlt, frage gezielt nach.
-Wenn ein Wert ungültig ist, weise darauf hin und nutze nur gültige Werte.
-Interpretiere Platzhalter im Format [SLOT:wert].
-~~~
+1. Pflichtangaben
+2. Sinnvolle Ergänzungen
+3. Verfeinern
+4. Ausschlüsse
+
+Zusätzlich zeigt sie:
+
+- eine Prompt-Vorschau
+- eine lesbare Zusammenfassung der Auswahl
+- eine technische Slot-Ansicht
+- eine interne Gesamtbewertung
 
 ## Typische Befehle
 
@@ -319,6 +275,12 @@ ajv validate -s schema/prompt-library.schema.json -d data/library.json
 
 ~~~bash
 python scripts/build_vscode_snippets.py
+~~~
+
+### Prompts rendern
+
+~~~bash
+python scripts/render_prompt.py --instance example_01
 ~~~
 
 ### Alle Hooks ausführen
@@ -353,25 +315,26 @@ Prüfen:
 - existiert `.vscode/prompt-library.code-snippets`?
 - wurde VS Code neu geladen?
 
+### UI lädt nicht sauber
+
+Prüfen:
+
+- startest du einen lokalen Webserver im Repo-Stamm?
+- existiert `data/library.json`?
+- ist `library.json` gültiges JSON?
+
 ### JSON ist ungültig
 
-Dann zeigt `ajv` einen Validierungsfehler.  
+Dann zeigt `ajv` einen Validierungsfehler.
 In diesem Fall zuerst `data/library.json` korrigieren und dann erneut validieren.
 
-## Empfohlene Ergänzungen
+## Empfohlene nächste technische Runde
 
-Sinnvolle nächste Dateien für das Repository:
+Der nächste sinnvolle Ausbau im Core ist **Integritätsprüfung statt weiterer Sonderpfade**:
 
-- `system/system-prompt.txt`
-- `.gitignore`
-
-## Beispiel für `.gitignore` in Variante A
-
-~~~gitignore
-.vscode/prompt-library.code-snippets
-__pycache__/
-*.pyc
-~~~
+- Konsistenz zwischen `library`, `slot_schema`, `templates` und `example_instances`
+- Smoke-Tests für `render_prompt.py`
+- optional ein dediziertes `scripts/validate_integrity.py`
 
 ## Lizenz
 
