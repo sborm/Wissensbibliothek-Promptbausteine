@@ -1,17 +1,17 @@
 {
   "meta": {
     "project": "Prompt-Bibliothek",
-    "version": "2.5.0",
+    "version": "2.7.0",
     "author": "Sarah Bormann",
-    "created": "2026-04-08T00:36:36Z",
+    "created": "2026-04-08T14:15:00Z",
     "locale": "de-DE",
-    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit geschärfter Slotlogik für Ziel, Aufgabe, Kontext, Output-Form, Prozess, Qualitätskriterien, Rolle, Grenzen, Adressat und Interaktionsmodus. Die Bibliothek trennt klar zwischen Ziel, Operation, Denklogik, fachlicher Funktion, Interventionsintensität und echten Ausschlüssen. Ergänzt um Templates, Beispielinstanzen, Konfliktregeln und Provenienzmetadaten."
+    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit in Runde 2 geschärfter Kontext- und Ableitungslogik. Der Nutzungskontext ist nun auf gemeinsamer Abstraktionsebene modelliert, der Steuerungsgrad vollwertig ausgebaut und die Empfehlungslogik in Templates, Constraints und Beispielen sauber nachgezogen."
   },
   "library": {
     "ZIEL": {
       "id": "A",
       "label": "Ziel",
-      "description": "Wozu dient der Prompt? Was soll erreicht werden?",
+      "description": "Wozu dient der Prompt? Was soll mit dem Ergebnis erreicht oder ermöglicht werden?",
       "subdimensions": {
         "ZIEL_TYP": {
           "id": "A1",
@@ -20,54 +20,34 @@
           "required": true,
           "values": [
             {
-              "key": "informieren",
-              "label": "Informieren",
-              "description": "Wissen oder Fakten vermitteln, damit ein Thema verstanden oder eingeordnet werden kann."
+              "key": "verstehen",
+              "label": "Verstehen",
+              "description": "Das Ergebnis soll helfen, ein Thema nachvollziehbar zu verstehen."
             },
             {
-              "key": "erklaeren",
-              "label": "Erklären",
-              "description": "Ein Thema verständlich erläutern und zugänglich machen."
+              "key": "orientieren",
+              "label": "Orientieren",
+              "description": "Das Ergebnis soll einen Überblick, eine Einordnung oder erste Klarheit liefern."
             },
             {
-              "key": "zusammenfassen",
-              "label": "Zusammenfassen",
-              "description": "Inhalte verdichten und auf das Wesentliche reduzieren."
+              "key": "entscheiden",
+              "label": "Entscheiden",
+              "description": "Das Ergebnis soll eine belastbare Grundlage für eine Entscheidung schaffen."
             },
             {
-              "key": "analysieren",
-              "label": "Analysieren",
-              "description": "Zusammenhänge, Strukturen oder Ursachen untersuchen."
+              "key": "entwickeln",
+              "label": "Entwickeln",
+              "description": "Das Ergebnis soll neue Ansätze, Optionen oder Lösungen hervorbringen."
             },
             {
-              "key": "vergleichen",
-              "label": "Vergleichen",
-              "description": "Gemeinsamkeiten, Unterschiede oder Optionen sichtbar machen."
+              "key": "verbessern",
+              "label": "Verbessern",
+              "description": "Das Ergebnis soll einen bestehenden Inhalt, Entwurf oder Zustand gezielt verbessern."
             },
             {
-              "key": "bewerten",
-              "label": "Bewerten",
-              "description": "Etwas anhand von Kriterien einschätzen."
-            },
-            {
-              "key": "entscheidung_vorbereiten",
-              "label": "Entscheidung vorbereiten",
-              "description": "Eine belastbare Grundlage für eine Entscheidung erarbeiten."
-            },
-            {
-              "key": "ideen_generieren",
-              "label": "Ideen generieren",
-              "description": "Neue Ansätze oder Optionen entwickeln."
-            },
-            {
-              "key": "umformulieren",
-              "label": "Umformulieren",
-              "description": "Bestehende Inhalte sprachlich neu ausdrücken."
-            },
-            {
-              "key": "planen",
-              "label": "Planen",
-              "description": "Schritte, Maßnahmen oder Vorgehen strukturieren."
+              "key": "umsetzen",
+              "label": "Umsetzen",
+              "description": "Das Ergebnis soll in konkrete nächste Schritte, Maßnahmen oder Ausführung überführbar sein."
             }
           ],
           "origin": [
@@ -81,7 +61,7 @@
           "heuristic_scope": [
             "alle_tasks"
           ],
-          "confidence": 0.9
+          "confidence": 0.92
         },
         "ANALYSETIEFE": {
           "id": "A2",
@@ -111,13 +91,13 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "B",
-          "recommendation_notes": "Steuert die analytische Bearbeitungstiefe, nicht die Textlänge. Besonders nützlich bei Analyse-, Bewertungs- und Erklärungsaufgaben.",
+          "recommendation_notes": "Steuert die analytische Bearbeitungstiefe, nicht die Textlänge. Besonders nützlich bei Analyse-, Bewertungs-, Prüf- und Erklärungsaufgaben.",
           "heuristic_scope": [
             "analysieren",
             "bewerten",
-            "entscheidung_vorbereiten",
-            "planen",
-            "erklaeren"
+            "pruefen",
+            "erklaeren",
+            "entscheiden"
           ],
           "confidence": 0.72
         },
@@ -128,24 +108,19 @@
           "required": false,
           "values": [
             {
-              "key": "explorieren",
-              "label": "Explorieren",
-              "description": "Offenes Erkunden, um ein Thema zunächst zu verstehen."
-            },
-            {
-              "key": "strukturieren",
-              "label": "Strukturieren",
-              "description": "Inhalte so ordnen, dass ein tragfähiger Überblick entsteht."
+              "key": "orientierend",
+              "label": "Orientierend",
+              "description": "Das Ergebnis schafft Orientierung, ohne schon auf Entscheidung oder Umsetzung zuzuschneiden."
             },
             {
               "key": "entscheidungsreif",
               "label": "Entscheidungsreif",
-              "description": "So aufbereiten, dass eine Auswahl oder Entscheidung möglich wird."
+              "description": "Das Ergebnis ist so aufbereitet, dass eine Auswahl oder Entscheidung möglich wird."
             },
             {
               "key": "umsetzungsreif",
               "label": "Umsetzungsreif",
-              "description": "So konkretisieren, dass nächste Schritte direkt ableitbar sind."
+              "description": "Das Ergebnis ist so konkret, dass nächste Schritte direkt abgeleitet oder ausgeführt werden können."
             }
           ],
           "origin": [
@@ -154,15 +129,15 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "B",
-          "recommendation_notes": "Beschreibt, wie weit die Antwort in Richtung Entscheidung oder Umsetzung tragen soll.",
+          "recommendation_notes": "Beschreibt, wie weit die Antwort praktisch tragen soll: orientierend, entscheidungsreif oder direkt umsetzungsreif.",
           "heuristic_scope": [
             "analysieren",
             "bewerten",
-            "entscheidung_vorbereiten",
-            "planen",
-            "verbessern"
+            "pruefen",
+            "entscheiden",
+            "umsetzen"
           ],
-          "confidence": 0.74
+          "confidence": 0.79
         }
       }
     },
@@ -178,14 +153,29 @@
           "required": true,
           "values": [
             {
-              "key": "beantworten",
-              "label": "Beantworten",
-              "description": "Eine konkrete Frage beantworten."
+              "key": "erklaeren",
+              "label": "Erklären",
+              "description": "Einen Sachverhalt verständlich erläutern und zugänglich machen."
             },
             {
-              "key": "erlaeutern",
-              "label": "Erläutern",
-              "description": "Einen Sachverhalt ausführen und einordnen."
+              "key": "zusammenfassen",
+              "label": "Zusammenfassen",
+              "description": "Inhalte verdichten und auf das Wesentliche reduzieren."
+            },
+            {
+              "key": "analysieren",
+              "label": "Analysieren",
+              "description": "Zusammenhänge, Strukturen, Ursachen oder Muster untersuchen."
+            },
+            {
+              "key": "vergleichen",
+              "label": "Vergleichen",
+              "description": "Optionen, Varianten oder Positionen systematisch gegenüberstellen."
+            },
+            {
+              "key": "bewerten",
+              "label": "Bewerten",
+              "description": "Etwas anhand von Kriterien einschätzen oder beurteilen."
             },
             {
               "key": "strukturieren",
@@ -193,39 +183,29 @@
               "description": "Inhalte ordnen, gliedern oder in eine klare Form bringen."
             },
             {
-              "key": "umschreiben",
-              "label": "Umschreiben",
-              "description": "Inhalte sprachlich anders formulieren."
-            },
-            {
-              "key": "verbessern",
-              "label": "Verbessern",
-              "description": "Vorhandenen Text oder Entwurf optimieren."
-            },
-            {
               "key": "klassifizieren",
               "label": "Klassifizieren",
-              "description": "Einordnen oder kategorisieren."
+              "description": "Elemente einordnen oder Kategorien zuweisen."
             },
             {
               "key": "extrahieren",
               "label": "Extrahieren",
-              "description": "Wesentliche Informationen herausziehen."
-            },
-            {
-              "key": "entwerfen",
-              "label": "Entwerfen",
-              "description": "Einen ersten Entwurf oder eine erste Fassung erzeugen."
+              "description": "Wesentliche Informationen gezielt herausziehen."
             },
             {
               "key": "pruefen",
               "label": "Prüfen",
-              "description": "Auf Qualität, Logik oder Konsistenz kontrollieren."
+              "description": "Auf Qualität, Logik, Konsistenz oder Fehler kontrollieren."
             },
             {
-              "key": "vergleichen",
-              "label": "Vergleichen",
-              "description": "Mehrere Optionen oder Varianten systematisch gegenüberstellen."
+              "key": "entwerfen",
+              "label": "Entwerfen",
+              "description": "Eine erste Fassung, einen Vorschlag oder einen neuen Entwurf erzeugen."
+            },
+            {
+              "key": "umformulieren",
+              "label": "Umformulieren",
+              "description": "Bestehende Inhalte sprachlich neu oder passender ausdrücken."
             }
           ],
           "origin": [
@@ -238,7 +218,7 @@
           "heuristic_scope": [
             "alle_tasks"
           ],
-          "confidence": 0.88
+          "confidence": 0.9
         },
         "AUFGABENSTRUKTUR": {
           "id": "B2",
@@ -268,9 +248,9 @@
           "heuristic_scope": [
             "analysieren",
             "pruefen",
-            "planen",
             "entwerfen",
-            "verbessern",
+            "strukturieren",
+            "vergleichen",
             "leitfaden",
             "checkliste"
           ],
@@ -281,7 +261,7 @@
     "KONTEXT": {
       "id": "C",
       "label": "Kontext",
-      "description": "Unter welchen Bedingungen oder in welchem Rahmen soll gearbeitet werden?",
+      "description": "Unter welchen Bedingungen und in welchem Nutzungskontext soll gearbeitet werden?",
       "subdimensions": {
         "SITUATIONSKONTEXT": {
           "id": "C1",
@@ -290,29 +270,34 @@
           "required": false,
           "values": [
             {
-              "key": "meetingvorbereitung",
-              "label": "Meetingvorbereitung",
-              "description": "Vorbereitung auf Besprechung oder Termin."
+              "key": "lernen",
+              "label": "Lernen",
+              "description": "Der Prompt dient Verstehen, Einüben oder didaktischer Vermittlung."
             },
             {
-              "key": "strategiearbeit",
-              "label": "Strategiearbeit",
-              "description": "Arbeit an strategischen Fragestellungen."
+              "key": "abstimmen",
+              "label": "Abstimmen",
+              "description": "Der Prompt unterstützt Abstimmung, Besprechung oder gemeinsame Ausrichtung."
             },
             {
-              "key": "lernprozess",
-              "label": "Lernprozess",
-              "description": "Verstehen, Einüben oder Vertiefen."
+              "key": "entscheiden",
+              "label": "Entscheiden",
+              "description": "Der Prompt dient Auswahl, Priorisierung oder Entscheidungsvorbereitung."
             },
             {
-              "key": "kundengespraech",
-              "label": "Kundengespräch",
-              "description": "Kommunikation mit Kunden oder Stakeholdern."
+              "key": "extern_kommunizieren",
+              "label": "Extern kommunizieren",
+              "description": "Der Prompt dient Kommunikation nach außen, z. B. mit Kunden, Öffentlichkeit oder externen Stakeholdern."
             },
             {
-              "key": "entscheidungsfindung",
-              "label": "Entscheidungsfindung",
-              "description": "Vorbereitung oder Unterstützung einer Entscheidung."
+              "key": "strategie",
+              "label": "Strategie",
+              "description": "Der Prompt dient strategischer Einordnung, Zielarbeit oder längerfristiger Ausrichtung."
+            },
+            {
+              "key": "operativ_umsetzen",
+              "label": "Operativ umsetzen",
+              "description": "Der Prompt dient konkreter Durchführung, Abarbeitung oder nächsten Schritten."
             }
           ],
           "origin": [
@@ -322,15 +307,19 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "B",
-          "recommendation_notes": "Kontext nur dann setzen, wenn er Entscheidungen, Ton oder Prioritäten real verändert.",
+          "recommendation_notes": "Beschreibt den primären Nutzungskontext auf gemeinsamer Ebene. Setze ihn, wenn Arbeitslage, Ton oder Ableitungen sich dadurch real ändern.",
           "heuristic_scope": [
-            "meetingvorbereitung",
-            "strategiearbeit",
-            "kundengespraech",
-            "entscheidungsfindung",
-            "lernprozess"
+            "erklaeren",
+            "umformulieren",
+            "entscheiden",
+            "umsetzen",
+            "entwickeln",
+            "lernende",
+            "kunden",
+            "team",
+            "oeffentlichkeit"
           ],
-          "confidence": 0.7
+          "confidence": 0.78
         },
         "WISSENSKONTEXT": {
           "id": "C2",
@@ -352,11 +341,6 @@
               "key": "experte",
               "label": "Experte",
               "description": "Tiefes Fachwissen vorhanden."
-            },
-            {
-              "key": "gemischte_zielgruppe",
-              "label": "Gemischte Zielgruppe",
-              "description": "Unterschiedliche Wissensstände in der Zielgruppe."
             }
           ],
           "origin": [
@@ -365,16 +349,16 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "B",
-          "recommendation_notes": "Setzt Flughöhe und implizites Vorwissen; besonders nützlich bei erklärenden oder didaktischen Aufgaben.",
+          "recommendation_notes": "Setzt Flughöhe und implizites Vorwissen im Arbeitskontext; besonders nützlich bei erklärenden oder didaktischen Aufgaben.",
           "heuristic_scope": [
             "erklaeren",
-            "informieren",
+            "zusammenfassen",
             "lernprozess",
             "anfaenger",
             "fortgeschritten",
             "experte"
           ],
-          "confidence": 0.68
+          "confidence": 0.7
         },
         "RAHMENBEDINGUNG": {
           "id": "C3",
@@ -416,7 +400,8 @@
             "formeller_anlass",
             "begrenzte_datenlage",
             "email",
-            "kunden"
+            "kunden",
+            "extern_kommunizieren"
           ],
           "confidence": 0.76
         }
@@ -483,11 +468,13 @@
           "recommendation_notes": "Früh explizit setzen; besonders relevant für strukturierte, evaluierbare Outputs.",
           "heuristic_scope": [
             "vergleichen",
-            "entscheidung_vorbereiten",
-            "umschreiben",
-            "verbessern",
+            "entscheiden",
+            "umformulieren",
             "entwerfen",
-            "planen"
+            "umsetzen",
+            "extern_kommunizieren",
+            "operativ_umsetzen",
+            "abstimmen"
           ],
           "confidence": 0.9
         },
@@ -531,7 +518,7 @@
             "analysieren",
             "vergleichen",
             "bewerten",
-            "entscheidung_vorbereiten",
+            "entscheiden",
             "leitfaden",
             "email",
             "fragenkatalog",
@@ -576,13 +563,15 @@
           "heuristic_scope": [
             "vergleichen",
             "bewerten",
-            "entscheidung_vorbereiten",
-            "planen",
+            "entscheiden",
+            "umsetzen",
             "entwerfen",
             "leitfaden",
             "checkliste",
             "tabelle",
-            "liste"
+            "liste",
+            "extern_kommunizieren",
+            "operativ_umsetzen"
           ],
           "confidence": 0.78
         }
@@ -642,11 +631,14 @@
             "analysieren",
             "vergleichen",
             "bewerten",
-            "entscheidung_vorbereiten",
-            "planen",
+            "entscheiden",
+            "umsetzen",
             "entwerfen",
             "leitfaden",
-            "checkliste"
+            "checkliste",
+            "strategie",
+            "abstimmen",
+            "operativ_umsetzen"
           ],
           "confidence": 0.9
         },
@@ -686,10 +678,12 @@
           "recommendation_notes": "Beschreibt den kognitiven Arbeitsstil, nicht Rolle, Ton oder Qualitätsanspruch.",
           "heuristic_scope": [
             "analysieren",
-            "ideen_generieren",
-            "entscheidung_vorbereiten",
-            "planen",
-            "verbessern"
+            "entwickeln",
+            "entscheiden",
+            "umsetzen",
+            "umformulieren",
+            "strategie",
+            "operativ_umsetzen"
           ],
           "confidence": 0.77
         }
@@ -741,11 +735,11 @@
           "recommendation_notes": "Wichtiger Hebel für Ton, Register und Lesbarkeit; besonders nützlich bei Umformulierung und Kommunikation.",
           "heuristic_scope": [
             "umformulieren",
-            "umschreiben",
-            "verbessern",
             "email",
             "kunden",
-            "laien"
+            "anfaenger",
+            "extern_kommunizieren",
+            "lernen"
           ],
           "confidence": 0.8
         },
@@ -791,9 +785,9 @@
           "heuristic_scope": [
             "analysieren",
             "bewerten",
-            "verbessern",
+            "umformulieren",
             "pruefen",
-            "fachkundig",
+            "fortgeschritten",
             "experte"
           ],
           "confidence": 0.69
@@ -833,11 +827,13 @@
           "auto_recommendation_tier": "B",
           "recommendation_notes": "Explizite Trade-offs helfen, wenn nicht alles gleichzeitig maximiert werden kann.",
           "heuristic_scope": [
-            "entscheidung_vorbereiten",
+            "entscheiden",
             "vergleichen",
             "bewerten",
             "zeitdruck",
-            "semi_professionell"
+            "fortgeschritten",
+            "operativ_umsetzen",
+            "strategie"
           ],
           "confidence": 0.73
         },
@@ -878,11 +874,10 @@
           "recommendation_notes": "Stilregeln bündeln sprachliche und darstellerische Präferenzen, die keine echten Inhaltsverbote sind.",
           "heuristic_scope": [
             "umformulieren",
-            "verbessern",
             "email",
             "kunden",
-            "laien",
-            "semi_professionell"
+            "anfaenger",
+            "fortgeschritten"
           ],
           "confidence": 0.75
         }
@@ -929,9 +924,9 @@
           "heuristic_scope": [
             "analysieren",
             "bewerten",
-            "entscheidung_vorbereiten",
+            "entscheiden",
             "pruefen",
-            "verbessern",
+            "umformulieren",
             "strategieberater",
             "lektor"
           ],
@@ -974,7 +969,7 @@
           "heuristic_scope": [
             "analysieren",
             "bewerten",
-            "entscheidung_vorbereiten",
+            "entscheiden",
             "pruefen",
             "sparringsmodus"
           ],
@@ -1118,7 +1113,7 @@
           "heuristic_scope": [
             "erklaeren",
             "umformulieren",
-            "entscheidung_vorbereiten",
+            "entscheiden",
             "vergleichen",
             "email",
             "leitfaden",
@@ -1128,7 +1123,10 @@
             "fuehrungskraefte",
             "kunden",
             "lernende",
-            "oeffentlichkeit"
+            "oeffentlichkeit",
+            "extern_kommunizieren",
+            "lernen",
+            "abstimmen"
           ],
           "confidence": 0.86
         },
@@ -1139,19 +1137,19 @@
           "required": false,
           "values": [
             {
-              "key": "laien",
-              "label": "Laien",
-              "description": "Kein oder kaum Fachwissen."
+              "key": "anfaenger",
+              "label": "Anfänger",
+              "description": "Kein oder kaum Fachwissen vorhanden."
             },
             {
-              "key": "semi_professionell",
-              "label": "Semi-professionell",
-              "description": "Begrenztes Fachwissen vorhanden."
+              "key": "fortgeschritten",
+              "label": "Fortgeschritten",
+              "description": "Grundlegendes Fachwissen ist vorhanden."
             },
             {
-              "key": "fachkundig",
-              "label": "Fachkundig",
-              "description": "Mit solidem Fachwissen."
+              "key": "experte",
+              "label": "Experte",
+              "description": "Tiefes oder spezialisiertes Fachwissen ist vorhanden."
             }
           ],
           "origin": [
@@ -1160,16 +1158,18 @@
           ],
           "evidence_strength": "mittel",
           "auto_recommendation_tier": "A",
-          "recommendation_notes": "Vorkenntnisannahmen steuern Erklärtiefe und Begriffsgebrauch; eng mit Zielgruppe koppeln.",
+          "recommendation_notes": "Vorkenntnisannahmen steuern Erklärtiefe und Begriffsgebrauch; Skala bewusst an den Wissenskontext angeglichen.",
           "heuristic_scope": [
             "erklaeren",
             "umformulieren",
             "leitfaden",
             "lernende",
-            "laien",
-            "semi_professionell"
+            "anfaenger",
+            "fortgeschritten",
+            "lernen",
+            "extern_kommunizieren"
           ],
-          "confidence": 0.75
+          "confidence": 0.78
         }
       }
     },
@@ -1214,13 +1214,16 @@
           "auto_recommendation_tier": "B",
           "recommendation_notes": "Der Interaktionsmodus ist vor allem dann wichtig, wenn Aufgaben iterativ verfeinert, in Varianten entwickelt oder über mehrere Schritte bearbeitet werden sollen.",
           "heuristic_scope": [
-            "planen",
+            "umsetzen",
             "entwerfen",
-            "verbessern",
+            "umformulieren",
             "iteratives_verfeinern",
             "varianten_entwickeln",
             "leitfaden",
-            "checkliste"
+            "checkliste",
+            "abstimmen",
+            "strategie",
+            "operativ_umsetzen"
           ],
           "confidence": 0.72
         },
@@ -1233,19 +1236,38 @@
             {
               "key": "frei",
               "label": "Frei",
-              "description": "Großer Spielraum für die KI."
+              "description": "Großer Spielraum für Struktur, Schwerpunktsetzung und Ausarbeitung."
             },
             {
               "key": "eng_gefuehrt",
               "label": "Eng geführt",
-              "description": "Stark vorgegebene Struktur und Regeln."
+              "description": "Klare Struktur, geringe Freiheitsgrade und enge Orientierung an Vorgaben oder Kriterien."
             },
             {
               "key": "mit_zwischenstaenden",
               "label": "Mit Zwischenständen",
-              "description": "Bearbeitung in sichtbaren Etappen."
+              "description": "Bearbeitung in sichtbaren Etappen mit Zwischenergebnissen oder Zwischenprüfpunkten."
             }
-          ]
+          ],
+          "origin": [
+            "repo_practice",
+            "community_guide",
+            "internal_taxonomy"
+          ],
+          "evidence_strength": "mittel",
+          "auto_recommendation_tier": "B",
+          "recommendation_notes": "Steuert, wie eng der Bearbeitungsweg vorgegeben ist. Besonders nützlich bei Prüf-, Entscheidungs- und iterativen Aufgaben.",
+          "heuristic_scope": [
+            "mehrstufig",
+            "pruefen",
+            "analysieren",
+            "entscheiden",
+            "umsetzen",
+            "iteratives_verfeinern",
+            "rueckfragen_stellen",
+            "varianten_entwickeln"
+          ],
+          "confidence": 0.76
         }
       }
     }
@@ -1268,7 +1290,7 @@
       "heuristic_scope": [
         "alle_tasks"
       ],
-      "confidence": 0.9
+      "confidence": 0.92
     },
     {
       "slot": "ANALYSETIEFE",
@@ -1282,13 +1304,13 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "B",
-      "recommendation_notes": "Steuert die analytische Bearbeitungstiefe, nicht die Textlänge. Besonders nützlich bei Analyse-, Bewertungs- und Erklärungsaufgaben.",
+      "recommendation_notes": "Steuert die analytische Bearbeitungstiefe, nicht die Textlänge. Besonders nützlich bei Analyse-, Bewertungs-, Prüf- und Erklärungsaufgaben.",
       "heuristic_scope": [
         "analysieren",
         "bewerten",
-        "entscheidung_vorbereiten",
-        "planen",
-        "erklaeren"
+        "pruefen",
+        "erklaeren",
+        "entscheiden"
       ],
       "confidence": 0.72
     },
@@ -1304,15 +1326,15 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "B",
-      "recommendation_notes": "Beschreibt, wie weit die Antwort in Richtung Entscheidung oder Umsetzung tragen soll.",
+      "recommendation_notes": "Beschreibt, wie weit die Antwort praktisch tragen soll: orientierend, entscheidungsreif oder direkt umsetzungsreif.",
       "heuristic_scope": [
         "analysieren",
         "bewerten",
-        "entscheidung_vorbereiten",
-        "planen",
-        "verbessern"
+        "pruefen",
+        "entscheiden",
+        "umsetzen"
       ],
-      "confidence": 0.74
+      "confidence": 0.79
     },
     {
       "slot": "AUFGABENTYP",
@@ -1330,7 +1352,7 @@
       "heuristic_scope": [
         "alle_tasks"
       ],
-      "confidence": 0.88
+      "confidence": 0.9
     },
     {
       "slot": "AUFGABENSTRUKTUR",
@@ -1349,9 +1371,9 @@
       "heuristic_scope": [
         "analysieren",
         "pruefen",
-        "planen",
         "entwerfen",
-        "verbessern",
+        "strukturieren",
+        "vergleichen",
         "leitfaden",
         "checkliste"
       ],
@@ -1370,15 +1392,52 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "B",
-      "recommendation_notes": "Kontext nur dann setzen, wenn er Entscheidungen, Ton oder Prioritäten real verändert.",
+      "recommendation_notes": "Beschreibt den primären Nutzungskontext auf gemeinsamer Ebene. Setze ihn, wenn Arbeitslage, Ton oder Ableitungen sich dadurch real ändern.",
       "heuristic_scope": [
-        "meetingvorbereitung",
-        "strategiearbeit",
-        "kundengespraech",
-        "entscheidungsfindung",
-        "lernprozess"
+        "erklaeren",
+        "umformulieren",
+        "entscheiden",
+        "umsetzen",
+        "entwickeln",
+        "lernende",
+        "kunden",
+        "team",
+        "oeffentlichkeit"
       ],
-      "confidence": 0.7
+      "confidence": 0.78,
+      "label": "Situationskontext",
+      "values": [
+        {
+          "key": "lernen",
+          "label": "Lernen",
+          "description": "Der Prompt dient Verstehen, Einüben oder didaktischer Vermittlung."
+        },
+        {
+          "key": "abstimmen",
+          "label": "Abstimmen",
+          "description": "Der Prompt unterstützt Abstimmung, Besprechung oder gemeinsame Ausrichtung."
+        },
+        {
+          "key": "entscheiden",
+          "label": "Entscheiden",
+          "description": "Der Prompt dient Auswahl, Priorisierung oder Entscheidungsvorbereitung."
+        },
+        {
+          "key": "extern_kommunizieren",
+          "label": "Extern kommunizieren",
+          "description": "Der Prompt dient Kommunikation nach außen, z. B. mit Kunden, Öffentlichkeit oder externen Stakeholdern."
+        },
+        {
+          "key": "strategie",
+          "label": "Strategie",
+          "description": "Der Prompt dient strategischer Einordnung, Zielarbeit oder längerfristiger Ausrichtung."
+        },
+        {
+          "key": "operativ_umsetzen",
+          "label": "Operativ umsetzen",
+          "description": "Der Prompt dient konkreter Durchführung, Abarbeitung oder nächsten Schritten."
+        }
+      ]
     },
     {
       "slot": "WISSENSKONTEXT",
@@ -1392,16 +1451,16 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "B",
-      "recommendation_notes": "Setzt Flughöhe und implizites Vorwissen; besonders nützlich bei erklärenden oder didaktischen Aufgaben.",
+      "recommendation_notes": "Setzt Flughöhe und implizites Vorwissen im Arbeitskontext; besonders nützlich bei erklärenden oder didaktischen Aufgaben.",
       "heuristic_scope": [
         "erklaeren",
-        "informieren",
+        "zusammenfassen",
         "lernprozess",
         "anfaenger",
         "fortgeschritten",
         "experte"
       ],
-      "confidence": 0.68
+      "confidence": 0.7
     },
     {
       "slot": "RAHMENBEDINGUNG",
@@ -1422,7 +1481,8 @@
         "formeller_anlass",
         "begrenzte_datenlage",
         "email",
-        "kunden"
+        "kunden",
+        "extern_kommunizieren"
       ],
       "confidence": 0.76
     },
@@ -1441,11 +1501,13 @@
       "recommendation_notes": "Früh explizit setzen; besonders relevant für strukturierte, evaluierbare Outputs.",
       "heuristic_scope": [
         "vergleichen",
-        "entscheidung_vorbereiten",
-        "umschreiben",
-        "verbessern",
+        "entscheiden",
+        "umformulieren",
         "entwerfen",
-        "planen"
+        "umsetzen",
+        "extern_kommunizieren",
+        "operativ_umsetzen",
+        "abstimmen"
       ],
       "confidence": 0.9
     },
@@ -1468,7 +1530,7 @@
         "analysieren",
         "vergleichen",
         "bewerten",
-        "entscheidung_vorbereiten",
+        "entscheiden",
         "leitfaden",
         "email",
         "fragenkatalog",
@@ -1492,13 +1554,15 @@
       "heuristic_scope": [
         "vergleichen",
         "bewerten",
-        "entscheidung_vorbereiten",
-        "planen",
+        "entscheiden",
+        "umsetzen",
         "entwerfen",
         "leitfaden",
         "checkliste",
         "tabelle",
-        "liste"
+        "liste",
+        "extern_kommunizieren",
+        "operativ_umsetzen"
       ],
       "confidence": 0.78
     },
@@ -1520,11 +1584,14 @@
         "analysieren",
         "vergleichen",
         "bewerten",
-        "entscheidung_vorbereiten",
-        "planen",
+        "entscheiden",
+        "umsetzen",
         "entwerfen",
         "leitfaden",
-        "checkliste"
+        "checkliste",
+        "strategie",
+        "abstimmen",
+        "operativ_umsetzen"
       ],
       "confidence": 0.9
     },
@@ -1543,10 +1610,12 @@
       "recommendation_notes": "Beschreibt den kognitiven Arbeitsstil, nicht Rolle, Ton oder Qualitätsanspruch.",
       "heuristic_scope": [
         "analysieren",
-        "ideen_generieren",
-        "entscheidung_vorbereiten",
-        "planen",
-        "verbessern"
+        "entwickeln",
+        "entscheiden",
+        "umsetzen",
+        "umformulieren",
+        "strategie",
+        "operativ_umsetzen"
       ],
       "confidence": 0.77
     },
@@ -1565,11 +1634,11 @@
       "recommendation_notes": "Wichtiger Hebel für Ton, Register und Lesbarkeit; besonders nützlich bei Umformulierung und Kommunikation.",
       "heuristic_scope": [
         "umformulieren",
-        "umschreiben",
-        "verbessern",
         "email",
         "kunden",
-        "laien"
+        "anfaenger",
+        "extern_kommunizieren",
+        "lernen"
       ],
       "confidence": 0.8
     },
@@ -1589,9 +1658,9 @@
       "heuristic_scope": [
         "analysieren",
         "bewerten",
-        "verbessern",
+        "umformulieren",
         "pruefen",
-        "fachkundig",
+        "fortgeschritten",
         "experte"
       ],
       "confidence": 0.69
@@ -1610,11 +1679,13 @@
       "auto_recommendation_tier": "B",
       "recommendation_notes": "Explizite Trade-offs helfen, wenn nicht alles gleichzeitig maximiert werden kann.",
       "heuristic_scope": [
-        "entscheidung_vorbereiten",
+        "entscheiden",
         "vergleichen",
         "bewerten",
         "zeitdruck",
-        "semi_professionell"
+        "fortgeschritten",
+        "operativ_umsetzen",
+        "strategie"
       ],
       "confidence": 0.73
     },
@@ -1633,11 +1704,10 @@
       "recommendation_notes": "Stilregeln bündeln sprachliche und darstellerische Präferenzen, die keine echten Inhaltsverbote sind.",
       "heuristic_scope": [
         "umformulieren",
-        "verbessern",
         "email",
         "kunden",
-        "laien",
-        "semi_professionell"
+        "anfaenger",
+        "fortgeschritten"
       ],
       "confidence": 0.75
     },
@@ -1656,9 +1726,9 @@
       "heuristic_scope": [
         "analysieren",
         "bewerten",
-        "entscheidung_vorbereiten",
+        "entscheiden",
         "pruefen",
-        "verbessern",
+        "umformulieren",
         "strategieberater",
         "lektor"
       ],
@@ -1680,7 +1750,7 @@
       "heuristic_scope": [
         "analysieren",
         "bewerten",
-        "entscheidung_vorbereiten",
+        "entscheiden",
         "pruefen",
         "sparringsmodus"
       ],
@@ -1745,7 +1815,7 @@
       "heuristic_scope": [
         "erklaeren",
         "umformulieren",
-        "entscheidung_vorbereiten",
+        "entscheiden",
         "vergleichen",
         "email",
         "leitfaden",
@@ -1755,7 +1825,10 @@
         "fuehrungskraefte",
         "kunden",
         "lernende",
-        "oeffentlichkeit"
+        "oeffentlichkeit",
+        "extern_kommunizieren",
+        "lernen",
+        "abstimmen"
       ],
       "confidence": 0.86
     },
@@ -1771,16 +1844,18 @@
       ],
       "evidence_strength": "mittel",
       "auto_recommendation_tier": "A",
-      "recommendation_notes": "Vorkenntnisannahmen steuern Erklärtiefe und Begriffsgebrauch; eng mit Zielgruppe koppeln.",
+      "recommendation_notes": "Vorkenntnisannahmen steuern Erklärtiefe und Begriffsgebrauch; Skala bewusst an den Wissenskontext angeglichen.",
       "heuristic_scope": [
         "erklaeren",
         "umformulieren",
         "leitfaden",
         "lernende",
-        "laien",
-        "semi_professionell"
+        "anfaenger",
+        "fortgeschritten",
+        "lernen",
+        "extern_kommunizieren"
       ],
-      "confidence": 0.75
+      "confidence": 0.78
     },
     {
       "slot": "MODUS",
@@ -1797,13 +1872,16 @@
       "auto_recommendation_tier": "B",
       "recommendation_notes": "Der Interaktionsmodus ist vor allem dann wichtig, wenn Aufgaben iterativ verfeinert, in Varianten entwickelt oder über mehrere Schritte bearbeitet werden sollen.",
       "heuristic_scope": [
-        "planen",
+        "umsetzen",
         "entwerfen",
-        "verbessern",
+        "umformulieren",
         "iteratives_verfeinern",
         "varianten_entwickeln",
         "leitfaden",
-        "checkliste"
+        "checkliste",
+        "abstimmen",
+        "strategie",
+        "operativ_umsetzen"
       ],
       "confidence": 0.72
     },
@@ -1812,14 +1890,51 @@
       "dimension": "INTERAKTIONSMODUS",
       "subdimension": "STEUERUNGSGRAD",
       "required": false,
-      "multi": false
+      "multi": false,
+      "origin": [
+        "repo_practice",
+        "community_guide",
+        "internal_taxonomy"
+      ],
+      "evidence_strength": "mittel",
+      "auto_recommendation_tier": "B",
+      "recommendation_notes": "Steuert, wie eng der Bearbeitungsweg vorgegeben ist. Besonders nützlich bei Prüf-, Entscheidungs- und iterativen Aufgaben.",
+      "heuristic_scope": [
+        "mehrstufig",
+        "pruefen",
+        "analysieren",
+        "entscheiden",
+        "umsetzen",
+        "iteratives_verfeinern",
+        "rueckfragen_stellen",
+        "varianten_entwickeln"
+      ],
+      "confidence": 0.76,
+      "label": "Steuerungsgrad",
+      "values": [
+        {
+          "key": "frei",
+          "label": "Frei",
+          "description": "Großer Spielraum für Struktur, Schwerpunktsetzung und Ausarbeitung."
+        },
+        {
+          "key": "eng_gefuehrt",
+          "label": "Eng geführt",
+          "description": "Klare Struktur, geringe Freiheitsgrade und enge Orientierung an Vorgaben oder Kriterien."
+        },
+        {
+          "key": "mit_zwischenstaenden",
+          "label": "Mit Zwischenständen",
+          "description": "Bearbeitung in sichtbaren Etappen mit Zwischenergebnissen oder Zwischenprüfpunkten."
+        }
+      ]
     }
   ],
   "templates": [
     {
       "id": "default_v1",
       "label": "Standard-Template",
-      "description": "Allgemeines Prompt-Schema für viele Aufgaben mit klarer Trennung von Ziel und Operation.",
+      "description": "Allgemeines Prompt-Schema mit geschärfter Trennung von Ziel, Operation und Nutzungskontext.",
       "slots_used": [
         "ZIEL_TYP",
         "AUFGABENTYP",
@@ -1828,35 +1943,38 @@
         "SITUATIONSKONTEXT",
         "SPRACHQUALITAET"
       ],
-      "text": "Bitte [AUFGABENTYP], um [ZIEL_TYP] zu unterstützen. Berücksichtige dabei [SITUATIONSKONTEXT]. Gib das Ergebnis als [FORMAT] in [UMFANG] aus. Achte besonders auf [SPRACHQUALITAET]."
+      "text": "Bitte [AUFGABENTYP], damit das Ergebnis beim [ZIEL_TYP] hilft. Berücksichtige dabei den Nutzungskontext [SITUATIONSKONTEXT]. Gib das Ergebnis als [FORMAT] in [UMFANG] aus. Achte besonders auf [SPRACHQUALITAET]."
     },
     {
       "id": "decision_table_v1",
       "label": "Entscheidungsvorbereitung als Tabelle",
-      "description": "Für Vergleiche und Entscheidungsvorbereitung mit klarer Handlungsreife.",
+      "description": "Für Entscheidungs- oder Abstimmungskontexte mit klarer Reife und nachvollziehbarer Prozesslogik.",
       "slots_used": [
         "ZIEL_TYP",
+        "AUFGABENTYP",
+        "SITUATIONSKONTEXT",
         "HANDLUNGSREIFE",
         "FORMAT",
         "ERGEBNISORIENTIERUNG",
         "PROZESSLOGIK",
         "ZIELGRUPPE"
       ],
-      "text": "Bitte unterstütze mich dabei, [ZIEL_TYP], damit das Ergebnis [HANDLUNGSREIFE] wird. Gehe so vor: [PROZESSLOGIK]. Gib das Ergebnis als [FORMAT] aus. Liefere [ERGEBNISORIENTIERUNG]. Das Ergebnis ist gedacht für [ZIELGRUPPE]."
+      "text": "Bitte [AUFGABENTYP], um beim [ZIEL_TYP] zu helfen, sodass das Ergebnis [HANDLUNGSREIFE] ist. Berücksichtige den Kontext [SITUATIONSKONTEXT] und gehe so vor: [PROZESSLOGIK]. Gib das Ergebnis als [FORMAT] aus. Liefere [ERGEBNISORIENTIERUNG]. Das Ergebnis ist gedacht für [ZIELGRUPPE]."
     },
     {
       "id": "rewrite_v1",
       "label": "Umformulieren",
-      "description": "Für sprachliche Überarbeitung bestehender Texte mit sauber getrennten Stilregeln.",
+      "description": "Für sprachliche Überarbeitung in adressaten- oder kommunikationssensitiven Kontexten.",
       "slots_used": [
         "ZIEL_TYP",
         "AUFGABENTYP",
+        "SITUATIONSKONTEXT",
         "SPRACHQUALITAET",
         "STILREGELN",
         "FORMAT",
         "FUNKTIONSROLLE"
       ],
-      "text": "Bitte [AUFGABENTYP], um [ZIEL_TYP]. Formuliere sprachlich [SPRACHQUALITAET]. Beachte dabei [STILREGELN]. Antworte aus der Funktion [FUNKTIONSROLLE]. Gib das Ergebnis als [FORMAT] aus."
+      "text": "Bitte [AUFGABENTYP], damit der Text beim [ZIEL_TYP] besser hilft. Berücksichtige den Kontext [SITUATIONSKONTEXT]. Formuliere sprachlich [SPRACHQUALITAET]. Beachte dabei [STILREGELN]. Antworte aus der Funktion [FUNKTIONSROLLE]. Gib das Ergebnis als [FORMAT] aus."
     }
   ],
   "constraints": [
@@ -1865,7 +1983,7 @@
       "type": "recommendation",
       "if": {
         "slot": "ZIEL_TYP",
-        "equals": "entscheidung_vorbereiten"
+        "equals": "entscheiden"
       },
       "then": {
         "recommended_slots": [
@@ -1897,7 +2015,7 @@
       "id": "c2",
       "type": "recommendation",
       "if": {
-        "slot": "ZIEL_TYP",
+        "slot": "AUFGABENTYP",
         "equals": "umformulieren"
       },
       "then": {
@@ -1968,17 +2086,184 @@
         "slot": "FORMALE_AUSSCHLUESSE",
         "contains": "keine_listen"
       }
+    },
+    {
+      "id": "c6",
+      "type": "recommendation",
+      "if": {
+        "slot": "SITUATIONSKONTEXT",
+        "equals": "entscheiden"
+      },
+      "then": {
+        "recommended_slots": [
+          "FORMAT",
+          "ERGEBNISORIENTIERUNG",
+          "PROZESSLOGIK",
+          "HANDLUNGSREIFE"
+        ],
+        "recommended_values": {
+          "FORMAT": [
+            "tabelle",
+            "liste"
+          ],
+          "ERGEBNISORIENTIERUNG": [
+            "ergebnis_plus_begruendung",
+            "ergebnis_plus_alternativen"
+          ],
+          "PROZESSLOGIK": [
+            "erst_kriterien_dann_vergleichen",
+            "erst_optionen_dann_empfehlung"
+          ],
+          "HANDLUNGSREIFE": [
+            "entscheidungsreif"
+          ]
+        }
+      }
+    },
+    {
+      "id": "c7",
+      "type": "recommendation",
+      "if": {
+        "slot": "SITUATIONSKONTEXT",
+        "equals": "extern_kommunizieren"
+      },
+      "then": {
+        "recommended_slots": [
+          "ZIELGRUPPE",
+          "WISSENSSTAND_ADRESSAT",
+          "SPRACHQUALITAET",
+          "STILREGELN",
+          "RAHMENBEDINGUNG"
+        ],
+        "recommended_values": {
+          "ZIELGRUPPE": [
+            "kunden",
+            "oeffentlichkeit",
+            "team"
+          ],
+          "SPRACHQUALITAET": [
+            "klar",
+            "professionell",
+            "einfach"
+          ],
+          "STILREGELN": [
+            "direkt_zum_punkt",
+            "ohne_wiederholungen"
+          ],
+          "RAHMENBEDINGUNG": [
+            "sensible_kommunikation",
+            "formeller_anlass"
+          ]
+        }
+      }
+    },
+    {
+      "id": "c8",
+      "type": "recommendation",
+      "if": {
+        "slot": "SITUATIONSKONTEXT",
+        "equals": "operativ_umsetzen"
+      },
+      "then": {
+        "recommended_slots": [
+          "HANDLUNGSREIFE",
+          "FORMAT",
+          "ERGEBNISORIENTIERUNG",
+          "DENKMODUS",
+          "PRIORISIERUNG"
+        ],
+        "recommended_values": {
+          "HANDLUNGSREIFE": [
+            "umsetzungsreif"
+          ],
+          "FORMAT": [
+            "checkliste",
+            "leitfaden",
+            "liste"
+          ],
+          "ERGEBNISORIENTIERUNG": [
+            "ergebnis_plus_naechste_schritte"
+          ],
+          "DENKMODUS": [
+            "pragmatisch"
+          ],
+          "PRIORISIERUNG": [
+            "praktikabilitaet_vor_theorie"
+          ]
+        }
+      }
+    },
+    {
+      "id": "c9",
+      "type": "recommendation",
+      "if": {
+        "slot": "SITUATIONSKONTEXT",
+        "equals": "lernen"
+      },
+      "then": {
+        "recommended_slots": [
+          "ZIELGRUPPE",
+          "WISSENSSTAND_ADRESSAT",
+          "SPRACHQUALITAET",
+          "FORMAT"
+        ],
+        "recommended_values": {
+          "ZIELGRUPPE": [
+            "lernende"
+          ],
+          "WISSENSSTAND_ADRESSAT": [
+            "anfaenger",
+            "fortgeschritten"
+          ],
+          "SPRACHQUALITAET": [
+            "klar",
+            "einfach"
+          ],
+          "FORMAT": [
+            "leitfaden",
+            "gliederung",
+            "fragenkatalog"
+          ]
+        }
+      }
+    },
+    {
+      "id": "c10",
+      "type": "recommendation",
+      "if": {
+        "slot": "STEUERUNGSGRAD",
+        "equals": "mit_zwischenstaenden"
+      },
+      "then": {
+        "recommended_slots": [
+          "MODUS",
+          "AUFGABENSTRUKTUR",
+          "PROZESSLOGIK"
+        ],
+        "recommended_values": {
+          "MODUS": [
+            "iteratives_verfeinern"
+          ],
+          "AUFGABENSTRUKTUR": [
+            "mehrstufig"
+          ],
+          "PROZESSLOGIK": [
+            "schrittweise_vorgehen",
+            "erst_befunde_dann_interpretation_dann_empfehlung"
+          ]
+        }
+      }
     }
   ],
   "example_instances": [
     {
       "id": "example_01",
-      "label": "Entscheidungsgrundlage für Teammeeting",
+      "label": "Entscheidungsgrundlage für Teamentscheidung",
       "values": {
-        "ZIEL_TYP": "entscheidung_vorbereiten",
+        "ZIEL_TYP": "entscheiden",
         "AUFGABENTYP": "vergleichen",
-        "SITUATIONSKONTEXT": "meetingvorbereitung",
-        "WISSENSKONTEXT": "gemischte_zielgruppe",
+        "SITUATIONSKONTEXT": "entscheiden",
+        "WISSENSKONTEXT": "fortgeschritten",
         "RAHMENBEDINGUNG": "zeitdruck",
         "FORMAT": "tabelle",
         "UMFANG": "kurz",
@@ -1992,7 +2277,7 @@
         ],
         "FORMALE_AUSSCHLUESSE": [],
         "ZIELGRUPPE": "team",
-        "WISSENSSTAND_ADRESSAT": "semi_professionell",
+        "WISSENSSTAND_ADRESSAT": "fortgeschritten",
         "MODUS": "einmalige_antwort",
         "STEUERUNGSGRAD": "eng_gefuehrt",
         "ANALYSETIEFE": "mittel",
@@ -2011,9 +2296,9 @@
       "id": "example_02",
       "label": "Text verständlicher umformulieren",
       "values": {
-        "ZIEL_TYP": "umformulieren",
-        "AUFGABENTYP": "umschreiben",
-        "SITUATIONSKONTEXT": "kundengespraech",
+        "ZIEL_TYP": "verstehen",
+        "AUFGABENTYP": "umformulieren",
+        "SITUATIONSKONTEXT": "extern_kommunizieren",
         "WISSENSKONTEXT": "anfaenger",
         "RAHMENBEDINGUNG": "sensible_kommunikation",
         "FORMAT": "fliesstext",
@@ -2026,7 +2311,7 @@
         "INHALTLICHE_AUSSCHLUESSE": [],
         "FORMALE_AUSSCHLUESSE": [],
         "ZIELGRUPPE": "kunden",
-        "WISSENSSTAND_ADRESSAT": "laien",
+        "WISSENSSTAND_ADRESSAT": "anfaenger",
         "MODUS": "iteratives_verfeinern",
         "STEUERUNGSGRAD": "mit_zwischenstaenden",
         "ANALYSETIEFE": "ueberblick",
@@ -2039,6 +2324,40 @@
           "alltagstaugliche_sprache",
           "ohne_wiederholungen",
           "ohne_meta_erklaerungen"
+        ]
+      }
+    },
+    {
+      "id": "example_03",
+      "label": "Operative Umsetzungscheckliste",
+      "values": {
+        "ZIEL_TYP": "umsetzen",
+        "AUFGABENTYP": "strukturieren",
+        "SITUATIONSKONTEXT": "operativ_umsetzen",
+        "WISSENSKONTEXT": "fortgeschritten",
+        "RAHMENBEDINGUNG": "zeitdruck",
+        "FORMAT": "checkliste",
+        "UMFANG": "kurz",
+        "ERGEBNISORIENTIERUNG": "ergebnis_plus_naechste_schritte",
+        "PROZESSLOGIK": "schrittweise_vorgehen",
+        "SPRACHQUALITAET": "klar",
+        "INHALTSQUALITAET": "praxisnah",
+        "PRIORISIERUNG": "praktikabilitaet_vor_theorie",
+        "INHALTLICHE_AUSSCHLUESSE": [],
+        "FORMALE_AUSSCHLUESSE": [],
+        "ZIELGRUPPE": "ich_selbst",
+        "WISSENSSTAND_ADRESSAT": "fortgeschritten",
+        "MODUS": "einmalige_antwort",
+        "STEUERUNGSGRAD": "eng_gefuehrt",
+        "ANALYSETIEFE": "ueberblick",
+        "HANDLUNGSREIFE": "umsetzungsreif",
+        "AUFGABENSTRUKTUR": "mehrstufig",
+        "DENKMODUS": "pragmatisch",
+        "FUNKTIONSROLLE": "analyst",
+        "INTERVENTIONSTIEFE": "beratend",
+        "STILREGELN": [
+          "direkt_zum_punkt",
+          "ohne_wiederholungen"
         ]
       }
     }
