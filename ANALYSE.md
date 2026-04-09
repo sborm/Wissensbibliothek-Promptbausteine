@@ -75,6 +75,14 @@ Git-History zeigt: `falktron_2026_04_02.case.json` und `case-context.schema.json
 
 6. **GitHub Pages fehlt:** Der im Workflow zentrale „Kopieren → Chat einfügen → fertig"-Zyklus funktioniert nur lokal. Das schränkt die Nutzbarkeit auf stationäre Umgebungen ein.
 
+7. **Ungültiger Wert im System-Prompt:** `system/system-prompt.txt` Zeile 25 enthielt `[ZIEL_TYP:entscheidung_vorbereiten]` — ein Key, der in der Bibliothek nicht existiert. Das Beispiel, mit dem KI-Systeme auf die Bibliothek eingewiesen werden, war damit selbst bibliothekswidrig. *(In diesem Commit behoben.)*
+
+8. **Strukturlücke `implementation_plan_v1`:** Das einzige Template ohne `AUFGABENTYP` in `slots_used`. Der Template-Text begann mit „Bitte arbeite so, dass das Ergebnis beim [ZIEL_TYP] hilft…" — ohne zu spezifizieren, was getan werden soll. Alle anderen Templates folgen dem Muster „Bitte [AUFGABENTYP], damit…". *(In diesem Commit behoben.)*
+
+9. **Goldstandard-Beispiele: Vollspezifikation statt repräsentativer Referenz:** Alle 7 `example_instances` belegen exakt 25/25 Slots. Reale Prompts brauchen 3–12 Slots. Die Beispiele zeigen die maximale Befüllung — nicht, welche Slots für welchen Use Case tatsächlich ausreichen. Eine Minimalkonfiguration ist aus den Beispielen nicht ableitbar.
+
+10. **Semantische Redundanz `WISSENSKONTEXT` / `WISSENSSTAND_ADRESSAT`:** Identische Wertemengen (`anfaenger / fortgeschritten / experte`) in zwei unterschiedlichen Dimensionen (KONTEXT vs. ADRESSAT). Keine Constraint-Regel greift bei gegensätzlicher Belegung ein (z.B. WISSENSKONTEXT=experte, WISSENSSTAND_ADRESSAT=anfaenger). Ohne explizite Demarkationslinie ist systematische Fehlbelegung wahrscheinlich.
+
 ---
 
 ### Zielkonflikte (belastbar)

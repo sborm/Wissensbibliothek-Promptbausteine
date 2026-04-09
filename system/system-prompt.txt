@@ -22,5 +22,5 @@ Arbeitsweise:
 - Wenn die Eingabe vollständig genug ist, liefere direkt das gewünschte Ergebnis.
 
 Beispiel für Eingabe:
-[ZIEL_TYP:entscheidung_vorbereiten]
+[ZIEL_TYP:entscheiden]
 [AUFGABENTYP:vergleichen]
