@@ -403,7 +403,7 @@
 
     async function loadLibrary(){
       try{
-        const response = await fetch("../data/library_v3_target.json", { cache: "no-store" });
+        const response = await fetch("../data/library.json", { cache: "no-store" });
         if(!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         state.data = data;
@@ -422,9 +422,9 @@
         console.error(error);
         setRepoMetaNotices([
           { type: "error", text: `Initialisierung fehlgeschlagen: ${error.message}` },
-          { type: "warning", text: "Prüfe ../data/library_v3_target.json oder den JSON-Aufbau des V3-Modells." }
+          { type: "warning", text: "Prüfe ../data/library.json oder den JSON-Aufbau des V3-Modells." }
         ]);
-        elements.promptOutput.textContent = "Fehler beim Laden von ../data/library_v3_target.json";
+        elements.promptOutput.textContent = "Fehler beim Laden von ../data/library.json";
       }
     }
 
