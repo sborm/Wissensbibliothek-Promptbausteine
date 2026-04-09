@@ -12,13 +12,13 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_INPUT = Path("data/library_v3_target.json")
+DEFAULT_INPUT = Path("data/library.json")
 
 PLACEHOLDER_RE = re.compile(r"\[([A-Z0-9_]+)\]")
 
 
 class IntegrityError(Exception):
-    """Raised when semantic integrity checks fail."""
+    pass
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -117,9 +117,7 @@ def build_slot_index(data: dict[str, Any]) -> dict[str, dict[str, Any]]:
             raise IntegrityError(f"Slot '{slot_key}' referenziert unbekanntes value_set '{value_set_name}'.")
 
         if multi is not False:
-            raise IntegrityError(
-                f"Slot '{slot_key}' verletzt die V3-Regel single-select. multi muss exakt false sein."
-            )
+            raise IntegrityError(f"Slot '{slot_key}' verletzt die Single-Select-Regel. multi muss exakt false sein.")
 
         value_set = ensure_list(value_sets[value_set_name], f"values.{value_set_name}")
         allowed_values: set[str] = set()
@@ -145,11 +143,7 @@ def build_slot_index(data: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return index
 
 
-def validate_dimensions_against_slots(
-    dimension_index: dict[str, dict[str, Any]],
-    slot_index: dict[str, dict[str, Any]],
-    errors: list[str],
-) -> None:
+def validate_dimensions_against_slots(dimension_index, slot_index, errors):
     slots_by_dimension: dict[str, list[str]] = {}
     for slot_key, meta in slot_index.items():
         slots_by_dimension.setdefault(meta["dimension"], []).append(slot_key)
@@ -161,44 +155,28 @@ def validate_dimensions_against_slots(
 
         missing_in_order = sorted(actual_set - ordered_set)
         if missing_in_order:
-            errors.append(
-                f"Dimension '{dim_key}' enthält Slots, die nicht in slot_order stehen: {', '.join(missing_in_order)}"
-            )
+            errors.append(f"Dimension '{dim_key}' enthält Slots, die nicht in slot_order stehen: {', '.join(missing_in_order)}")
 
         unknown_in_order = sorted(ordered_set - set(slot_index))
         if unknown_in_order:
-            errors.append(
-                f"Dimension '{dim_key}' enthält unbekannte Slots in slot_order: {', '.join(unknown_in_order)}"
-            )
+            errors.append(f"Dimension '{dim_key}' enthält unbekannte Slots in slot_order: {', '.join(unknown_in_order)}")
 
-        wrong_dimension = sorted(
-            slot for slot in ordered if slot in slot_index and slot_index[slot]["dimension"] != dim_key
-        )
+        wrong_dimension = sorted(slot for slot in ordered if slot in slot_index and slot_index[slot]["dimension"] != dim_key)
         if wrong_dimension:
-            errors.append(
-                f"Dimension '{dim_key}' führt Slots in slot_order mit anderer Slot-Dimension: {', '.join(wrong_dimension)}"
-            )
+            errors.append(f"Dimension '{dim_key}' führt Slots in slot_order mit anderer Slot-Dimension: {', '.join(wrong_dimension)}")
 
         if len(ordered) != len(ordered_set):
             dupes = [slot for slot, count in Counter(ordered).items() if count > 1]
-            errors.append(
-                f"Dimension '{dim_key}' enthält doppelte Slots in slot_order: {', '.join(sorted(dupes))}"
-            )
+            errors.append(f"Dimension '{dim_key}' enthält doppelte Slots in slot_order: {', '.join(sorted(dupes))}")
 
 
-def validate_values(
-    data: dict[str, Any],
-    slot_index: dict[str, dict[str, Any]],
-    errors: list[str],
-) -> None:
+def validate_values(data, slot_index, errors):
     values = ensure_dict(data.get("values"), "values")
     referenced_value_sets = {meta["value_set"] for meta in slot_index.values()}
 
     extra_value_sets = sorted(set(values) - referenced_value_sets)
     if extra_value_sets:
-        errors.append(
-            f"Nicht referenzierte value_sets vorhanden: {', '.join(extra_value_sets)}"
-        )
+        errors.append(f"Nicht referenzierte value_sets vorhanden: {', '.join(extra_value_sets)}")
 
     for value_set_name, value_set_any in values.items():
         value_set = ensure_list(value_set_any, f"values.{value_set_name}")
@@ -215,25 +193,17 @@ def validate_values(
             if not isinstance(value_key, str) or not value_key:
                 errors.append(f"Wert ohne gültigen key unter values.{value_set_name}[{idx}]")
             elif not re.fullmatch(r"[a-z0-9_]+", value_key):
-                errors.append(
-                    f"Wert '{value_key}' in values.{value_set_name} verletzt snake_case/API-Regel."
-                )
+                errors.append(f"Wert '{value_key}' in values.{value_set_name} verletzt snake_case/API-Regel.")
 
             if not isinstance(label, str) or not label.strip():
                 errors.append(f"Wert '{value_key}' in values.{value_set_name} hat kein gültiges label.")
             elif label in seen_labels:
-                errors.append(
-                    f"Doppeltes Label '{label}' in values.{value_set_name}"
-                )
+                errors.append(f"Doppeltes Label '{label}' in values.{value_set_name}")
             else:
                 seen_labels.add(label)
 
 
-def validate_templates(
-    data: dict[str, Any],
-    slot_index: dict[str, dict[str, Any]],
-    errors: list[str],
-) -> None:
+def validate_templates(data, slot_index, errors):
     templates = ensure_list(data.get("templates"), "templates")
     seen_ids: set[str] = set()
 
@@ -268,29 +238,18 @@ def validate_templates(
 
         unknown_placeholders = sorted(slot for slot in placeholder_set if slot not in slot_index)
         if unknown_placeholders:
-            errors.append(
-                f"Template '{tpl_id}' enthält unbekannte Platzhalter: {', '.join(unknown_placeholders)}"
-            )
+            errors.append(f"Template '{tpl_id}' enthält unbekannte Platzhalter: {', '.join(unknown_placeholders)}")
 
         missing_in_text = sorted(slot for slot in used_set if slot not in placeholder_set)
         if missing_in_text:
-            errors.append(
-                f"Template '{tpl_id}' führt Slots in slots_used, die im Text nicht vorkommen: {', '.join(missing_in_text)}"
-            )
+            errors.append(f"Template '{tpl_id}' führt Slots in slots_used, die im Text nicht vorkommen: {', '.join(missing_in_text)}")
 
         missing_in_slots_used = sorted(slot for slot in placeholder_set if slot not in used_set)
         if missing_in_slots_used:
-            errors.append(
-                f"Template '{tpl_id}' enthält Platzhalter, die nicht in slots_used stehen: {', '.join(missing_in_slots_used)}"
-            )
+            errors.append(f"Template '{tpl_id}' enthält Platzhalter, die nicht in slots_used stehen: {', '.join(missing_in_slots_used)}")
 
 
-def validate_generator(
-    data: dict[str, Any],
-    slot_index: dict[str, dict[str, Any]],
-    template_ids: set[str],
-    errors: list[str],
-) -> None:
+def validate_generator(data, slot_index, template_ids, errors):
     generator = ensure_dict(data.get("generator"), "generator")
 
     default_template_id = generator.get("default_template_id")
@@ -310,18 +269,14 @@ def validate_generator(
 
     if len(sequence_clean) != len(set(sequence_clean)):
         dupes = [slot for slot, count in Counter(sequence_clean).items() if count > 1]
-        errors.append(
-            f"generator.slot_sequence enthält doppelte Slots: {', '.join(sorted(dupes))}"
-        )
+        errors.append(f"generator.slot_sequence enthält doppelte Slots: {', '.join(sorted(dupes))}")
 
     all_slots = set(slot_index)
     sequence_set = set(sequence_clean)
 
     missing_in_sequence = sorted(all_slots - sequence_set)
     if missing_in_sequence:
-        errors.append(
-            f"generator.slot_sequence enthält nicht alle Slots des Modells. Fehlend: {', '.join(missing_in_sequence)}"
-        )
+        errors.append(f"generator.slot_sequence enthält nicht alle Slots des Modells. Fehlend: {', '.join(missing_in_sequence)}")
 
     for slot_any in required_slots:
         if not isinstance(slot_any, str) or slot_any not in slot_index:
@@ -330,19 +285,13 @@ def validate_generator(
         if slot_any not in sequence_set:
             errors.append(f"generator.required_slots enthält Slot außerhalb von slot_sequence: {slot_any}")
 
-    missing_declared_required = sorted(
-        slot for slot, meta in slot_index.items() if meta["required"] and slot not in set(required_slots)
-    )
+    missing_declared_required = sorted(slot for slot, meta in slot_index.items() if meta["required"] and slot not in set(required_slots))
     if missing_declared_required:
-        errors.append(
-            f"generator.required_slots deckt nicht alle required-Slots ab: {', '.join(missing_declared_required)}"
-        )
+        errors.append(f"generator.required_slots deckt nicht alle required-Slots ab: {', '.join(missing_declared_required)}")
 
     if len(required_slots) != len(set(required_slots)):
         dupes = [slot for slot, count in Counter(required_slots).items() if count > 1]
-        errors.append(
-            f"generator.required_slots enthält doppelte Slots: {', '.join(sorted(dupes))}"
-        )
+        errors.append(f"generator.required_slots enthält doppelte Slots: {', '.join(sorted(dupes))}")
 
     mode_values: list[str] = []
     for mode_any in modes:
@@ -358,12 +307,7 @@ def validate_generator(
         errors.append(f"generator.modes enthält doppelte Einträge: {', '.join(sorted(dupes))}")
 
 
-def validate_workflows(
-    data: dict[str, Any],
-    slot_index: dict[str, dict[str, Any]],
-    template_index: dict[str, dict[str, Any]],
-    errors: list[str],
-) -> None:
+def validate_workflows(data, slot_index, template_index, errors):
     workflows = ensure_list(data.get("workflows"), "workflows")
     seen_ids: set[str] = set()
 
@@ -386,13 +330,11 @@ def validate_workflows(
             continue
 
         values = ensure_dict(wf.get("values"), f"workflows[{idx}].values")
-
         workflow_slots = set(values)
+
         unknown_slots = sorted(slot for slot in workflow_slots if slot not in slot_index)
         if unknown_slots:
-            errors.append(
-                f"Workflow '{wf_id}' enthält unbekannte Slots: {', '.join(unknown_slots)}"
-            )
+            errors.append(f"Workflow '{wf_id}' enthält unbekannte Slots: {', '.join(unknown_slots)}")
             continue
 
         for slot, raw_value in values.items():
@@ -400,82 +342,56 @@ def validate_workflows(
                 errors.append(f"Workflow '{wf_id}': Slot '{slot}' erwartet genau einen String-Wert.")
                 continue
             if raw_value not in slot_index[slot]["allowed_values"]:
-                errors.append(
-                    f"Workflow '{wf_id}': Ungültiger Wert '{raw_value}' für Slot '{slot}'."
-                )
+                errors.append(f"Workflow '{wf_id}': Ungültiger Wert '{raw_value}' für Slot '{slot}'.")
 
         missing_required = sorted(slot for slot in required_slots if slot not in workflow_slots)
         if missing_required:
-            errors.append(
-                f"Workflow '{wf_id}' fehlt generator.required_slots: {', '.join(missing_required)}"
-            )
+            errors.append(f"Workflow '{wf_id}' fehlt generator.required_slots: {', '.join(missing_required)}")
 
         tpl_slots = set(template_index[template_id]["slots_used"])
         missing_template_slots = sorted(slot for slot in tpl_slots if slot not in workflow_slots)
         if missing_template_slots:
-            errors.append(
-                f"Workflow '{wf_id}' fehlt Template-Slots aus '{template_id}': {', '.join(missing_template_slots)}"
-            )
+            errors.append(f"Workflow '{wf_id}' fehlt Template-Slots aus '{template_id}': {', '.join(missing_template_slots)}")
 
 
-def validate_heuristics(data: dict[str, Any], errors: list[str]) -> None:
+def validate_heuristics(data, errors):
     heuristics = ensure_dict(data.get("heuristics"), "heuristics")
     enabled = heuristics.get("enabled")
     if not isinstance(enabled, bool):
         errors.append("heuristics.enabled muss boolean sein.")
-
-    recommendations = heuristics.get("recommendations")
-    constraints = heuristics.get("constraints")
-    meta = heuristics.get("meta")
-
-    if not isinstance(recommendations, list):
+    if not isinstance(heuristics.get("recommendations"), list):
         errors.append("heuristics.recommendations muss eine Liste sein.")
-    if not isinstance(constraints, list):
+    if not isinstance(heuristics.get("constraints"), list):
         errors.append("heuristics.constraints muss eine Liste sein.")
-    if not isinstance(meta, dict):
+    if not isinstance(heuristics.get("meta"), dict):
         errors.append("heuristics.meta muss ein Objekt sein.")
 
 
 def run_checks(data: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-
     dimension_index = build_dimension_index(data)
     slot_index = build_slot_index(data)
-
     validate_dimensions_against_slots(dimension_index, slot_index, errors)
     validate_values(data, slot_index, errors)
     validate_templates(data, slot_index, errors)
 
     templates = ensure_list(data.get("templates"), "templates")
-    template_index = {
-        tpl["id"]: tpl
-        for tpl in templates
-        if isinstance(tpl, dict) and isinstance(tpl.get("id"), str)
-    }
+    template_index = {tpl["id"]: tpl for tpl in templates if isinstance(tpl, dict) and isinstance(tpl.get("id"), str)}
 
     validate_generator(data, slot_index, set(template_index), errors)
     validate_workflows(data, slot_index, template_index, errors)
     validate_heuristics(data, errors)
-
     return errors
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Prüft semantische Integrität des V3-Bibliotheksmodells über das JSON-Schema hinaus."
-    )
-    parser.add_argument(
-        "--input",
-        type=Path,
-        default=DEFAULT_INPUT,
-        help=f"Pfad zur V3-Bibliotheksdatei (Default: {DEFAULT_INPUT})",
-    )
+    parser = argparse.ArgumentParser(description="Prüft semantische Integrität des aktuellen Bibliotheksmodells über das JSON-Schema hinaus.")
+    parser.add_argument("--input", type=Path, default=DEFAULT_INPUT, help=f"Pfad zur Bibliotheksdatei (Default: {DEFAULT_INPUT})")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-
     try:
         data = load_json(args.input)
         errors = run_checks(data)
