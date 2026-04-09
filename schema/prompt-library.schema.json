@@ -1,16 +1,19 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://example.local/prompt-library.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sborm.github.io/Wissensbibliothek-Promptbausteine/schema/library.schema.json",
   "title": "Prompt Library Schema",
+  "description": "Schema fuer das kanonische Zielmodell der Prompt-Bibliothek mit single-select Taxonomie, Generator-Layer und optionalem Heuristik-Layer.",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "meta",
-    "library",
-    "slot_schema",
+    "dimensions",
+    "slots",
+    "values",
     "templates",
-    "constraints",
-    "example_instances"
+    "generator",
+    "workflows",
+    "heuristics"
   ],
   "properties": {
     "meta": {
@@ -20,231 +23,707 @@
         "project",
         "version",
         "author",
-        "created",
         "locale",
-        "description"
+        "description",
+        "model_principles"
       ],
       "properties": {
-        "project": { "type": "string", "minLength": 1 },
-        "version": { "type": "string", "minLength": 1 },
-        "author": { "type": "string", "minLength": 1 },
-        "created": { "type": "string", "minLength": 1 },
-        "locale": { "type": "string", "minLength": 1 },
-        "description": { "type": "string", "minLength": 1 }
-      }
-    },
-    "library": {
-      "type": "object",
-      "minProperties": 1,
-      "additionalProperties": { "$ref": "#/definitions/dimension" }
-    },
-    "slot_schema": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/slotSchemaItem" }
-    },
-    "templates": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/template" }
-    },
-    "constraints": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/constraint" }
-    },
-    "example_instances": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/exampleInstance" }
-    }
-  },
-  "definitions": {
-    "valueItem": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["key", "label", "description"],
-      "properties": {
-        "key": { "type": "string", "minLength": 1 },
-        "label": { "type": "string", "minLength": 1 },
-        "description": { "type": "string", "minLength": 1 }
-      }
-    },
-    "originItem": {
-      "type": "string",
-      "enum": [
-        "community_guide",
-        "repo_practice",
-        "practitioner_blog",
-        "forum_hypothesis",
-        "internal_taxonomy"
-      ]
-    },
-    "evidenceStrength": {
-      "type": "string",
-      "enum": ["stark", "mittel", "schwach"]
-    },
-    "autoRecommendationTier": {
-      "type": "string",
-      "enum": ["A", "B", "C"]
-    },
-    "subdimension": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "label", "slot", "required", "values"],
-      "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "label": { "type": "string", "minLength": 1 },
-        "slot": { "type": "string", "minLength": 1 },
-        "required": { "type": "boolean" },
-        "multi": { "type": "boolean" },
-        "values": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "$ref": "#/definitions/valueItem" }
+        "project": {
+          "type": "string",
+          "minLength": 1
         },
-        "origin": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "$ref": "#/definitions/originItem" }
+        "version": {
+          "type": "string",
+          "minLength": 1
         },
-        "evidence_strength": { "$ref": "#/definitions/evidenceStrength" },
-        "auto_recommendation_tier": { "$ref": "#/definitions/autoRecommendationTier" },
-        "recommendation_notes": { "type": "string", "minLength": 1 },
-        "heuristic_scope": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "type": "string", "minLength": 1 }
+        "author": {
+          "type": "string",
+          "minLength": 1
         },
-        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
-      }
-    },
-    "dimension": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "label", "description", "subdimensions"],
-      "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "label": { "type": "string", "minLength": 1 },
-        "description": { "type": "string", "minLength": 1 },
-        "subdimensions": {
-          "type": "object",
-          "minProperties": 1,
-          "additionalProperties": { "$ref": "#/definitions/subdimension" }
+        "locale": {
+          "type": "string",
+          "pattern": "^[a-z]{2}-[A-Z]{2}$"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_principles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
         }
       }
     },
-    "slotSchemaItem": {
+    "dimensions": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "$ref": "#/$defs/dimension"
+      }
+    },
+    "slots": {
+      "type": "array",
+      "minItems": 28,
+      "items": {
+        "$ref": "#/$defs/slot"
+      }
+    },
+    "values": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["slot", "dimension", "subdimension", "required", "multi"],
+      "required": [
+        "ziel_typ",
+        "ziel_reife",
+        "aufgabentyp",
+        "aufgabenstruktur",
+        "situationskontext",
+        "zielgruppe",
+        "wissensniveau",
+        "rahmenbedingung",
+        "prozesslogik",
+        "methodik",
+        "interaktionsmodus",
+        "steuerungsgrad",
+        "arbeitsmodus",
+        "format",
+        "umfang",
+        "ergebnisfokus",
+        "tonalitaet",
+        "direktheit",
+        "rollenstimme",
+        "qualitaetsfokus",
+        "priorisierung",
+        "tiefengrad",
+        "evidenzregel",
+        "tabellenregel",
+        "listenregel",
+        "beispielregel",
+        "metaregel",
+        "redundanzregel"
+      ],
       "properties": {
-        "slot": { "type": "string", "minLength": 1 },
-        "dimension": { "type": "string", "minLength": 1 },
-        "subdimension": { "type": "string", "minLength": 1 },
-        "required": { "type": "boolean" },
-        "multi": { "type": "boolean" },
-        "origin": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "$ref": "#/definitions/originItem" }
+        "ziel_typ": {
+          "$ref": "#/$defs/valueSet"
         },
-        "evidence_strength": { "$ref": "#/definitions/evidenceStrength" },
-        "auto_recommendation_tier": { "$ref": "#/definitions/autoRecommendationTier" },
-        "recommendation_notes": { "type": "string", "minLength": 1 },
-        "heuristic_scope": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "type": "string", "minLength": 1 }
+        "ziel_reife": {
+          "$ref": "#/$defs/valueSet"
         },
-        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        "aufgabentyp": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "aufgabenstruktur": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "situationskontext": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "zielgruppe": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "wissensniveau": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "rahmenbedingung": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "prozesslogik": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "methodik": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "interaktionsmodus": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "steuerungsgrad": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "arbeitsmodus": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "format": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "umfang": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "ergebnisfokus": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "tonalitaet": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "direktheit": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "rollenstimme": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "qualitaetsfokus": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "priorisierung": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "tiefengrad": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "evidenzregel": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "tabellenregel": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "listenregel": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "beispielregel": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "metaregel": {
+          "$ref": "#/$defs/valueSet"
+        },
+        "redundanzregel": {
+          "$ref": "#/$defs/valueSet"
+        }
+      }
+    },
+    "templates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/template"
+      }
+    },
+    "generator": {
+      "$ref": "#/$defs/generator"
+    },
+    "workflows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/workflow"
+      }
+    },
+    "heuristics": {
+      "$ref": "#/$defs/heuristics"
+    }
+  },
+  "$defs": {
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "key",
+        "label",
+        "description",
+        "slot_order"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z]$"
+        },
+        "key": {
+          "type": "string",
+          "enum": [
+            "ZIEL",
+            "AUFGABE",
+            "KONTEXT",
+            "PROZESS",
+            "OUTPUT",
+            "STIL",
+            "KRITERIEN",
+            "GRENZEN"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slot_order": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "ZIEL_TYP",
+              "ZIEL_REIFE",
+              "AUFGABENTYP",
+              "AUFGABENSTRUKTUR",
+              "SITUATIONSKONTEXT",
+              "ZIELGRUPPE",
+              "WISSENSNIVEAU",
+              "RAHMENBEDINGUNG",
+              "PROZESSLOGIK",
+              "METHODIK",
+              "INTERAKTIONSMODUS",
+              "STEUERUNGSGRAD",
+              "ARBEITSMODUS",
+              "FORMAT",
+              "UMFANG",
+              "ERGEBNISFOKUS",
+              "TONALITAET",
+              "DIREKTHEIT",
+              "ROLLENSTIMME",
+              "QUALITAETSFOKUS",
+              "PRIORISIERUNG",
+              "TIEFENGRAD",
+              "EVIDENZREGEL",
+              "TABELLENREGEL",
+              "LISTENREGEL",
+              "BEISPIELREGEL",
+              "METAREGEL",
+              "REDUNDANZREGEL"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "key",
+        "label",
+        "dimension",
+        "required",
+        "multi",
+        "value_set",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z][0-9]+$"
+        },
+        "key": {
+          "type": "string",
+          "enum": [
+            "ZIEL_TYP",
+            "ZIEL_REIFE",
+            "AUFGABENTYP",
+            "AUFGABENSTRUKTUR",
+            "SITUATIONSKONTEXT",
+            "ZIELGRUPPE",
+            "WISSENSNIVEAU",
+            "RAHMENBEDINGUNG",
+            "PROZESSLOGIK",
+            "METHODIK",
+            "INTERAKTIONSMODUS",
+            "STEUERUNGSGRAD",
+            "ARBEITSMODUS",
+            "FORMAT",
+            "UMFANG",
+            "ERGEBNISFOKUS",
+            "TONALITAET",
+            "DIREKTHEIT",
+            "ROLLENSTIMME",
+            "QUALITAETSFOKUS",
+            "PRIORISIERUNG",
+            "TIEFENGRAD",
+            "EVIDENZREGEL",
+            "TABELLENREGEL",
+            "LISTENREGEL",
+            "BEISPIELREGEL",
+            "METAREGEL",
+            "REDUNDANZREGEL"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dimension": {
+          "type": "string",
+          "enum": [
+            "ZIEL",
+            "AUFGABE",
+            "KONTEXT",
+            "PROZESS",
+            "OUTPUT",
+            "STIL",
+            "KRITERIEN",
+            "GRENZEN"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "multi": {
+          "const": false
+        },
+        "value_set": {
+          "type": "string",
+          "enum": [
+            "ziel_typ",
+            "ziel_reife",
+            "aufgabentyp",
+            "aufgabenstruktur",
+            "situationskontext",
+            "zielgruppe",
+            "wissensniveau",
+            "rahmenbedingung",
+            "prozesslogik",
+            "methodik",
+            "interaktionsmodus",
+            "steuerungsgrad",
+            "arbeitsmodus",
+            "format",
+            "umfang",
+            "ergebnisfokus",
+            "tonalitaet",
+            "direktheit",
+            "rollenstimme",
+            "qualitaetsfokus",
+            "priorisierung",
+            "tiefengrad",
+            "evidenzregel",
+            "tabellenregel",
+            "listenregel",
+            "beispielregel",
+            "metaregel",
+            "redundanzregel"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "valueSet": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/value"
+      }
+    },
+    "value": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "label"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "template": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "label", "description", "slots_used", "text"],
+      "required": [
+        "id",
+        "label",
+        "description",
+        "slots_used",
+        "text"
+      ],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "label": { "type": "string", "minLength": 1 },
-        "description": { "type": "string", "minLength": 1 },
+        "id": {
+          "type": "string",
+          "enum": [
+            "default_v1",
+            "analysis_v1",
+            "decision_v1",
+            "rewrite_v1",
+            "implementation_v1"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
         "slots_used": {
           "type": "array",
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "enum": [
+              "ZIEL_TYP",
+              "ZIEL_REIFE",
+              "AUFGABENTYP",
+              "AUFGABENSTRUKTUR",
+              "SITUATIONSKONTEXT",
+              "ZIELGRUPPE",
+              "WISSENSNIVEAU",
+              "RAHMENBEDINGUNG",
+              "PROZESSLOGIK",
+              "METHODIK",
+              "INTERAKTIONSMODUS",
+              "STEUERUNGSGRAD",
+              "ARBEITSMODUS",
+              "FORMAT",
+              "UMFANG",
+              "ERGEBNISFOKUS",
+              "TONALITAET",
+              "DIREKTHEIT",
+              "ROLLENSTIMME",
+              "QUALITAETSFOKUS",
+              "PRIORISIERUNG",
+              "TIEFENGRAD",
+              "EVIDENZREGEL",
+              "TABELLENREGEL",
+              "LISTENREGEL",
+              "BEISPIELREGEL",
+              "METAREGEL",
+              "REDUNDANZREGEL"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
         },
-        "text": { "type": "string", "minLength": 1 }
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
-    "constraintIf": {
+    "generator": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["slot", "equals"],
+      "required": [
+        "default_template_id",
+        "slot_sequence",
+        "required_slots",
+        "modes",
+        "copy_behavior",
+        "empty_value_behavior"
+      ],
       "properties": {
-        "slot": { "type": "string", "minLength": 1 },
-        "equals": { "type": "string", "minLength": 1 }
-      }
-    },
-    "constraintThenNot": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["slot", "contains"],
-      "properties": {
-        "slot": { "type": "string", "minLength": 1 },
-        "contains": { "type": "string", "minLength": 1 }
-      }
-    },
-    "constraintThen": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["recommended_slots", "recommended_values"],
-      "properties": {
-        "recommended_slots": {
+        "default_template_id": {
+          "type": "string",
+          "enum": [
+            "default_v1",
+            "analysis_v1",
+            "decision_v1",
+            "rewrite_v1",
+            "implementation_v1"
+          ]
+        },
+        "slot_sequence": {
           "type": "array",
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "enum": [
+              "ZIEL_TYP",
+              "ZIEL_REIFE",
+              "AUFGABENTYP",
+              "AUFGABENSTRUKTUR",
+              "SITUATIONSKONTEXT",
+              "ZIELGRUPPE",
+              "WISSENSNIVEAU",
+              "RAHMENBEDINGUNG",
+              "PROZESSLOGIK",
+              "METHODIK",
+              "INTERAKTIONSMODUS",
+              "STEUERUNGSGRAD",
+              "ARBEITSMODUS",
+              "FORMAT",
+              "UMFANG",
+              "ERGEBNISFOKUS",
+              "TONALITAET",
+              "DIREKTHEIT",
+              "ROLLENSTIMME",
+              "QUALITAETSFOKUS",
+              "PRIORISIERUNG",
+              "TIEFENGRAD",
+              "EVIDENZREGEL",
+              "TABELLENREGEL",
+              "LISTENREGEL",
+              "BEISPIELREGEL",
+              "METAREGEL",
+              "REDUNDANZREGEL"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
         },
-        "recommended_values": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "array",
-            "items": { "type": "string", "minLength": 1 }
-          }
+        "required_slots": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "ZIEL_TYP",
+              "ZIEL_REIFE",
+              "AUFGABENTYP",
+              "AUFGABENSTRUKTUR",
+              "SITUATIONSKONTEXT",
+              "ZIELGRUPPE",
+              "WISSENSNIVEAU",
+              "RAHMENBEDINGUNG",
+              "PROZESSLOGIK",
+              "METHODIK",
+              "INTERAKTIONSMODUS",
+              "STEUERUNGSGRAD",
+              "ARBEITSMODUS",
+              "FORMAT",
+              "UMFANG",
+              "ERGEBNISFOKUS",
+              "TONALITAET",
+              "DIREKTHEIT",
+              "ROLLENSTIMME",
+              "QUALITAETSFOKUS",
+              "PRIORISIERUNG",
+              "TIEFENGRAD",
+              "EVIDENZREGEL",
+              "TABELLENREGEL",
+              "LISTENREGEL",
+              "BEISPIELREGEL",
+              "METAREGEL",
+              "REDUNDANZREGEL"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "modes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "expert"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "copy_behavior": {
+          "type": "string",
+          "minLength": 1
+        },
+        "empty_value_behavior": {
+          "type": "string",
+          "minLength": 1
         }
       }
     },
-    "constraint": {
+    "workflow": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type", "if"],
+      "required": [
+        "id",
+        "label",
+        "template_id",
+        "values"
+      ],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "type": { "type": "string", "enum": ["recommendation", "incompatibility"] },
-        "if": { "$ref": "#/definitions/constraintIf" },
-        "then": { "$ref": "#/definitions/constraintThen" },
-        "then_not": { "$ref": "#/definitions/constraintThenNot" }
-      },
-      "allOf": [
-        {
-          "if": { "properties": { "type": { "const": "recommendation" } } },
-          "then": { "required": ["then"] }
+        "id": {
+          "type": "string",
+          "pattern": "^workflow_[0-9]{2,}$"
         },
-        {
-          "if": { "properties": { "type": { "const": "incompatibility" } } },
-          "then": { "required": ["then_not"] }
-        }
-      ]
-    },
-    "exampleInstance": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "label", "values"],
-      "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "label": { "type": "string", "minLength": 1 },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "template_id": {
+          "type": "string",
+          "enum": [
+            "default_v1",
+            "analysis_v1",
+            "decision_v1",
+            "rewrite_v1",
+            "implementation_v1"
+          ]
+        },
         "values": {
           "type": "object",
-          "minProperties": 1,
-          "additionalProperties": {
-            "anyOf": [
-              { "type": "string" },
-              { "type": "array", "items": { "type": "string" } }
+          "propertyNames": {
+            "enum": [
+              "ZIEL_TYP",
+              "ZIEL_REIFE",
+              "AUFGABENTYP",
+              "AUFGABENSTRUKTUR",
+              "SITUATIONSKONTEXT",
+              "ZIELGRUPPE",
+              "WISSENSNIVEAU",
+              "RAHMENBEDINGUNG",
+              "PROZESSLOGIK",
+              "METHODIK",
+              "INTERAKTIONSMODUS",
+              "STEUERUNGSGRAD",
+              "ARBEITSMODUS",
+              "FORMAT",
+              "UMFANG",
+              "ERGEBNISFOKUS",
+              "TONALITAET",
+              "DIREKTHEIT",
+              "ROLLENSTIMME",
+              "QUALITAETSFOKUS",
+              "PRIORISIERUNG",
+              "TIEFENGRAD",
+              "EVIDENZREGEL",
+              "TABELLENREGEL",
+              "LISTENREGEL",
+              "BEISPIELREGEL",
+              "METAREGEL",
+              "REDUNDANZREGEL"
             ]
+          },
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "minProperties": 1
+        }
+      }
+    },
+    "heuristics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "description",
+        "recommendations",
+        "constraints",
+        "meta"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "object"
           }
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "meta": {
+          "type": "object"
         }
       }
     }
