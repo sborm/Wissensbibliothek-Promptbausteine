@@ -1,11 +1,11 @@
 {
   "meta": {
     "project": "Prompt-Bibliothek",
-    "version": "2.8.0",
+    "version": "2.8.1",
     "author": "Sarah Bormann",
     "created": "2026-04-08T16:05:00Z",
     "locale": "de-DE",
-    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit in Runde 3 ausgebauter Praxisabdeckung. Die Kern- und Kontextlogik aus den Vorversionen bleibt erhalten, wird aber um zusätzliche nutzungsnahe Templates, Beispielinstanzen und Empfehlungspfade für Analyse, Prüfung, Extraktion, Erklärung, Strategie und operative Umsetzung ergänzt."
+    "description": "Taxonomisch strukturierte Prompt-Bibliothek mit in Runde 1 geschärfter Kernkalibrierung. Der Fokus liegt nicht auf weiterer Breite, sondern auf besser synchronisierten Templates, belastbareren Goldstandard-Beispielinstanzen und operativ stärkeren Startkonfigurationen für Analyse, Prüfung, Erklärung, Extraktion, Entscheidung und Umsetzung."
   },
   "library": {
     "ZIEL": {
@@ -1894,9 +1894,11 @@
         "FORMAT",
         "UMFANG",
         "SITUATIONSKONTEXT",
+        "WISSENSKONTEXT",
+        "RAHMENBEDINGUNG",
         "SPRACHQUALITAET"
       ],
-      "text": "Bitte [AUFGABENTYP], damit das Ergebnis beim [ZIEL_TYP] hilft. Berücksichtige dabei den Nutzungskontext [SITUATIONSKONTEXT]. Gib das Ergebnis als [FORMAT] in [UMFANG] aus. Achte besonders auf [SPRACHQUALITAET]."
+      "text": "Bitte [AUFGABENTYP], damit das Ergebnis beim [ZIEL_TYP] hilft. Berücksichtige dabei den Nutzungskontext [SITUATIONSKONTEXT] und setze den Wissenskontext [WISSENSKONTEXT] voraus. Berücksichtige außerdem [RAHMENBEDINGUNG]. Gib das Ergebnis als [FORMAT] in [UMFANG] aus. Achte besonders auf [SPRACHQUALITAET]."
     },
     {
       "id": "decision_table_v1",
@@ -1910,9 +1912,10 @@
         "FORMAT",
         "ERGEBNISORIENTIERUNG",
         "PROZESSLOGIK",
-        "ZIELGRUPPE"
+        "ZIELGRUPPE",
+        "STEUERUNGSGRAD"
       ],
-      "text": "Bitte [AUFGABENTYP], um beim [ZIEL_TYP] zu helfen, sodass das Ergebnis [HANDLUNGSREIFE] ist. Berücksichtige den Kontext [SITUATIONSKONTEXT] und gehe so vor: [PROZESSLOGIK]. Gib das Ergebnis als [FORMAT] aus. Liefere [ERGEBNISORIENTIERUNG]. Das Ergebnis ist gedacht für [ZIELGRUPPE]."
+      "text": "Bitte [AUFGABENTYP], um beim [ZIEL_TYP] zu helfen, sodass das Ergebnis [HANDLUNGSREIFE] ist. Berücksichtige den Kontext [SITUATIONSKONTEXT] und gehe so vor: [PROZESSLOGIK]. Arbeite mit [STEUERUNGSGRAD]. Gib das Ergebnis als [FORMAT] aus. Liefere [ERGEBNISORIENTIERUNG]. Das Ergebnis ist gedacht für [ZIELGRUPPE]."
     },
     {
       "id": "rewrite_v1",
@@ -1922,12 +1925,13 @@
         "ZIEL_TYP",
         "AUFGABENTYP",
         "SITUATIONSKONTEXT",
+        "RAHMENBEDINGUNG",
         "SPRACHQUALITAET",
         "STILREGELN",
         "FORMAT",
         "FUNKTIONSROLLE"
       ],
-      "text": "Bitte [AUFGABENTYP], damit der Text beim [ZIEL_TYP] besser hilft. Berücksichtige den Kontext [SITUATIONSKONTEXT]. Formuliere sprachlich [SPRACHQUALITAET]. Beachte dabei [STILREGELN]. Antworte aus der Funktion [FUNKTIONSROLLE]. Gib das Ergebnis als [FORMAT] aus."
+      "text": "Bitte [AUFGABENTYP], damit der Text beim [ZIEL_TYP] besser hilft. Berücksichtige den Kontext [SITUATIONSKONTEXT] und die Rahmenbedingung [RAHMENBEDINGUNG]. Formuliere sprachlich [SPRACHQUALITAET]. Beachte dabei [STILREGELN]. Antworte aus der Funktion [FUNKTIONSROLLE]. Gib das Ergebnis als [FORMAT] aus."
     },
     {
       "id": "analysis_report_v1",
@@ -1937,12 +1941,14 @@
         "ZIEL_TYP",
         "AUFGABENTYP",
         "ANALYSETIEFE",
+        "WISSENSKONTEXT",
+        "AUFGABENSTRUKTUR",
         "PROZESSLOGIK",
         "FORMAT",
         "INHALTSQUALITAET",
         "INHALTLICHE_AUSSCHLUESSE"
       ],
-      "text": "Bitte [AUFGABENTYP], damit das Ergebnis beim [ZIEL_TYP] hilft. Arbeite in [ANALYSETIEFE] und gehe nach [PROZESSLOGIK] vor. Gib das Ergebnis als [FORMAT] aus. Achte besonders auf [INHALTSQUALITAET] und beachte [INHALTLICHE_AUSSCHLUESSE]."
+      "text": "Bitte [AUFGABENTYP], damit das Ergebnis beim [ZIEL_TYP] hilft. Arbeite in [ANALYSETIEFE], setze den Wissenskontext [WISSENSKONTEXT] voraus und lege die Bearbeitung [AUFGABENSTRUKTUR] an. Gehe nach [PROZESSLOGIK] vor. Gib das Ergebnis als [FORMAT] aus. Achte besonders auf [INHALTSQUALITAET] und beachte [INHALTLICHE_AUSSCHLUESSE]."
     },
     {
       "id": "audit_review_v1",
@@ -1954,9 +1960,10 @@
         "FORMAT",
         "ERGEBNISORIENTIERUNG",
         "INTERVENTIONSTIEFE",
+        "STEUERUNGSGRAD",
         "INHALTLICHE_AUSSCHLUESSE"
       ],
-      "text": "Bitte [AUFGABENTYP] den vorliegenden Inhalt. Gehe nach [PROZESSLOGIK] vor. Gib das Ergebnis als [FORMAT] aus und liefere [ERGEBNISORIENTIERUNG]. Arbeite [INTERVENTIONSTIEFE] und beachte [INHALTLICHE_AUSSCHLUESSE]."
+      "text": "Bitte [AUFGABENTYP] den vorliegenden Inhalt. Gehe nach [PROZESSLOGIK] vor und arbeite mit [STEUERUNGSGRAD]. Gib das Ergebnis als [FORMAT] aus und liefere [ERGEBNISORIENTIERUNG]. Arbeite [INTERVENTIONSTIEFE] und beachte [INHALTLICHE_AUSSCHLUESSE]."
     },
     {
       "id": "extraction_v1",
@@ -1967,9 +1974,10 @@
         "FORMAT",
         "UMFANG",
         "ERGEBNISORIENTIERUNG",
-        "PRIORISIERUNG"
+        "PRIORISIERUNG",
+        "STEUERUNGSGRAD"
       ],
-      "text": "Bitte [AUFGABENTYP] die wesentlichen Informationen. Gib das Ergebnis als [FORMAT] in [UMFANG] aus und liefere [ERGEBNISORIENTIERUNG]. Priorisiere dabei [PRIORISIERUNG]."
+      "text": "Bitte [AUFGABENTYP] die wesentlichen Informationen. Arbeite mit [STEUERUNGSGRAD]. Gib das Ergebnis als [FORMAT] in [UMFANG] aus und liefere [ERGEBNISORIENTIERUNG]. Priorisiere dabei [PRIORISIERUNG]."
     },
     {
       "id": "implementation_plan_v1",
@@ -1982,9 +1990,12 @@
         "FORMAT",
         "ERGEBNISORIENTIERUNG",
         "DENKMODUS",
-        "PRIORISIERUNG"
+        "PRIORISIERUNG",
+        "AUFGABENSTRUKTUR",
+        "MODUS",
+        "STEUERUNGSGRAD"
       ],
-      "text": "Bitte arbeite so, dass das Ergebnis beim [ZIEL_TYP] hilft. Berücksichtige den Nutzungskontext [SITUATIONSKONTEXT] und mache die Antwort [HANDLUNGSREIFE]. Gib das Ergebnis als [FORMAT] aus, liefere [ERGEBNISORIENTIERUNG], denke [DENKMODUS] und priorisiere [PRIORISIERUNG]."
+      "text": "Bitte arbeite so, dass das Ergebnis beim [ZIEL_TYP] hilft. Berücksichtige den Nutzungskontext [SITUATIONSKONTEXT] und mache die Antwort [HANDLUNGSREIFE]. Lege die Bearbeitung [AUFGABENSTRUKTUR] an, arbeite im Modus [MODUS] und nutze [STEUERUNGSGRAD]. Gib das Ergebnis als [FORMAT] aus, liefere [ERGEBNISORIENTIERUNG], denke [DENKMODUS] und priorisiere [PRIORISIERUNG]."
     },
     {
       "id": "explanation_guide_v1",
@@ -1993,12 +2004,13 @@
       "slots_used": [
         "ZIEL_TYP",
         "AUFGABENTYP",
+        "WISSENSKONTEXT",
         "WISSENSSTAND_ADRESSAT",
         "SPRACHQUALITAET",
         "FORMAT",
         "ZIELGRUPPE"
       ],
-      "text": "Bitte [AUFGABENTYP], damit das Ergebnis beim [ZIEL_TYP] hilft. Richte die Darstellung auf [ZIELGRUPPE] mit Wissensstand [WISSENSSTAND_ADRESSAT] aus. Formuliere [SPRACHQUALITAET] und gib das Ergebnis als [FORMAT] aus."
+      "text": "Bitte [AUFGABENTYP], damit das Ergebnis beim [ZIEL_TYP] hilft. Setze dabei den Wissenskontext [WISSENSKONTEXT] voraus. Richte die Darstellung auf [ZIELGRUPPE] mit Wissensstand [WISSENSSTAND_ADRESSAT] aus. Formuliere [SPRACHQUALITAET] und gib das Ergebnis als [FORMAT] aus."
     }
   ],
   "constraints": [
@@ -2575,7 +2587,7 @@
         "STEUERUNGSGRAD": "eng_gefuehrt",
         "ANALYSETIEFE": "mittel",
         "HANDLUNGSREIFE": "entscheidungsreif",
-        "AUFGABENSTRUKTUR": "mehrstufig",
+        "AUFGABENSTRUKTUR": "einzelschritt",
         "DENKMODUS": "strategisch",
         "FUNKTIONSROLLE": "strategieberater",
         "INTERVENTIONSTIEFE": "beratend",
@@ -2609,7 +2621,7 @@
         "STEUERUNGSGRAD": "mit_zwischenstaenden",
         "ANALYSETIEFE": "ueberblick",
         "HANDLUNGSREIFE": "umsetzungsreif",
-        "AUFGABENSTRUKTUR": "einzelschritt",
+        "AUFGABENSTRUKTUR": "mehrstufig",
         "DENKMODUS": "pragmatisch",
         "FUNKTIONSROLLE": "lektor",
         "INTERVENTIONSTIEFE": "beratend",
@@ -2622,7 +2634,7 @@
     },
     {
       "id": "example_03",
-      "label": "Operative Umsetzungscheckliste",
+      "label": "Operativer Umsetzungsplan als Checkliste",
       "values": {
         "ZIEL_TYP": "umsetzen",
         "AUFGABENTYP": "strukturieren",
@@ -2640,8 +2652,8 @@
         "FORMALE_AUSSCHLUESSE": [],
         "ZIELGRUPPE": "ich_selbst",
         "WISSENSSTAND_ADRESSAT": "fortgeschritten",
-        "MODUS": "einmalige_antwort",
-        "STEUERUNGSGRAD": "eng_gefuehrt",
+        "MODUS": "iteratives_verfeinern",
+        "STEUERUNGSGRAD": "mit_zwischenstaenden",
         "ANALYSETIEFE": "ueberblick",
         "HANDLUNGSREIFE": "umsetzungsreif",
         "AUFGABENSTRUKTUR": "mehrstufig",
@@ -2677,7 +2689,7 @@
         "FORMALE_AUSSCHLUESSE": [],
         "ZIELGRUPPE": "ich_selbst",
         "WISSENSSTAND_ADRESSAT": "experte",
-        "MODUS": "einmalige_antwort",
+        "MODUS": "iteratives_verfeinern",
         "STEUERUNGSGRAD": "eng_gefuehrt",
         "ANALYSETIEFE": "tiefenanalyse",
         "HANDLUNGSREIFE": "orientierend",
@@ -2693,14 +2705,14 @@
     },
     {
       "id": "example_05",
-      "label": "Prüfcheckliste für Review eines Entwurfs",
+      "label": "Prüfleitfaden für Review eines Entwurfs",
       "values": {
         "ZIEL_TYP": "verbessern",
         "AUFGABENTYP": "pruefen",
         "SITUATIONSKONTEXT": "abstimmen",
         "WISSENSKONTEXT": "fortgeschritten",
         "RAHMENBEDINGUNG": "formeller_anlass",
-        "FORMAT": "checkliste",
+        "FORMAT": "leitfaden",
         "UMFANG": "mittel",
         "ERGEBNISORIENTIERUNG": "ergebnis_plus_begruendung",
         "PROZESSLOGIK": "erst_befunde_dann_interpretation_dann_empfehlung",
@@ -2739,7 +2751,7 @@
         "RAHMENBEDINGUNG": "zeitdruck",
         "FORMAT": "tabelle",
         "UMFANG": "kurz",
-        "ERGEBNISORIENTIERUNG": "nur_ergebnis",
+        "ERGEBNISORIENTIERUNG": "ergebnis_plus_begruendung",
         "PROZESSLOGIK": "erst_sammeln_dann_strukturieren",
         "SPRACHQUALITAET": "klar",
         "INHALTSQUALITAET": "relevant",
@@ -2766,12 +2778,12 @@
     },
     {
       "id": "example_07",
-      "label": "Lernleitfaden für Einsteiger",
+      "label": "Lernleitfaden mit Zwischenständen für Einsteiger",
       "values": {
         "ZIEL_TYP": "verstehen",
         "AUFGABENTYP": "erklaeren",
         "SITUATIONSKONTEXT": "lernen",
-        "WISSENSKONTEXT": "fortgeschritten",
+        "WISSENSKONTEXT": "anfaenger",
         "RAHMENBEDINGUNG": "begrenzte_datenlage",
         "FORMAT": "leitfaden",
         "UMFANG": "mittel",
@@ -2786,8 +2798,8 @@
         "FORMALE_AUSSCHLUESSE": [],
         "ZIELGRUPPE": "lernende",
         "WISSENSSTAND_ADRESSAT": "anfaenger",
-        "MODUS": "einmalige_antwort",
-        "STEUERUNGSGRAD": "eng_gefuehrt",
+        "MODUS": "iteratives_verfeinern",
+        "STEUERUNGSGRAD": "mit_zwischenstaenden",
         "ANALYSETIEFE": "ueberblick",
         "HANDLUNGSREIFE": "orientierend",
         "AUFGABENSTRUKTUR": "mehrstufig",
