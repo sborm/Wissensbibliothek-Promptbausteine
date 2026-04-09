@@ -974,17 +974,16 @@
     {
       "id": "decision_v1",
       "label": "Entscheidung",
-      "description": "Template fuer Priorisierung und Entscheidungsvorbereitung.",
+      "description": "Template fuer Priorisierung und Entscheidungsvorbereitung. METHODIK optional als freier Slot hinzufuegbar.",
       "slots_used": [
         "ZIEL_TYP",
         "AUFGABENTYP",
         "ZIELGRUPPE",
-        "METHODIK",
         "FORMAT",
         "ERGEBNISFOKUS",
         "PRIORISIERUNG"
       ],
-      "text": "Ich moechte [ZIEL_TYP] fuer [ZIELGRUPPE]. Bitte [AUFGABENTYP], wende [METHODIK] an und liefere das Ergebnis als [FORMAT]. Gib [ERGEBNISFOKUS] aus und priorisiere [PRIORISIERUNG]."
+      "text": "Ich moechte [ZIEL_TYP] fuer [ZIELGRUPPE]. Bitte [AUFGABENTYP] und liefere das Ergebnis als [FORMAT]. Gib [ERGEBNISFOKUS] aus und priorisiere [PRIORISIERUNG]."
     },
     {
       "id": "rewrite_v1",
