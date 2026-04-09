@@ -1,0 +1,1315 @@
+{
+  "meta": {
+    "project": "Prompt-Bibliothek",
+    "version": "3.0.0-migrated",
+    "author": "Sarah Bormann",
+    "locale": "de-DE",
+    "description": "Aus einem V2-Modell migriertes V3-Zielmodell. Der Kern bildet eine single-select Taxonomie mit getrenntem Generator- und optionalem Heuristik-Layer.",
+    "model_principles": [
+      "single_select_per_slot",
+      "snake_case_values",
+      "uppercase_slot_keys",
+      "taxonomy_first",
+      "generator_second",
+      "heuristics_optional"
+    ]
+  },
+  "dimensions": [
+    {
+      "id": "A",
+      "key": "ZIEL",
+      "label": "Ziel",
+      "description": "Wozu dient der Prompt? Was soll mit dem Ergebnis erreicht werden?",
+      "slot_order": [
+        "ZIEL_TYP",
+        "ZIEL_REIFE"
+      ]
+    },
+    {
+      "id": "B",
+      "key": "AUFGABE",
+      "label": "Aufgabe",
+      "description": "Was genau soll die KI tun?",
+      "slot_order": [
+        "AUFGABENTYP",
+        "AUFGABENSTRUKTUR"
+      ]
+    },
+    {
+      "id": "C",
+      "key": "KONTEXT",
+      "label": "Kontext",
+      "description": "In welcher Nutzungslage und fuer welche Zielgruppe wird gearbeitet?",
+      "slot_order": [
+        "SITUATIONSKONTEXT",
+        "ZIELGRUPPE",
+        "WISSENSNIVEAU",
+        "RAHMENBEDINGUNG"
+      ]
+    },
+    {
+      "id": "D",
+      "key": "PROZESS",
+      "label": "Prozess",
+      "description": "Wie soll die KI vorgehen und wie soll die Zusammenarbeit im Chat ablaufen?",
+      "slot_order": [
+        "PROZESSLOGIK",
+        "METHODIK",
+        "INTERAKTIONSMODUS",
+        "STEUERUNGSGRAD",
+        "ARBEITSMODUS"
+      ]
+    },
+    {
+      "id": "E",
+      "key": "OUTPUT",
+      "label": "Output",
+      "description": "In welcher Form und mit welchem Ergebnisfokus soll geliefert werden?",
+      "slot_order": [
+        "FORMAT",
+        "UMFANG",
+        "ERGEBNISFOKUS"
+      ]
+    },
+    {
+      "id": "F",
+      "key": "STIL",
+      "label": "Stil",
+      "description": "Wie soll die Antwort sprachlich und rollenbezogen klingen?",
+      "slot_order": [
+        "TONALITAET",
+        "DIREKTHEIT",
+        "ROLLENSTIMME"
+      ]
+    },
+    {
+      "id": "G",
+      "key": "KRITERIEN",
+      "label": "Kriterien",
+      "description": "Woran wird eine gute Antwort gemessen und welche Trade-offs gelten?",
+      "slot_order": [
+        "QUALITAETSFOKUS",
+        "PRIORISIERUNG",
+        "TIEFENGRAD"
+      ]
+    },
+    {
+      "id": "H",
+      "key": "GRENZEN",
+      "label": "Grenzen",
+      "description": "Was soll ausgeschlossen, begrenzt oder formal vermieden werden?",
+      "slot_order": [
+        "EVIDENZREGEL",
+        "TABELLENREGEL",
+        "LISTENREGEL",
+        "BEISPIELREGEL",
+        "METAREGEL",
+        "REDUNDANZREGEL"
+      ]
+    }
+  ],
+  "slots": [
+    {
+      "id": "A1",
+      "key": "ZIEL_TYP",
+      "label": "Zieltyp",
+      "dimension": "ZIEL",
+      "required": true,
+      "multi": false,
+      "value_set": "ziel_typ",
+      "description": "Primaerer Zweck des Ergebnisses."
+    },
+    {
+      "id": "A2",
+      "key": "ZIEL_REIFE",
+      "label": "Zielreife",
+      "dimension": "ZIEL",
+      "required": false,
+      "multi": false,
+      "value_set": "ziel_reife",
+      "description": "Praktische Reife des Ergebnisses."
+    },
+    {
+      "id": "B1",
+      "key": "AUFGABENTYP",
+      "label": "Aufgabentyp",
+      "dimension": "AUFGABE",
+      "required": true,
+      "multi": false,
+      "value_set": "aufgabentyp",
+      "description": "Konkrete Operation, die die KI ausfuehren soll."
+    },
+    {
+      "id": "B2",
+      "key": "AUFGABENSTRUKTUR",
+      "label": "Aufgabenstruktur",
+      "dimension": "AUFGABE",
+      "required": false,
+      "multi": false,
+      "value_set": "aufgabenstruktur",
+      "description": "Einzelschritt oder mehrstufig."
+    },
+    {
+      "id": "C1",
+      "key": "SITUATIONSKONTEXT",
+      "label": "Situationskontext",
+      "dimension": "KONTEXT",
+      "required": true,
+      "multi": false,
+      "value_set": "situationskontext",
+      "description": "Primaere Nutzungslage des Prompts."
+    },
+    {
+      "id": "C2",
+      "key": "ZIELGRUPPE",
+      "label": "Zielgruppe",
+      "dimension": "KONTEXT",
+      "required": true,
+      "multi": false,
+      "value_set": "zielgruppe",
+      "description": "Fuer wen das Ergebnis gedacht ist."
+    },
+    {
+      "id": "C3",
+      "key": "WISSENSNIVEAU",
+      "label": "Wissensniveau",
+      "dimension": "KONTEXT",
+      "required": false,
+      "multi": false,
+      "value_set": "wissensniveau",
+      "description": "Vorkenntnisniveau, auf das der Prompt ausgerichtet wird."
+    },
+    {
+      "id": "C4",
+      "key": "RAHMENBEDINGUNG",
+      "label": "Rahmenbedingung",
+      "dimension": "KONTEXT",
+      "required": false,
+      "multi": false,
+      "value_set": "rahmenbedingung",
+      "description": "Besondere Arbeitslage wie Zeitdruck oder sensible Kommunikation."
+    },
+    {
+      "id": "D1",
+      "key": "PROZESSLOGIK",
+      "label": "Prozesslogik",
+      "dimension": "PROZESS",
+      "required": false,
+      "multi": false,
+      "value_set": "prozesslogik",
+      "description": "Reihenfolge der Bearbeitungsschritte."
+    },
+    {
+      "id": "D2",
+      "key": "METHODIK",
+      "label": "Methodik",
+      "dimension": "PROZESS",
+      "required": false,
+      "multi": false,
+      "value_set": "methodik",
+      "description": "Konkreter methodischer Arbeitsrahmen."
+    },
+    {
+      "id": "D3",
+      "key": "INTERAKTIONSMODUS",
+      "label": "Interaktionsmodus",
+      "dimension": "PROZESS",
+      "required": false,
+      "multi": false,
+      "value_set": "interaktionsmodus",
+      "description": "Wie die Zusammenarbeit im Chat ablaufen soll."
+    },
+    {
+      "id": "D4",
+      "key": "STEUERUNGSGRAD",
+      "label": "Steuerungsgrad",
+      "dimension": "PROZESS",
+      "required": false,
+      "multi": false,
+      "value_set": "steuerungsgrad",
+      "description": "Wie eng oder offen die Bearbeitung gefuehrt wird."
+    },
+    {
+      "id": "D5",
+      "key": "ARBEITSMODUS",
+      "label": "Arbeitsmodus",
+      "dimension": "PROZESS",
+      "required": false,
+      "multi": false,
+      "value_set": "arbeitsmodus",
+      "description": "Kognitiver Bearbeitungsstil."
+    },
+    {
+      "id": "E1",
+      "key": "FORMAT",
+      "label": "Format",
+      "dimension": "OUTPUT",
+      "required": true,
+      "multi": false,
+      "value_set": "format",
+      "description": "Form des Ergebnisses."
+    },
+    {
+      "id": "E2",
+      "key": "UMFANG",
+      "label": "Umfang",
+      "dimension": "OUTPUT",
+      "required": false,
+      "multi": false,
+      "value_set": "umfang",
+      "description": "Gewuenschte Laenge oder Detailliertheit."
+    },
+    {
+      "id": "E3",
+      "key": "ERGEBNISFOKUS",
+      "label": "Ergebnisfokus",
+      "dimension": "OUTPUT",
+      "required": false,
+      "multi": false,
+      "value_set": "ergebnisfokus",
+      "description": "Welche Art von Deliverable im Vordergrund steht."
+    },
+    {
+      "id": "F1",
+      "key": "TONALITAET",
+      "label": "Tonalitaet",
+      "dimension": "STIL",
+      "required": false,
+      "multi": false,
+      "value_set": "tonalitaet",
+      "description": "Sprachlicher Grundton der Antwort."
+    },
+    {
+      "id": "F2",
+      "key": "DIREKTHEIT",
+      "label": "Direktheit",
+      "dimension": "STIL",
+      "required": false,
+      "multi": false,
+      "value_set": "direktheit",
+      "description": "Wie direkt oder zurueckhaltend formuliert werden soll."
+    },
+    {
+      "id": "F3",
+      "key": "ROLLENSTIMME",
+      "label": "Rollenstimme",
+      "dimension": "STIL",
+      "required": false,
+      "multi": false,
+      "value_set": "rollenstimme",
+      "description": "Rollenbezogene Sprachfigur."
+    },
+    {
+      "id": "G1",
+      "key": "QUALITAETSFOKUS",
+      "label": "Qualitaetsfokus",
+      "dimension": "KRITERIEN",
+      "required": true,
+      "multi": false,
+      "value_set": "qualitaetsfokus",
+      "description": "Zentrales Qualitaetskriterium der Antwort."
+    },
+    {
+      "id": "G2",
+      "key": "PRIORISIERUNG",
+      "label": "Priorisierung",
+      "dimension": "KRITERIEN",
+      "required": false,
+      "multi": false,
+      "value_set": "priorisierung",
+      "description": "Trade-off-Regel bei konkurrierenden Anforderungen."
+    },
+    {
+      "id": "G3",
+      "key": "TIEFENGRAD",
+      "label": "Tiefengrad",
+      "dimension": "KRITERIEN",
+      "required": false,
+      "multi": false,
+      "value_set": "tiefengrad",
+      "description": "Gewuenschte analytische oder inhaltliche Tiefe."
+    },
+    {
+      "id": "H1",
+      "key": "EVIDENZREGEL",
+      "label": "Evidenzregel",
+      "dimension": "GRENZEN",
+      "required": false,
+      "multi": false,
+      "value_set": "evidenzregel",
+      "description": "Regel fuer Spekulation, Belegpflicht und Unsicherheiten."
+    },
+    {
+      "id": "H2",
+      "key": "TABELLENREGEL",
+      "label": "Tabellenregel",
+      "dimension": "GRENZEN",
+      "required": false,
+      "multi": false,
+      "value_set": "tabellenregel",
+      "description": "Ob Tabellen vermieden oder erlaubt sind."
+    },
+    {
+      "id": "H3",
+      "key": "LISTENREGEL",
+      "label": "Listenregel",
+      "dimension": "GRENZEN",
+      "required": false,
+      "multi": false,
+      "value_set": "listenregel",
+      "description": "Ob Listen vermieden oder erlaubt sind."
+    },
+    {
+      "id": "H4",
+      "key": "BEISPIELREGEL",
+      "label": "Beispielregel",
+      "dimension": "GRENZEN",
+      "required": false,
+      "multi": false,
+      "value_set": "beispielregel",
+      "description": "Ob Beispiele verwendet werden duerfen."
+    },
+    {
+      "id": "H5",
+      "key": "METAREGEL",
+      "label": "Metaregel",
+      "dimension": "GRENZEN",
+      "required": false,
+      "multi": false,
+      "value_set": "metaregel",
+      "description": "Regel fuer Meta-Erklaerungen ueber das eigene Vorgehen."
+    },
+    {
+      "id": "H6",
+      "key": "REDUNDANZREGEL",
+      "label": "Redundanzregel",
+      "dimension": "GRENZEN",
+      "required": false,
+      "multi": false,
+      "value_set": "redundanzregel",
+      "description": "Regel fuer Wiederholungen und Redundanz."
+    }
+  ],
+  "values": {
+    "ziel_typ": [
+      {
+        "key": "informieren",
+        "label": "Informieren"
+      },
+      {
+        "key": "verstehen",
+        "label": "Verstehen"
+      },
+      {
+        "key": "orientieren",
+        "label": "Orientieren"
+      },
+      {
+        "key": "analysieren",
+        "label": "Analysieren"
+      },
+      {
+        "key": "priorisieren",
+        "label": "Priorisieren"
+      },
+      {
+        "key": "entscheiden",
+        "label": "Entscheiden"
+      },
+      {
+        "key": "entwickeln",
+        "label": "Entwickeln"
+      },
+      {
+        "key": "verbessern",
+        "label": "Verbessern"
+      },
+      {
+        "key": "umsetzen",
+        "label": "Umsetzen"
+      }
+    ],
+    "ziel_reife": [
+      {
+        "key": "orientierend",
+        "label": "Orientierend"
+      },
+      {
+        "key": "entscheidungsreif",
+        "label": "Entscheidungsreif"
+      },
+      {
+        "key": "umsetzungsreif",
+        "label": "Umsetzungsreif"
+      }
+    ],
+    "aufgabentyp": [
+      {
+        "key": "erklaeren",
+        "label": "Erklaeren"
+      },
+      {
+        "key": "zusammenfassen",
+        "label": "Zusammenfassen"
+      },
+      {
+        "key": "analysieren",
+        "label": "Analysieren"
+      },
+      {
+        "key": "vergleichen",
+        "label": "Vergleichen"
+      },
+      {
+        "key": "bewerten",
+        "label": "Bewerten"
+      },
+      {
+        "key": "strukturieren",
+        "label": "Strukturieren"
+      },
+      {
+        "key": "klassifizieren",
+        "label": "Klassifizieren"
+      },
+      {
+        "key": "extrahieren",
+        "label": "Extrahieren"
+      },
+      {
+        "key": "pruefen",
+        "label": "Pruefen"
+      },
+      {
+        "key": "entwerfen",
+        "label": "Entwerfen"
+      },
+      {
+        "key": "umformulieren",
+        "label": "Umformulieren"
+      }
+    ],
+    "aufgabenstruktur": [
+      {
+        "key": "einzelschritt",
+        "label": "Einzelschritt"
+      },
+      {
+        "key": "mehrstufig",
+        "label": "Mehrstufig"
+      }
+    ],
+    "situationskontext": [
+      {
+        "key": "lernen",
+        "label": "Lernen"
+      },
+      {
+        "key": "abstimmen",
+        "label": "Abstimmen"
+      },
+      {
+        "key": "entscheiden",
+        "label": "Entscheiden"
+      },
+      {
+        "key": "extern_kommunizieren",
+        "label": "Extern kommunizieren"
+      },
+      {
+        "key": "strategie",
+        "label": "Strategie"
+      },
+      {
+        "key": "operativ_umsetzen",
+        "label": "Operativ umsetzen"
+      }
+    ],
+    "zielgruppe": [
+      {
+        "key": "ich_selbst",
+        "label": "Ich selbst"
+      },
+      {
+        "key": "team",
+        "label": "Team"
+      },
+      {
+        "key": "management",
+        "label": "Management"
+      },
+      {
+        "key": "kunden",
+        "label": "Kunden"
+      },
+      {
+        "key": "lernende",
+        "label": "Lernende"
+      },
+      {
+        "key": "oeffentlichkeit",
+        "label": "Oeffentlichkeit"
+      }
+    ],
+    "wissensniveau": [
+      {
+        "key": "anfaenger",
+        "label": "Anfaenger"
+      },
+      {
+        "key": "fortgeschritten",
+        "label": "Fortgeschritten"
+      },
+      {
+        "key": "experte",
+        "label": "Experte"
+      }
+    ],
+    "rahmenbedingung": [
+      {
+        "key": "zeitdruck",
+        "label": "Zeitdruck"
+      },
+      {
+        "key": "begrenzte_datenlage",
+        "label": "Begrenzte Datenlage"
+      },
+      {
+        "key": "sensible_kommunikation",
+        "label": "Sensible Kommunikation"
+      },
+      {
+        "key": "formeller_anlass",
+        "label": "Formeller Anlass"
+      }
+    ],
+    "prozesslogik": [
+      {
+        "key": "zuerst_analysieren_dann_bewerten",
+        "label": "Zuerst analysieren, dann bewerten"
+      },
+      {
+        "key": "erst_sammeln_dann_strukturieren",
+        "label": "Erst sammeln, dann strukturieren"
+      },
+      {
+        "key": "erst_kriterien_dann_vergleichen",
+        "label": "Erst Kriterien, dann vergleichen"
+      },
+      {
+        "key": "erst_optionen_dann_empfehlung",
+        "label": "Erst Optionen, dann Empfehlung"
+      },
+      {
+        "key": "erst_befunde_dann_interpretation_dann_empfehlung",
+        "label": "Erst Befunde, dann Interpretation, dann Empfehlung"
+      },
+      {
+        "key": "schrittweise_vorgehen",
+        "label": "Schrittweise vorgehen"
+      }
+    ],
+    "methodik": [
+      {
+        "key": "pro_contra",
+        "label": "Pro und Contra"
+      },
+      {
+        "key": "kriterienmatrix",
+        "label": "Kriterienmatrix"
+      },
+      {
+        "key": "priorisierungsmatrix",
+        "label": "Priorisierungsmatrix"
+      },
+      {
+        "key": "risiko_nutzen_abwaegung",
+        "label": "Risiko-Nutzen-Abwaegung"
+      },
+      {
+        "key": "befund_interpretation_empfehlung",
+        "label": "Befund-Interpretation-Empfehlung"
+      }
+    ],
+    "interaktionsmodus": [
+      {
+        "key": "einmalige_antwort",
+        "label": "Einmalige Antwort"
+      },
+      {
+        "key": "iteratives_verfeinern",
+        "label": "Iteratives Verfeinern"
+      },
+      {
+        "key": "rueckfragen_stellen",
+        "label": "Rueckfragen stellen"
+      },
+      {
+        "key": "varianten_entwickeln",
+        "label": "Varianten entwickeln"
+      }
+    ],
+    "steuerungsgrad": [
+      {
+        "key": "frei",
+        "label": "Frei"
+      },
+      {
+        "key": "eng_gefuehrt",
+        "label": "Eng gefuehrt"
+      },
+      {
+        "key": "mit_zwischenstaenden",
+        "label": "Mit Zwischenstaenden"
+      }
+    ],
+    "arbeitsmodus": [
+      {
+        "key": "analytisch",
+        "label": "Analytisch"
+      },
+      {
+        "key": "kreativ",
+        "label": "Kreativ"
+      },
+      {
+        "key": "strategisch",
+        "label": "Strategisch"
+      },
+      {
+        "key": "pragmatisch",
+        "label": "Pragmatisch"
+      }
+    ],
+    "format": [
+      {
+        "key": "tabelle",
+        "label": "Tabelle"
+      },
+      {
+        "key": "liste",
+        "label": "Liste"
+      },
+      {
+        "key": "fliesstext",
+        "label": "Fliesstext"
+      },
+      {
+        "key": "checkliste",
+        "label": "Checkliste"
+      },
+      {
+        "key": "gliederung",
+        "label": "Gliederung"
+      },
+      {
+        "key": "email",
+        "label": "E-Mail"
+      },
+      {
+        "key": "leitfaden",
+        "label": "Leitfaden"
+      },
+      {
+        "key": "fragenkatalog",
+        "label": "Fragenkatalog"
+      }
+    ],
+    "umfang": [
+      {
+        "key": "sehr_kurz",
+        "label": "Sehr kurz"
+      },
+      {
+        "key": "kurz",
+        "label": "Kurz"
+      },
+      {
+        "key": "mittel",
+        "label": "Mittel"
+      },
+      {
+        "key": "ausfuehrlich",
+        "label": "Ausfuehrlich"
+      }
+    ],
+    "ergebnisfokus": [
+      {
+        "key": "nur_ergebnis",
+        "label": "Nur Ergebnis"
+      },
+      {
+        "key": "ergebnis_mit_begruendung",
+        "label": "Ergebnis mit Begruendung"
+      },
+      {
+        "key": "ergebnis_mit_alternativen",
+        "label": "Ergebnis mit Alternativen"
+      },
+      {
+        "key": "ergebnis_mit_naechsten_schritten",
+        "label": "Ergebnis mit naechsten Schritten"
+      }
+    ],
+    "tonalitaet": [
+      {
+        "key": "klar",
+        "label": "Klar"
+      },
+      {
+        "key": "praezise",
+        "label": "Praezise"
+      },
+      {
+        "key": "einfach",
+        "label": "Einfach"
+      },
+      {
+        "key": "professionell",
+        "label": "Professionell"
+      },
+      {
+        "key": "sachlich",
+        "label": "Sachlich"
+      },
+      {
+        "key": "alltagstauglich",
+        "label": "Alltagstauglich"
+      }
+    ],
+    "direktheit": [
+      {
+        "key": "direkt",
+        "label": "Direkt"
+      },
+      {
+        "key": "zurueckhaltend",
+        "label": "Zurueckhaltend"
+      }
+    ],
+    "rollenstimme": [
+      {
+        "key": "neutraler_analyst",
+        "label": "Neutraler Analyst"
+      },
+      {
+        "key": "kritischer_analyst",
+        "label": "Kritischer Analyst"
+      },
+      {
+        "key": "kritischer_sparringspartner",
+        "label": "Kritischer Sparringspartner"
+      },
+      {
+        "key": "didaktischer_erklaerer",
+        "label": "Didaktischer Erklaerer"
+      },
+      {
+        "key": "sprachlicher_optimierer",
+        "label": "Sprachlicher Optimierer"
+      },
+      {
+        "key": "strategischer_berater",
+        "label": "Strategischer Berater"
+      }
+    ],
+    "qualitaetsfokus": [
+      {
+        "key": "vollstaendig",
+        "label": "Vollstaendig"
+      },
+      {
+        "key": "relevant",
+        "label": "Relevant"
+      },
+      {
+        "key": "differenziert",
+        "label": "Differenziert"
+      },
+      {
+        "key": "ausgewogen",
+        "label": "Ausgewogen"
+      },
+      {
+        "key": "praxisnah",
+        "label": "Praxisnah"
+      }
+    ],
+    "priorisierung": [
+      {
+        "key": "kuerze_vor_tiefe",
+        "label": "Kuerze vor Tiefe"
+      },
+      {
+        "key": "tiefe_vor_kuerze",
+        "label": "Tiefe vor Kuerze"
+      },
+      {
+        "key": "klarheit_vor_vollstaendigkeit",
+        "label": "Klarheit vor Vollstaendigkeit"
+      },
+      {
+        "key": "praktikabilitaet_vor_theorie",
+        "label": "Praktikabilitaet vor Theorie"
+      }
+    ],
+    "tiefengrad": [
+      {
+        "key": "ueberblick",
+        "label": "Ueberblick"
+      },
+      {
+        "key": "mittel",
+        "label": "Mittel"
+      },
+      {
+        "key": "tiefenanalyse",
+        "label": "Tiefenanalyse"
+      }
+    ],
+    "evidenzregel": [
+      {
+        "key": "offen",
+        "label": "Offen"
+      },
+      {
+        "key": "keine_spekulation",
+        "label": "Keine Spekulation"
+      },
+      {
+        "key": "nur_belegte_aussagen",
+        "label": "Nur belegte Aussagen"
+      },
+      {
+        "key": "unsicherheiten_offen_markieren",
+        "label": "Unsicherheiten offen markieren"
+      },
+      {
+        "key": "strikt_belegt",
+        "label": "Strikt belegt"
+      }
+    ],
+    "tabellenregel": [
+      {
+        "key": "tabellen_erlaubt",
+        "label": "Tabellen erlaubt"
+      },
+      {
+        "key": "keine_tabellen",
+        "label": "Keine Tabellen"
+      }
+    ],
+    "listenregel": [
+      {
+        "key": "listen_erlaubt",
+        "label": "Listen erlaubt"
+      },
+      {
+        "key": "keine_listen",
+        "label": "Keine Listen"
+      }
+    ],
+    "beispielregel": [
+      {
+        "key": "beispiele_erlaubt",
+        "label": "Beispiele erlaubt"
+      },
+      {
+        "key": "keine_beispiele",
+        "label": "Keine Beispiele"
+      }
+    ],
+    "metaregel": [
+      {
+        "key": "meta_erlaubt",
+        "label": "Meta erlaubt"
+      },
+      {
+        "key": "keine_meta_erklaerungen",
+        "label": "Keine Meta-Erklaerungen"
+      }
+    ],
+    "redundanzregel": [
+      {
+        "key": "wiederholungen_erlaubt",
+        "label": "Wiederholungen erlaubt"
+      },
+      {
+        "key": "keine_wiederholungen",
+        "label": "Keine Wiederholungen"
+      }
+    ]
+  },
+  "templates": [
+    {
+      "id": "default_v1",
+      "label": "Standard",
+      "description": "Allgemeine Live-Prompt-Vorlage fuer den Alltagsgenerator.",
+      "slots_used": [
+        "ZIEL_TYP",
+        "AUFGABENTYP",
+        "SITUATIONSKONTEXT",
+        "ZIELGRUPPE",
+        "FORMAT",
+        "QUALITAETSFOKUS"
+      ],
+      "text": "Ich moechte [ZIEL_TYP] fuer [ZIELGRUPPE]. Bitte [AUFGABENTYP] im Kontext [SITUATIONSKONTEXT] und liefere das Ergebnis als [FORMAT]. Achte besonders auf [QUALITAETSFOKUS]."
+    },
+    {
+      "id": "analysis_v1",
+      "label": "Analyse",
+      "description": "Template fuer Analyse-, Bewertungs- und Strategieaufgaben.",
+      "slots_used": [
+        "ZIEL_TYP",
+        "AUFGABENTYP",
+        "SITUATIONSKONTEXT",
+        "PROZESSLOGIK",
+        "FORMAT",
+        "TIEFENGRAD",
+        "QUALITAETSFOKUS",
+        "EVIDENZREGEL"
+      ],
+      "text": "Ich moechte [ZIEL_TYP]. Bitte [AUFGABENTYP] im Kontext [SITUATIONSKONTEXT], gehe nach [PROZESSLOGIK] vor und liefere das Ergebnis als [FORMAT]. Arbeite in [TIEFENGRAD] und achte besonders auf [QUALITAETSFOKUS]. Beachte [EVIDENZREGEL]."
+    },
+    {
+      "id": "decision_v1",
+      "label": "Entscheidung",
+      "description": "Template fuer Priorisierung und Entscheidungsvorbereitung.",
+      "slots_used": [
+        "ZIEL_TYP",
+        "AUFGABENTYP",
+        "ZIELGRUPPE",
+        "METHODIK",
+        "FORMAT",
+        "ERGEBNISFOKUS",
+        "PRIORISIERUNG"
+      ],
+      "text": "Ich moechte [ZIEL_TYP] fuer [ZIELGRUPPE]. Bitte [AUFGABENTYP], wende [METHODIK] an und liefere das Ergebnis als [FORMAT]. Gib [ERGEBNISFOKUS] aus und priorisiere [PRIORISIERUNG]."
+    },
+    {
+      "id": "rewrite_v1",
+      "label": "Umformulieren",
+      "description": "Template fuer sprachliche Ueberarbeitung.",
+      "slots_used": [
+        "ZIEL_TYP",
+        "AUFGABENTYP",
+        "SITUATIONSKONTEXT",
+        "TONALITAET",
+        "DIREKTHEIT",
+        "ROLLENSTIMME",
+        "FORMAT"
+      ],
+      "text": "Ich moechte [ZIEL_TYP]. Bitte [AUFGABENTYP] im Kontext [SITUATIONSKONTEXT], formuliere [TONALITAET] und [DIREKTHEIT]. Nutze die Rollenstimme [ROLLENSTIMME] und gib das Ergebnis als [FORMAT] aus."
+    },
+    {
+      "id": "implementation_v1",
+      "label": "Umsetzung",
+      "description": "Template fuer operative Ableitungen und anschlussfaehige naechste Schritte.",
+      "slots_used": [
+        "ZIEL_TYP",
+        "ZIEL_REIFE",
+        "SITUATIONSKONTEXT",
+        "PROZESSLOGIK",
+        "INTERAKTIONSMODUS",
+        "STEUERUNGSGRAD",
+        "FORMAT",
+        "ERGEBNISFOKUS",
+        "PRIORISIERUNG"
+      ],
+      "text": "Ich moechte [ZIEL_TYP]. Bitte arbeite im Kontext [SITUATIONSKONTEXT], gehe nach [PROZESSLOGIK] vor, nutze [INTERAKTIONSMODUS] und arbeite [STEUERUNGSGRAD]. Mache das Ergebnis [ZIEL_REIFE], liefere es als [FORMAT] und gib [ERGEBNISFOKUS] aus. Priorisiere [PRIORISIERUNG]."
+    }
+  ],
+  "generator": {
+    "default_template_id": "default_v1",
+    "slot_sequence": [
+      "ZIEL_TYP",
+      "ZIEL_REIFE",
+      "AUFGABENTYP",
+      "AUFGABENSTRUKTUR",
+      "SITUATIONSKONTEXT",
+      "ZIELGRUPPE",
+      "WISSENSNIVEAU",
+      "RAHMENBEDINGUNG",
+      "PROZESSLOGIK",
+      "METHODIK",
+      "INTERAKTIONSMODUS",
+      "STEUERUNGSGRAD",
+      "ARBEITSMODUS",
+      "FORMAT",
+      "UMFANG",
+      "ERGEBNISFOKUS",
+      "TONALITAET",
+      "DIREKTHEIT",
+      "ROLLENSTIMME",
+      "QUALITAETSFOKUS",
+      "PRIORISIERUNG",
+      "TIEFENGRAD",
+      "EVIDENZREGEL",
+      "TABELLENREGEL",
+      "LISTENREGEL",
+      "BEISPIELREGEL",
+      "METAREGEL",
+      "REDUNDANZREGEL"
+    ],
+    "required_slots": [
+      "ZIEL_TYP",
+      "AUFGABENTYP",
+      "SITUATIONSKONTEXT",
+      "ZIELGRUPPE",
+      "FORMAT",
+      "QUALITAETSFOKUS"
+    ],
+    "modes": [
+      "standard",
+      "expert"
+    ],
+    "copy_behavior": "copy_rendered_prompt",
+    "empty_value_behavior": "omit_optional_slots"
+  },
+  "workflows": [
+    {
+      "id": "workflow_01",
+      "label": "Entscheidungsgrundlage für Teamentscheidung",
+      "template_id": "decision_v1",
+      "values": {
+        "ZIEL_TYP": "entscheiden",
+        "ZIEL_REIFE": "entscheidungsreif",
+        "AUFGABENTYP": "vergleichen",
+        "AUFGABENSTRUKTUR": "einzelschritt",
+        "SITUATIONSKONTEXT": "entscheiden",
+        "ZIELGRUPPE": "team",
+        "WISSENSNIVEAU": "fortgeschritten",
+        "RAHMENBEDINGUNG": "zeitdruck",
+        "PROZESSLOGIK": "erst_kriterien_dann_vergleichen",
+        "INTERAKTIONSMODUS": "einmalige_antwort",
+        "STEUERUNGSGRAD": "eng_gefuehrt",
+        "ARBEITSMODUS": "strategisch",
+        "FORMAT": "tabelle",
+        "UMFANG": "kurz",
+        "ERGEBNISFOKUS": "ergebnis_mit_begruendung",
+        "TONALITAET": "klar",
+        "DIREKTHEIT": "direkt",
+        "ROLLENSTIMME": "strategischer_berater",
+        "QUALITAETSFOKUS": "praxisnah",
+        "PRIORISIERUNG": "praktikabilitaet_vor_theorie",
+        "TIEFENGRAD": "mittel",
+        "EVIDENZREGEL": "keine_spekulation",
+        "TABELLENREGEL": "tabellen_erlaubt",
+        "LISTENREGEL": "listen_erlaubt",
+        "BEISPIELREGEL": "beispiele_erlaubt",
+        "METAREGEL": "meta_erlaubt",
+        "REDUNDANZREGEL": "wiederholungen_erlaubt"
+      }
+    },
+    {
+      "id": "workflow_02",
+      "label": "Text verständlicher umformulieren",
+      "template_id": "rewrite_v1",
+      "values": {
+        "ZIEL_TYP": "verstehen",
+        "ZIEL_REIFE": "umsetzungsreif",
+        "AUFGABENTYP": "umformulieren",
+        "AUFGABENSTRUKTUR": "mehrstufig",
+        "SITUATIONSKONTEXT": "extern_kommunizieren",
+        "ZIELGRUPPE": "kunden",
+        "WISSENSNIVEAU": "anfaenger",
+        "RAHMENBEDINGUNG": "sensible_kommunikation",
+        "PROZESSLOGIK": "schrittweise_vorgehen",
+        "INTERAKTIONSMODUS": "iteratives_verfeinern",
+        "STEUERUNGSGRAD": "mit_zwischenstaenden",
+        "ARBEITSMODUS": "pragmatisch",
+        "FORMAT": "fliesstext",
+        "UMFANG": "kurz",
+        "ERGEBNISFOKUS": "nur_ergebnis",
+        "TONALITAET": "einfach",
+        "ROLLENSTIMME": "sprachlicher_optimierer",
+        "QUALITAETSFOKUS": "relevant",
+        "PRIORISIERUNG": "klarheit_vor_vollstaendigkeit",
+        "TIEFENGRAD": "ueberblick",
+        "EVIDENZREGEL": "offen",
+        "TABELLENREGEL": "tabellen_erlaubt",
+        "LISTENREGEL": "listen_erlaubt",
+        "BEISPIELREGEL": "beispiele_erlaubt",
+        "METAREGEL": "keine_meta_erklaerungen",
+        "REDUNDANZREGEL": "keine_wiederholungen"
+      }
+    },
+    {
+      "id": "workflow_03",
+      "label": "Operativer Umsetzungsplan als Checkliste",
+      "template_id": "implementation_v1",
+      "values": {
+        "ZIEL_TYP": "umsetzen",
+        "ZIEL_REIFE": "umsetzungsreif",
+        "AUFGABENTYP": "strukturieren",
+        "AUFGABENSTRUKTUR": "mehrstufig",
+        "SITUATIONSKONTEXT": "operativ_umsetzen",
+        "ZIELGRUPPE": "ich_selbst",
+        "WISSENSNIVEAU": "fortgeschritten",
+        "RAHMENBEDINGUNG": "zeitdruck",
+        "PROZESSLOGIK": "schrittweise_vorgehen",
+        "INTERAKTIONSMODUS": "iteratives_verfeinern",
+        "STEUERUNGSGRAD": "mit_zwischenstaenden",
+        "ARBEITSMODUS": "pragmatisch",
+        "FORMAT": "checkliste",
+        "UMFANG": "kurz",
+        "ERGEBNISFOKUS": "ergebnis_mit_naechsten_schritten",
+        "TONALITAET": "klar",
+        "DIREKTHEIT": "direkt",
+        "ROLLENSTIMME": "neutraler_analyst",
+        "QUALITAETSFOKUS": "praxisnah",
+        "PRIORISIERUNG": "praktikabilitaet_vor_theorie",
+        "TIEFENGRAD": "ueberblick",
+        "EVIDENZREGEL": "offen",
+        "TABELLENREGEL": "tabellen_erlaubt",
+        "LISTENREGEL": "listen_erlaubt",
+        "BEISPIELREGEL": "beispiele_erlaubt",
+        "METAREGEL": "meta_erlaubt",
+        "REDUNDANZREGEL": "keine_wiederholungen"
+      }
+    },
+    {
+      "id": "workflow_04",
+      "label": "Belastbare Tiefenanalyse für Strategiefrage",
+      "template_id": "analysis_v1",
+      "values": {
+        "ZIEL_TYP": "verstehen",
+        "ZIEL_REIFE": "orientierend",
+        "AUFGABENTYP": "analysieren",
+        "AUFGABENSTRUKTUR": "mehrstufig",
+        "SITUATIONSKONTEXT": "strategie",
+        "ZIELGRUPPE": "ich_selbst",
+        "WISSENSNIVEAU": "experte",
+        "RAHMENBEDINGUNG": "begrenzte_datenlage",
+        "PROZESSLOGIK": "erst_befunde_dann_interpretation_dann_empfehlung",
+        "INTERAKTIONSMODUS": "iteratives_verfeinern",
+        "STEUERUNGSGRAD": "eng_gefuehrt",
+        "ARBEITSMODUS": "analytisch",
+        "FORMAT": "gliederung",
+        "UMFANG": "ausfuehrlich",
+        "ERGEBNISFOKUS": "ergebnis_mit_begruendung",
+        "TONALITAET": "praezise",
+        "DIREKTHEIT": "direkt",
+        "ROLLENSTIMME": "kritischer_analyst",
+        "QUALITAETSFOKUS": "differenziert",
+        "PRIORISIERUNG": "tiefe_vor_kuerze",
+        "TIEFENGRAD": "tiefenanalyse",
+        "EVIDENZREGEL": "strikt_belegt",
+        "TABELLENREGEL": "tabellen_erlaubt",
+        "LISTENREGEL": "listen_erlaubt",
+        "BEISPIELREGEL": "beispiele_erlaubt",
+        "METAREGEL": "keine_meta_erklaerungen",
+        "REDUNDANZREGEL": "wiederholungen_erlaubt"
+      }
+    },
+    {
+      "id": "workflow_05",
+      "label": "Prüfleitfaden für Review eines Entwurfs",
+      "template_id": "analysis_v1",
+      "values": {
+        "ZIEL_TYP": "verbessern",
+        "ZIEL_REIFE": "entscheidungsreif",
+        "AUFGABENTYP": "pruefen",
+        "AUFGABENSTRUKTUR": "mehrstufig",
+        "SITUATIONSKONTEXT": "abstimmen",
+        "ZIELGRUPPE": "team",
+        "WISSENSNIVEAU": "fortgeschritten",
+        "RAHMENBEDINGUNG": "formeller_anlass",
+        "PROZESSLOGIK": "erst_befunde_dann_interpretation_dann_empfehlung",
+        "INTERAKTIONSMODUS": "iteratives_verfeinern",
+        "STEUERUNGSGRAD": "mit_zwischenstaenden",
+        "ARBEITSMODUS": "analytisch",
+        "FORMAT": "leitfaden",
+        "UMFANG": "mittel",
+        "ERGEBNISFOKUS": "ergebnis_mit_begruendung",
+        "TONALITAET": "klar",
+        "DIREKTHEIT": "direkt",
+        "ROLLENSTIMME": "kritischer_analyst",
+        "QUALITAETSFOKUS": "differenziert",
+        "PRIORISIERUNG": "klarheit_vor_vollstaendigkeit",
+        "TIEFENGRAD": "mittel",
+        "EVIDENZREGEL": "strikt_belegt",
+        "TABELLENREGEL": "tabellen_erlaubt",
+        "LISTENREGEL": "listen_erlaubt",
+        "BEISPIELREGEL": "beispiele_erlaubt",
+        "METAREGEL": "meta_erlaubt",
+        "REDUNDANZREGEL": "keine_wiederholungen"
+      }
+    },
+    {
+      "id": "workflow_06",
+      "label": "Kerninformationen aus Material extrahieren",
+      "template_id": "default_v1",
+      "values": {
+        "ZIEL_TYP": "orientieren",
+        "ZIEL_REIFE": "orientierend",
+        "AUFGABENTYP": "extrahieren",
+        "AUFGABENSTRUKTUR": "einzelschritt",
+        "SITUATIONSKONTEXT": "abstimmen",
+        "ZIELGRUPPE": "team",
+        "WISSENSNIVEAU": "fortgeschritten",
+        "RAHMENBEDINGUNG": "zeitdruck",
+        "PROZESSLOGIK": "erst_sammeln_dann_strukturieren",
+        "INTERAKTIONSMODUS": "einmalige_antwort",
+        "STEUERUNGSGRAD": "eng_gefuehrt",
+        "ARBEITSMODUS": "pragmatisch",
+        "FORMAT": "tabelle",
+        "UMFANG": "kurz",
+        "ERGEBNISFOKUS": "ergebnis_mit_begruendung",
+        "TONALITAET": "klar",
+        "DIREKTHEIT": "direkt",
+        "ROLLENSTIMME": "neutraler_analyst",
+        "QUALITAETSFOKUS": "relevant",
+        "PRIORISIERUNG": "kuerze_vor_tiefe",
+        "TIEFENGRAD": "ueberblick",
+        "EVIDENZREGEL": "nur_belegte_aussagen",
+        "TABELLENREGEL": "tabellen_erlaubt",
+        "LISTENREGEL": "listen_erlaubt",
+        "BEISPIELREGEL": "beispiele_erlaubt",
+        "METAREGEL": "keine_meta_erklaerungen",
+        "REDUNDANZREGEL": "wiederholungen_erlaubt"
+      }
+    },
+    {
+      "id": "workflow_07",
+      "label": "Lernleitfaden mit Zwischenständen für Einsteiger",
+      "template_id": "default_v1",
+      "values": {
+        "ZIEL_TYP": "verstehen",
+        "ZIEL_REIFE": "orientierend",
+        "AUFGABENTYP": "erklaeren",
+        "AUFGABENSTRUKTUR": "mehrstufig",
+        "SITUATIONSKONTEXT": "lernen",
+        "ZIELGRUPPE": "lernende",
+        "WISSENSNIVEAU": "anfaenger",
+        "RAHMENBEDINGUNG": "begrenzte_datenlage",
+        "PROZESSLOGIK": "schrittweise_vorgehen",
+        "INTERAKTIONSMODUS": "iteratives_verfeinern",
+        "STEUERUNGSGRAD": "mit_zwischenstaenden",
+        "ARBEITSMODUS": "pragmatisch",
+        "FORMAT": "leitfaden",
+        "UMFANG": "mittel",
+        "ERGEBNISFOKUS": "ergebnis_mit_naechsten_schritten",
+        "TONALITAET": "einfach",
+        "DIREKTHEIT": "direkt",
+        "ROLLENSTIMME": "didaktischer_erklaerer",
+        "QUALITAETSFOKUS": "praxisnah",
+        "PRIORISIERUNG": "klarheit_vor_vollstaendigkeit",
+        "TIEFENGRAD": "ueberblick",
+        "EVIDENZREGEL": "keine_spekulation",
+        "TABELLENREGEL": "tabellen_erlaubt",
+        "LISTENREGEL": "listen_erlaubt",
+        "BEISPIELREGEL": "beispiele_erlaubt",
+        "METAREGEL": "keine_meta_erklaerungen",
+        "REDUNDANZREGEL": "wiederholungen_erlaubt"
+      }
+    }
+  ],
+  "heuristics": {
+    "enabled": false,
+    "description": "Optionaler Zusatzlayer fuer Empfehlungen, Score und Plausibilisierung. Kein Teil des taxonomischen Kerns.",
+    "recommendations": [],
+    "constraints": [],
+    "meta": {}
+  }
+}

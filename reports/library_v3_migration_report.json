@@ -1,0 +1,9 @@
+{
+  "source_version": "2.8.1",
+  "target_version": "3.0.0-migrated",
+  "migrated_example_instances": 7,
+  "generated_workflows": 7,
+  "slot_count_target": 28,
+  "warning_count": 0,
+  "warnings": []
+}
