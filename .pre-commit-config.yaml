@@ -1,44 +1,16 @@
 repos:
   - repo: local
     hooks:
-      - id: json-schema-validate-v2
-        name: JSON Schema Validate V2
-        entry: ajv validate -s schema/prompt-library.schema.json -d data/library.json
+      - id: json-schema-validate
+        name: JSON Schema Validate
+        entry: ajv validate -s schema/library.schema.json -d data/library.json
         language: system
         pass_filenames: false
-        files: ^(data/library\.json|schema/prompt-library\.schema\.json)$
+        files: ^(data/library\.json|schema/library\.schema\.json)$
 
-      - id: validate-library-integrity-v2
-        name: Validate Library Integrity V2
+      - id: validate-library-integrity
+        name: Validate Library Integrity
         entry: python scripts/validate_integrity.py
         language: system
         pass_filenames: false
-        files: ^(data/library\.json|schema/prompt-library\.schema\.json|scripts/validate_integrity\.py)$
-
-      - id: build-vscode-snippets-v2
-        name: Build VS Code Snippets V2
-        entry: python scripts/build_vscode_snippets.py
-        language: system
-        pass_filenames: false
-        files: ^(data/library\.json|scripts/build_vscode_snippets\.py)$
-
-      - id: json-schema-validate-v3
-        name: JSON Schema Validate V3
-        entry: ajv validate -s schema/library_v3_target.schema.json -d data/library_v3_target.json
-        language: system
-        pass_filenames: false
-        files: ^(data/library_v3_target\.json|schema/library_v3_target\.schema\.json)$
-
-      - id: validate-library-integrity-v3
-        name: Validate Library Integrity V3
-        entry: python scripts/validate_integrity_v3.py --input data/library_v3_target.json
-        language: system
-        pass_filenames: false
-        files: ^(data/library_v3_target\.json|schema/library_v3_target\.schema\.json|scripts/validate_integrity_v3\.py)$
-
-      - id: validate-library-integrity-v3-migrated
-        name: Validate Library Integrity V3 Migrated
-        entry: python scripts/validate_integrity_v3.py --input data/library_v3_migrated.json
-        language: system
-        pass_filenames: false
-        files: ^(data/library_v3_migrated\.json|schema/library_v3_target\.schema\.json|scripts/validate_integrity_v3\.py)$
+        files: ^(data/library\.json|schema/library\.schema\.json|scripts/validate_integrity\.py)$
