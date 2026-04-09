@@ -3,24 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prompt-Bibliothek UI</title>
+  <title>Prompt-Bibliothek V3 UI</title>
   <style>
-    :root {
-      --bg: #0b1020;
-      --panel: #121933;
-      --panel-2: #182246;
-      --text: #e9eefc;
-      --muted: #a8b3d1;
-      --muted-2: #8f9bc0;
-      --accent: #7aa2ff;
-      --accent-2: #9b8cff;
-      --border: #2c3968;
-      --border-soft: rgba(255,255,255,.07);
-      --danger: #ff7b7b;
-      --warn: #ffcf70;
-      --ok: #7fe3a1;
-      --shadow: 0 12px 32px rgba(0,0,0,.28);
-      --radius: 18px;
+    :root{
+      --bg:#0b1020;
+      --panel:#121933;
+      --panel-2:#182246;
+      --text:#e9eefc;
+      --muted:#a8b3d1;
+      --accent:#7aa2ff;
+      --accent-2:#9b8cff;
+      --border:#2c3968;
+      --ok:#7fe3a1;
+      --warn:#ffcf70;
+      --danger:#ff7b7b;
+      --radius:18px;
+      --shadow:0 12px 32px rgba(0,0,0,.28);
     }
     *{box-sizing:border-box}
     body{
@@ -34,286 +32,277 @@
       min-height:100vh;
     }
     code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-    .container{width:min(1440px,calc(100% - 32px)); margin:24px auto 40px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); backdrop-filter:blur(8px)}
-    .hero{display:grid; grid-template-columns:1.35fr .95fr; gap:16px; margin-bottom:16px}
-    .hero-main,.hero-side,.start-card,.main-card,.side-card{padding:18px}
+    .container{width:min(1480px,calc(100% - 32px)); margin:24px auto 40px}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .hero{display:grid; grid-template-columns:1.2fr .8fr; gap:16px; margin-bottom:16px}
+    .layout{display:grid; grid-template-columns:1.05fr .95fr; gap:16px; align-items:start}
     h1,h2,h3,h4{margin:0 0 10px; line-height:1.15}
-    h1{font-size:clamp(1.9rem,3vw,2.8rem); letter-spacing:-.02em; margin-bottom:8px}
-    h2{font-size:1.16rem} h3{font-size:1rem} h4{font-size:.96rem}
+    h1{font-size:clamp(1.9rem,3vw,2.8rem); letter-spacing:-.02em}
+    h2{font-size:1.18rem}
+    h3{font-size:1rem}
     p{margin:0 0 10px; color:var(--muted); line-height:1.5}
-    .hero-pills,.button-row,.inline-actions,.compact-badges,.suggestion-actions{display:flex; gap:10px; flex-wrap:wrap}
-    .pill,.badge{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--border); background:rgba(255,255,255,.03); color:var(--text); padding:8px 12px; border-radius:999px; font-size:.88rem}
-    .pill.subtle,.badge.subtle{color:var(--muted); background:rgba(255,255,255,.02)}
-    .pill.accent,.badge.accent{border-color:rgba(122,162,255,.38); background:rgba(122,162,255,.12); color:#dce8ff}
+    .pills,.row,.inline,.badges{display:flex; gap:10px; flex-wrap:wrap}
+    .pill,.badge{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:.88rem;
+    }
+    .badge.accent,.pill.accent{border-color:rgba(122,162,255,.38); background:rgba(122,162,255,.12)}
     .badge.soft{border-color:rgba(127,227,161,.26); background:rgba(127,227,161,.09); color:#d6ffe3}
     .badge.warn{border-color:rgba(255,207,112,.26); background:rgba(255,207,112,.09); color:#ffe9b6}
     .badge.error{border-color:rgba(255,123,123,.26); background:rgba(255,123,123,.09); color:#ffd7d7}
-    .status-stack,.notice-stack,.field-hints,.field-grid,.metric-grid,.suggestion-list,.compact-list,.stack{display:grid; gap:10px}
-    .notice{border-radius:12px; padding:11px 12px; border:1px solid transparent; font-size:.92rem; line-height:1.45}
-    .notice.error{color:#ffd7d7; border-color:rgba(255,123,123,.3); background:rgba(255,123,123,.08)}
-    .notice.warning{color:#ffe9b6; border-color:rgba(255,207,112,.3); background:rgba(255,207,112,.08)}
-    .notice.success{color:#d6ffe3; border-color:rgba(127,227,161,.3); background:rgba(127,227,161,.08)}
-    .notice.info{color:#dce8ff; border-color:rgba(122,162,255,.3); background:rgba(122,162,255,.08)}
-    .layout{display:grid; grid-template-columns:1.15fr .85fr; gap:16px; align-items:start}
-    .section-header{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px}
-    .section-header p,.section-description{margin:0; color:var(--muted); font-size:.93rem}
-    .start-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    .start-panel{border:1px solid var(--border-soft); border-radius:16px; background:rgba(255,255,255,.025); padding:14px; display:grid; gap:12px}
-    .sub-toolbar{margin-top:10px; padding-top:12px; border-top:1px solid var(--border-soft); display:grid; gap:12px}
-    .toolbar-row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    .stack,.grid,.field-grid,.notice-stack{display:grid; gap:12px}
+    .grid.two{grid-template-columns:1fr 1fr}
+    .grid.auto{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .toolbar{display:grid; gap:12px; margin-bottom:16px}
     .field{display:grid; gap:6px; min-width:0}
     .field label{font-size:.88rem; color:var(--muted)}
-    select,input[type="text"],textarea,button{font:inherit}
-    select,input[type="text"],textarea{width:100%; padding:11px 12px; border-radius:12px; border:1px solid var(--border); background:var(--panel-2); color:var(--text); outline:none; transition:border-color .15s ease, box-shadow .15s ease}
-    select:focus,input[type="text"]:focus,textarea:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(122,162,255,.12)}
-    button{border:1px solid var(--border); background:linear-gradient(180deg, rgba(122,162,255,.18), rgba(122,162,255,.08)); color:var(--text); border-radius:12px; padding:10px 13px; cursor:pointer; font-weight:600}
-    button:hover{border-color:var(--accent)}
+    select,input[type="text"],textarea,button{
+      font:inherit;
+    }
+    select,input[type="text"],textarea{
+      width:100%;
+      padding:11px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:var(--panel-2);
+      color:var(--text);
+      outline:none;
+    }
+    select:focus,input[type="text"]:focus,textarea:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(122,162,255,.12);
+    }
+    button{
+      border:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(122,162,255,.18), rgba(122,162,255,.08));
+      color:var(--text);
+      border-radius:12px;
+      padding:10px 13px;
+      cursor:pointer;
+      font-weight:600;
+    }
     button.secondary{background:rgba(255,255,255,.03)}
-    .progress-row{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px}
-    .progress-bar{width:100%; height:10px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden}
-    .progress-fill,.metric-fill{height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); width:0%; transition:width .18s ease}
-    .field-card{border:1px solid var(--border-soft); background:rgba(255,255,255,.02); border-radius:16px; padding:14px; display:grid; gap:10px}
-    .field-card.required{border-color:rgba(255,207,112,.28); background:rgba(255,207,112,.05)}
-    .field-card.recommended{border-color:rgba(122,162,255,.28); background:rgba(122,162,255,.05)}
-    .field-card.conflict{border-color:rgba(255,123,123,.35); background:rgba(255,123,123,.06)}
+    button:hover{border-color:var(--accent)}
+    .section-header{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px}
+    .section-header p{margin:0; font-size:.93rem}
+    .notice{
+      border-radius:12px; padding:11px 12px; border:1px solid transparent;
+      font-size:.92rem; line-height:1.45;
+    }
+    .notice.info{color:#dce8ff; border-color:rgba(122,162,255,.3); background:rgba(122,162,255,.08)}
+    .notice.success{color:#d6ffe3; border-color:rgba(127,227,161,.3); background:rgba(127,227,161,.08)}
+    .notice.warning{color:#ffe9b6; border-color:rgba(255,207,112,.3); background:rgba(255,207,112,.08)}
+    .notice.error{color:#ffd7d7; border-color:rgba(255,123,123,.3); background:rgba(255,123,123,.08)}
+    .field-card{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.02);
+      border-radius:16px;
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+    .field-card.required{border-color:rgba(255,207,112,.3); background:rgba(255,207,112,.05)}
     .field-card.complete{border-color:rgba(127,227,161,.25)}
-    .field-card.field-focus{border-color:rgba(122,162,255,.55); box-shadow:0 0 0 3px rgba(122,162,255,.14)}
+    .field-card.focus{border-color:rgba(122,162,255,.55); box-shadow:0 0 0 3px rgba(122,162,255,.14)}
     .field-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
-    .field-meta{display:grid; gap:4px; min-width:0}
-    .field-slot{font-size:.82rem; color:var(--muted-2); word-break:break-word}
-    .field-help{font-size:.86rem; color:var(--muted); line-height:1.45}
-    .checkbox-grid{display:grid; gap:8px; max-height:240px; overflow:auto; padding-right:4px}
-    .checkbox-item{display:flex; align-items:flex-start; gap:10px; padding:8px 10px; border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.02); border-radius:12px}
-    .checkbox-item input{margin-top:3px}
-    .checkbox-content{display:grid; gap:2px}
-    .checkbox-content span{color:var(--text); font-size:.93rem}
-    .checkbox-content small{color:var(--muted); line-height:1.35}
-    details.disclosure{border:1px solid var(--border-soft); border-radius:16px; background:rgba(255,255,255,.02); overflow:hidden}
-    details.disclosure>summary{list-style:none; cursor:pointer; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px; user-select:none}
+    .field-slot{font-size:.82rem; color:#8f9bc0; word-break:break-word}
+    .field-help,.subtle{font-size:.88rem; color:var(--muted); line-height:1.45}
+    .mode-toggle{
+      display:inline-flex; border:1px solid var(--border); border-radius:12px; overflow:hidden;
+    }
+    .mode-toggle button{
+      border:none; border-right:1px solid var(--border); border-radius:0; background:transparent;
+      padding:10px 12px;
+    }
+    .mode-toggle button:last-child{border-right:none}
+    .mode-toggle button.active{background:rgba(122,162,255,.12)}
+    .progress-wrap{display:grid; gap:8px}
+    .progress-bar{
+      width:100%; height:10px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden;
+    }
+    .progress-fill{
+      height:100%; width:0%; border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      transition:width .18s ease;
+    }
+    .metric-grid{display:grid; gap:10px}
+    .metric-item{
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:14px;
+      background:rgba(255,255,255,.02);
+      padding:12px;
+      display:grid; gap:8px;
+    }
+    .metric-head{display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .metric-bar{width:100%; height:8px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden}
+    .metric-fill{height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+    .summary-list,.suggestion-list,.status-list{display:grid; gap:10px}
+    .summary-item,.suggestion-item{
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:14px;
+      background:rgba(255,255,255,.02);
+      padding:12px;
+      display:grid; gap:8px;
+    }
+    .summary-item strong,.suggestion-item strong{font-size:.95rem}
+    .output-panel pre{
+      margin:0; white-space:pre-wrap; word-break:break-word;
+      font-size:.92rem; line-height:1.45; color:var(--text);
+      background:rgba(255,255,255,.025); border:1px solid var(--border);
+      border-radius:14px; padding:14px; min-height:180px;
+    }
+    details.disclosure{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      background:rgba(255,255,255,.02);
+      overflow:hidden;
+    }
+    details.disclosure>summary{
+      list-style:none; cursor:pointer; padding:14px 16px;
+      display:flex; justify-content:space-between; align-items:center; gap:12px; user-select:none;
+    }
     details.disclosure>summary::-webkit-details-marker{display:none}
     .disclosure-body{padding:0 16px 16px; border-top:1px solid rgba(255,255,255,.06); display:grid; gap:12px}
-    .summary-columns{display:grid; gap:10px}
-    .summary-item,.metric-item,.suggestion-item,.compact-item,.inline-editor{border:1px solid var(--border-soft); border-radius:14px; background:rgba(255,255,255,.02); padding:12px; display:grid; gap:8px}
-    .metric-head,.suggestion-head,.compact-head{display:flex; align-items:center; justify-content:space-between; gap:10px}
-    .metric-bar{width:100%; height:8px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden}
-    .summary-item strong{font-size:.92rem}
-    .summary-item span,.compact-meta,.metric-item small,.suggestion-item small,.subtle-text{color:var(--muted); font-size:.88rem; line-height:1.45}
-    .output-panel{display:grid; gap:12px}
-    .output-panel pre{margin:0; white-space:pre-wrap; word-break:break-word; font-size:.92rem; line-height:1.45; color:var(--text); background:rgba(255,255,255,.025); border:1px solid var(--border); border-radius:14px; padding:14px; min-height:170px}
-    .score-primary{position:sticky; top:16px}
-    .score-overview{display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center}
-    .score-big{font-size:clamp(2.2rem,4vw,3.4rem); line-height:1; font-weight:800; letter-spacing:-.04em}
-    .assessment-block{display:grid; gap:8px}
-    .suggestion-item.primary{border-color:rgba(122,162,255,.34); background:rgba(122,162,255,.06)}
-    .jump-btn{padding:8px 10px; border-radius:10px; border:1px solid rgba(122,162,255,.28); background:rgba(122,162,255,.08); color:var(--text); font-size:.86rem; font-weight:600; cursor:pointer}
-    .compact-item{padding:10px 12px}
-    .compact-main{display:grid; gap:3px; min-width:0}
-    .compact-main strong{font-size:.95rem}
-    .compact-value{font-size:.92rem}
-    .compact-mini{font-size:.83rem; color:var(--muted); line-height:1.35}
-    .inline-editor{padding:0; overflow:hidden}
-    .inline-editor .field-card{border:none; border-radius:0; background:transparent; box-shadow:none}
     .hidden{display:none !important}
-    .muted-panel{opacity:.72}
-    @media (max-width:1080px){.hero,.layout,.start-grid{grid-template-columns:1fr}.score-primary{position:static}}
-    @media (max-width:760px){.container{width:min(100% - 20px,1440px); margin-top:12px}.hero-main,.hero-side,.start-card,.main-card,.side-card{padding:14px}.toolbar-row{grid-template-columns:1fr}.field-head,.metric-head,.suggestion-head,.compact-head{flex-direction:column; align-items:flex-start}}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    @media (max-width:1100px){
+      .hero,.layout,.grid.two{grid-template-columns:1fr}
+    }
+    @media (max-width:760px){
+      .container{width:min(100% - 20px,1480px); margin-top:12px}
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <section class="hero">
-      <div class="hero-main card">
-        <h1>Prompt systematisch zusammenstellen</h1>
-        <p>Core-only-Version der Prompt-Bibliothek: Pflichtangaben zuerst, dann Empfehlungen, Verfeinerung und direkte Prompt-Vorschau. Kein Fallpfad, keine Sonderlogik im generischen Editor.</p>
-        <div class="hero-pills">
-          <div class="pill accent">Pflichtangaben zuerst</div>
-          <div class="pill">Empfehlungen aus Bibliothekslogik</div>
-          <div class="pill">Ohne Case-Sonderpfad</div>
+      <div class="card">
+        <h1>Prompt-Bibliothek V3</h1>
+        <p>Taxonomie zuerst, Generator danach. Standardmodus für schnelles Zusammenklicken, Expertenmodus für technische Sicht, Workflows und optionalen Heuristik-Layer.</p>
+        <div class="pills">
+          <div class="pill accent">Single-select pro Slot</div>
+          <div class="pill">V3-Kanon-Modell</div>
+          <div class="pill">Generator + Expertenmodus</div>
         </div>
       </div>
-      <div class="hero-side card">
+      <div class="card">
         <h2>Status</h2>
-        <div id="repoMeta" class="status-stack">
-          <div class="notice warning">Bibliothek wird geladen …</div>
+        <div id="repoMeta" class="notice-stack">
+          <div class="notice info">V3-Bibliothek wird geladen …</div>
         </div>
       </div>
     </section>
 
-    <section class="card start-card">
+    <section class="card toolbar">
       <div class="section-header">
         <div>
-          <h2>So möchtest du starten</h2>
-          <p class="section-description">Mit Beispielinstanz starten oder eine leere Konfiguration aufbauen. Structured und Template bleiben erhalten.</p>
+          <h2>Start und Modus</h2>
+          <p>Mit Workflow starten oder leer konfigurieren. Standardmodus reduziert Komplexität, Expertenmodus zeigt die volle V3-Struktur.</p>
         </div>
       </div>
 
-      <div class="start-grid">
-        <div class="start-panel">
-          <div>
-            <h3>Mit Beispiel starten</h3>
-            <p class="section-description">Nützlich, wenn du schnell in einen sinnvollen Ausgangszustand willst.</p>
-          </div>
-          <div class="field">
-            <label for="instanceSelect">Beispielinstanz</label>
-            <select id="instanceSelect"><option value="">— bitte wählen —</option></select>
-          </div>
-          <div class="button-row">
-            <button id="loadInstanceBtn" type="button">Beispiel übernehmen</button>
-          </div>
+      <div class="grid two">
+        <div class="field">
+          <label for="workflowSelect">Workflow</label>
+          <select id="workflowSelect">
+            <option value="">— bitte wählen —</option>
+          </select>
         </div>
-
-        <div class="start-panel">
-          <div>
-            <h3>Selbst konfigurieren</h3>
-            <p class="section-description">Starte leer und setze zuerst die Pflichtangaben. Die weiteren Bereiche öffnen sich danach schrittweise.</p>
-          </div>
-          <div class="button-row">
-            <button id="startEmptyBtn" type="button">Leere Konfiguration starten</button>
-            <button id="clearBtn" class="secondary" type="button">Alles zurücksetzen</button>
-          </div>
+        <div class="field">
+          <label for="templateSelect">Template</label>
+          <select id="templateSelect">
+            <option value="">— bitte wählen —</option>
+          </select>
         </div>
       </div>
 
-      <div class="sub-toolbar">
-        <div class="toolbar-row">
-          <div class="field">
-            <label for="modeSelect">Ausgabelogik</label>
-            <select id="modeSelect">
-              <option value="structured">Structured</option>
-              <option value="template">Template</option>
-            </select>
-          </div>
-          <div class="field" id="templateField">
-            <label for="templateSelect">Template</label>
-            <select id="templateSelect"><option value="">— bitte wählen —</option></select>
-          </div>
+      <div class="grid two">
+        <div class="row">
+          <button id="loadWorkflowBtn" type="button">Workflow übernehmen</button>
+          <button id="startEmptyBtn" class="secondary" type="button">Leere Konfiguration</button>
+          <button id="clearBtn" class="secondary" type="button">Zurücksetzen</button>
         </div>
-
-        <details class="disclosure">
-          <summary>
-            <div>
-              <strong>Erweiterte Startoptionen</strong>
-              <div class="subtle-text">Filter und technische Hilfen nur bei Bedarf.</div>
-            </div>
-            <span class="badge subtle">Optional</span>
-          </summary>
-          <div class="disclosure-body">
-            <div class="toolbar-row">
-              <div class="field">
-                <label for="searchInput">Felder filtern</label>
-                <input id="searchInput" type="text" placeholder="z. B. Ziel, Rolle, Qualität" />
-              </div>
-              <div class="field">
-                <label>&nbsp;</label>
-                <div class="button-row">
-                  <button id="copyPromptBtn" class="secondary" type="button">Prompt kopieren</button>
-                  <button id="copySlotsBtn" class="secondary" type="button">Slots kopieren</button>
-                </div>
-              </div>
-            </div>
-            <p class="subtle-text">Template-Modus rendert den gewählten Template-Text aus <code>library.json</code>. Structured-Modus erzeugt einen vollständigen strukturierten Prompt aus deinen aktuellen Slots.</p>
+        <div class="row">
+          <div class="mode-toggle" role="tablist" aria-label="UI-Modus">
+            <button id="standardModeBtn" type="button" class="active">Standard</button>
+            <button id="expertModeBtn" type="button">Expert</button>
           </div>
-        </details>
+          <button id="copyPromptBtn" class="secondary" type="button">Prompt kopieren</button>
+          <button id="copySlotsBtn" class="secondary" type="button">Slots kopieren</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="searchInput">Felder filtern</label>
+        <input id="searchInput" type="text" placeholder="z. B. Ziel, Methode, Qualität" />
       </div>
     </section>
 
     <div class="layout">
       <div class="stack">
-        <section class="card main-card">
+        <section class="card">
           <div class="section-header">
             <div>
-              <h2>1. Pflichtangaben</h2>
-              <p class="section-description">Diese drei Angaben brauchst du mindestens für einen belastbaren Prompt.</p>
+              <h2>Pflichtkern</h2>
+              <p>Diese Slots bilden den alltagstauglichen Minimalpfad des Generators.</p>
             </div>
             <span id="requiredProgressBadge" class="badge accent">0 von 0 gesetzt</span>
           </div>
-          <div class="progress-row">
+          <div class="progress-wrap">
             <div class="progress-bar"><div id="requiredProgressFill" class="progress-fill"></div></div>
+            <div id="requiredHint" class="notice info">Pflichtfelder werden geladen …</div>
           </div>
-          <div id="requiredHint" class="notice info">Die Pflichtangaben werden geladen …</div>
           <div id="requiredFields" class="field-grid"></div>
         </section>
 
-        <section class="card main-card">
+        <section class="card">
           <div class="section-header">
             <div>
-              <h2>2. Sinnvolle Ergänzungen</h2>
-              <p class="section-description">Empfehlungen bleiben sichtbar, aber bereits passende Konfigurationen sind weiter bearbeitbar.</p>
+              <h2>Weitere Generator-Felder</h2>
+              <p>Im Standardmodus nur die wichtigsten Zusatzfelder. Im Expertenmodus die komplette V3-Taxonomie.</p>
             </div>
           </div>
-          <div id="recommendationIntro" class="notice info">Sobald die Pflichtangaben gesetzt sind, erscheinen hier kontextabhängige Ergänzungen.</div>
-          <div id="recommendedActionable" class="field-grid"></div>
-          <div id="recommendedCoveredWrap" class="hidden">
-            <details id="recommendedCoveredDetails" class="disclosure">
-              <summary>
-                <div>
-                  <strong id="recommendedCoveredTitle">Bereits passende Empfehlungen</strong>
-                  <div class="subtle-text">Kompakte Übersicht — per „Bearbeiten“ jederzeit wieder als volle Konfiguration öffnbar.</div>
-                </div>
-                <span id="recommendedCoveredBadge" class="badge subtle">0</span>
-              </summary>
-              <div class="disclosure-body">
-                <div id="recommendedCovered" class="compact-list"></div>
-              </div>
-            </details>
-          </div>
-        </section>
-
-        <section class="card main-card">
-          <div class="section-header">
-            <div>
-              <h2>3. Verfeinern</h2>
-              <p class="section-description">Weitere Dimensionen für Kontext, Rolle, Qualitätskriterien, Adressat und Interaktionsmodus.</p>
-            </div>
-          </div>
-          <div id="refinementSections" class="stack"></div>
-        </section>
-
-        <section class="card main-card">
-          <div class="section-header">
-            <div>
-              <h2>4. Was vermieden werden soll</h2>
-              <p class="section-description">Nur setzen, wenn du die Antwort bewusst begrenzen oder formal steuern willst.</p>
-            </div>
-          </div>
-          <div id="exclusionFields" class="field-grid"></div>
+          <div id="fieldGroups" class="stack"></div>
         </section>
       </div>
 
       <div class="stack">
-        <section class="card side-card score-primary">
+        <section class="card">
           <div class="section-header">
             <div>
-              <h2>Gesamtbewertung</h2>
-              <p class="section-description">Interner Bibliotheks-Score auf Basis von Vollständigkeit, Kohärenz und heuristischer Passung.</p>
+              <h2>Gesamtbild</h2>
+              <p>Ohne V2-Constraint-Ballast als Standard. Fokus auf Vollständigkeit, Taxonomie-Abdeckung und Prompt-Nutzbarkeit.</p>
             </div>
           </div>
+          <div class="metric-grid" id="assessmentMetrics"></div>
           <div class="stack">
-            <div class="score-overview">
-              <div id="overallScore" class="score-big">0</div>
-              <div>
-                <strong id="overallLabel">Noch unvollständig</strong>
-                <div id="overallSubline" class="subtle-text">Setze zuerst die Pflichtangaben, damit die Gesamtbewertung belastbarer wird.</div>
-              </div>
-            </div>
-            <div id="assessmentMetrics" class="metric-grid"></div>
-            <div class="assessment-block">
+            <div>
               <h3>Interpretation</h3>
-              <div id="assessmentInterpretation" class="subtle-text">Noch keine belastbare Interpretation möglich.</div>
+              <div id="assessmentInterpretation" class="subtle">Noch keine belastbare Einordnung möglich.</div>
             </div>
-            <div class="assessment-block">
-              <h3>So erhöhst du den Score</h3>
-              <div id="scoreSuggestions" class="suggestion-list"></div>
+            <div>
+              <h3>Nächste sinnvolle Schritte</h3>
+              <div id="suggestions" class="suggestion-list"></div>
             </div>
           </div>
         </section>
 
-        <section class="card side-card">
+        <section class="card">
           <div class="section-header">
             <div>
               <h2>Aktueller Prompt</h2>
-              <p class="section-description">Direkt nutzbare Fassung oder früher Zwischenstand auf Basis deiner Auswahl.</p>
+              <p>Render nach Template oder als strukturierter V3-Prompt.</p>
             </div>
           </div>
           <div class="output-panel">
@@ -321,37 +310,37 @@
           </div>
         </section>
 
-        <section class="card side-card">
+        <section class="card">
           <div class="section-header">
             <div>
-              <h2>Deine Konfiguration</h2>
-              <p class="section-description">Lesbare Zusammenfassung der gesetzten Werte.</p>
+              <h2>Lesbare Zusammenfassung</h2>
+              <p>Alle aktuell gesetzten Slots in Klartext.</p>
             </div>
           </div>
-          <div id="summaryOutput" class="summary-columns"></div>
+          <div id="summaryOutput" class="summary-list"></div>
         </section>
 
-        <section class="card side-card">
+        <section class="card">
           <div class="section-header">
             <div>
-              <h2>Prüfung</h2>
-              <p class="section-description">Nur offene Punkte, sinnvolle nächste Schritte und Konflikte.</p>
+              <h2>Status und Prüfung</h2>
+              <p>Nur echte Hinweise: fehlende Pflichtfelder, unbekannte Kombinationen, aktivierter Heuristik-Layer.</p>
             </div>
           </div>
-          <div id="statusOutput" class="notice-stack"></div>
+          <div id="statusOutput" class="status-list"></div>
         </section>
 
-        <section class="card side-card">
+        <section class="card">
           <details class="disclosure">
             <summary>
               <div>
                 <strong>Technische Slot-Ansicht</strong>
-                <div class="subtle-text">Für Copy/Paste oder Weiterverarbeitung.</div>
+                <div class="subtle">Für Copy/Paste oder Weiterverarbeitung.</div>
               </div>
-              <span class="badge subtle">Expertenansicht</span>
+              <span class="badge">Expert</span>
             </summary>
             <div class="disclosure-body">
-              <pre id="slotsOutput">Noch keine Auswahl.</pre>
+              <pre id="slotsOutput" class="mono">Noch keine Auswahl.</pre>
             </div>
           </details>
         </section>
@@ -361,85 +350,46 @@
 
   <script>
     const state = {
-      libraryData: null,
+      data: null,
+      dimensionIndex: {},
       slotIndex: {},
-      dimensionOrder: [],
       templateIndex: {},
-      exampleIndex: {},
+      workflowIndex: {},
       assignments: {},
-      coveredEditorOpen: {}
+      uiMode: "standard"
     };
 
     const elements = {
       repoMeta: document.getElementById("repoMeta"),
-      modeSelect: document.getElementById("modeSelect"),
-      templateField: document.getElementById("templateField"),
+      workflowSelect: document.getElementById("workflowSelect"),
       templateSelect: document.getElementById("templateSelect"),
-      instanceSelect: document.getElementById("instanceSelect"),
-      searchInput: document.getElementById("searchInput"),
-      loadInstanceBtn: document.getElementById("loadInstanceBtn"),
+      loadWorkflowBtn: document.getElementById("loadWorkflowBtn"),
       startEmptyBtn: document.getElementById("startEmptyBtn"),
       clearBtn: document.getElementById("clearBtn"),
       copyPromptBtn: document.getElementById("copyPromptBtn"),
       copySlotsBtn: document.getElementById("copySlotsBtn"),
-      requiredFields: document.getElementById("requiredFields"),
-      requiredHint: document.getElementById("requiredHint"),
+      standardModeBtn: document.getElementById("standardModeBtn"),
+      expertModeBtn: document.getElementById("expertModeBtn"),
+      searchInput: document.getElementById("searchInput"),
       requiredProgressBadge: document.getElementById("requiredProgressBadge"),
       requiredProgressFill: document.getElementById("requiredProgressFill"),
-      recommendationIntro: document.getElementById("recommendationIntro"),
-      recommendedActionable: document.getElementById("recommendedActionable"),
-      recommendedCoveredWrap: document.getElementById("recommendedCoveredWrap"),
-      recommendedCoveredDetails: document.getElementById("recommendedCoveredDetails"),
-      recommendedCoveredTitle: document.getElementById("recommendedCoveredTitle"),
-      recommendedCoveredBadge: document.getElementById("recommendedCoveredBadge"),
-      recommendedCovered: document.getElementById("recommendedCovered"),
-      refinementSections: document.getElementById("refinementSections"),
-      exclusionFields: document.getElementById("exclusionFields"),
-      slotsOutput: document.getElementById("slotsOutput"),
+      requiredHint: document.getElementById("requiredHint"),
+      requiredFields: document.getElementById("requiredFields"),
+      fieldGroups: document.getElementById("fieldGroups"),
+      assessmentMetrics: document.getElementById("assessmentMetrics"),
+      assessmentInterpretation: document.getElementById("assessmentInterpretation"),
+      suggestions: document.getElementById("suggestions"),
       promptOutput: document.getElementById("promptOutput"),
       summaryOutput: document.getElementById("summaryOutput"),
       statusOutput: document.getElementById("statusOutput"),
-      overallScore: document.getElementById("overallScore"),
-      overallLabel: document.getElementById("overallLabel"),
-      overallSubline: document.getElementById("overallSubline"),
-      assessmentMetrics: document.getElementById("assessmentMetrics"),
-      assessmentInterpretation: document.getElementById("assessmentInterpretation"),
-      scoreSuggestions: document.getElementById("scoreSuggestions")
+      slotsOutput: document.getElementById("slotsOutput")
     };
-
-    const FIELD_QUESTIONS = {
-      ZIEL_TYP: "Was soll am Ende erreicht werden?",
-      AUFGABENTYP: "Was soll die KI konkret tun?",
-      FORMAT: "In welcher Form brauchst du das Ergebnis?"
-    };
-
-    const GROUP_LABEL_OVERRIDES = {
-      KONTEXT: "Kontext",
-      ROLLE: "Rolle",
-      QUALITAETSKRITERIEN: "Qualitätskriterien",
-      ADRESSAT: "Adressat",
-      INTERAKTIONSMODUS: "Interaktionsmodus",
-      OUTPUT_FORM: "Output-Form"
-    };
-
-    const ORIGIN_LABELS = {
-      community_guide: "Community-Guide",
-      repo_practice: "Repo-Praxis",
-      practitioner_blog: "Practitioner-Blog",
-      forum_hypothesis: "Forum-Hypothese",
-      internal_taxonomy: "Interne Taxonomie"
-    };
-
-    const EVIDENCE_WEIGHTS = { stark: 1.0, mittel: 0.72, schwach: 0.45 };
-    const TIER_PRIORITY = { A: 0, B: 1, C: 2 };
-    const TIER_SCORE = { A: 100, B: 70, C: 40 };
 
     function humanizeKey(value){ return String(value || "").replaceAll("_"," "); }
-    function lowerFirst(text){ return text ? text.charAt(0).toLowerCase() + text.slice(1) : text; }
     function escapeRegExp(value){ return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
     function unique(arr){ return [...new Set(arr)]; }
     function clampScore(value){ return Math.max(0, Math.min(100, Math.round(value))); }
-    function normalizeScopeToken(value){ return String(value || "").trim().toLowerCase(); }
+    function lowerFirst(text){ return text ? text.charAt(0).toLowerCase() + text.slice(1) : text; }
 
     function setRepoMetaNotices(items){
       elements.repoMeta.innerHTML = "";
@@ -452,85 +402,74 @@
     }
 
     async function loadLibrary(){
-      try {
-        const response = await fetch("../data/library.json", { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      try{
+        const response = await fetch("../data/library_v3_target.json", { cache: "no-store" });
+        if(!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        state.libraryData = data;
-        buildIndexes(data);
+        state.data = data;
+        buildIndexes();
         populateToolbar();
-        restoreAssignments();
-        updateTemplateVisibility();
+        restoreState();
+        updateModeButtons();
         updateOutputs();
+        const heuristicsEnabled = Boolean(data.heuristics?.enabled);
         setRepoMetaNotices([
-          { type: "success", text: `Bibliothek geladen: ${data.meta?.project || "Prompt-Bibliothek"}` },
+          { type: "success", text: `V3-Bibliothek geladen: ${data.meta?.project || "Prompt-Bibliothek"}` },
           { type: "info", text: `Version: ${data.meta?.version || "unbekannt"} · Locale: ${data.meta?.locale || "unbekannt"}` },
-          { type: "info", text: `Core-only-Modus aktiv: keine Fallakte, keine Sonderpfad-Logik in der UI.` }
+          { type: heuristicsEnabled ? "warning" : "success", text: heuristicsEnabled ? "Heuristik-Layer aktiv." : "Heuristik-Layer deaktiviert: Taxonomie ist die Wahrheitsquelle." }
         ]);
-      } catch (error) {
+      }catch(error){
         console.error(error);
         setRepoMetaNotices([
           { type: "error", text: `Initialisierung fehlgeschlagen: ${error.message}` },
-          { type: "warning", text: "Prüfe ../data/library.json oder den JSON-Aufbau des Core-Modells." }
+          { type: "warning", text: "Prüfe ../data/library_v3_target.json oder den JSON-Aufbau des V3-Modells." }
         ]);
-        elements.promptOutput.textContent = "Fehler beim Laden von ../data/library.json";
+        elements.promptOutput.textContent = "Fehler beim Laden von ../data/library_v3_target.json";
       }
     }
 
-    function buildIndexes(data){
+    function buildIndexes(){
+      state.dimensionIndex = {};
       state.slotIndex = {};
-      state.dimensionOrder = [];
       state.templateIndex = {};
-      state.exampleIndex = {};
+      state.workflowIndex = {};
 
-      const library = data.library || {};
-      Object.entries(library).forEach(([dimensionKey, dimensionObj]) => {
-        const dimInfo = {
-          dimensionKey,
-          dimensionLabel: dimensionObj.label || GROUP_LABEL_OVERRIDES[dimensionKey] || humanizeKey(dimensionKey),
-          dimensionDescription: dimensionObj.description || "",
-          slots: []
-        };
-
-        const subdimensions = dimensionObj.subdimensions || {};
-        Object.entries(subdimensions).forEach(([subKey, subObj]) => {
-          const slot = subObj.slot || subKey;
-          const allowedValues = {};
-          (subObj.values || []).forEach(valueObj => {
-            allowedValues[valueObj.key] = {
-              label: valueObj.label || valueObj.key,
-              description: valueObj.description || ""
-            };
-          });
-
-          state.slotIndex[slot] = {
-            slot,
-            dimensionKey,
-            dimensionLabel: dimInfo.dimensionLabel,
-            dimensionDescription: dimInfo.dimensionDescription,
-            subdimensionKey: subKey,
-            subdimensionLabel: subObj.label || humanizeKey(subKey),
-            required: Boolean(subObj.required),
-            multi: Boolean(subObj.multi),
-            allowedValues,
-            origin: Array.isArray(subObj.origin) ? subObj.origin : [],
-            evidenceStrength: subObj.evidence_strength || "",
-            autoRecommendationTier: subObj.auto_recommendation_tier || "",
-            recommendationNotes: subObj.recommendation_notes || "",
-            heuristicScope: Array.isArray(subObj.heuristic_scope) ? subObj.heuristic_scope : [],
-            confidence: typeof subObj.confidence === "number" ? subObj.confidence : null
-          };
-          dimInfo.slots.push(slot);
-        });
-
-        state.dimensionOrder.push(dimInfo);
+      (state.data.dimensions || []).forEach(dimension => {
+        state.dimensionIndex[dimension.key] = dimension;
       });
 
-      (data.templates || []).forEach(template => { state.templateIndex[template.id] = template; });
-      (data.example_instances || []).forEach(example => { state.exampleIndex[example.id] = example; });
+      (state.data.slots || []).forEach(slot => {
+        const valueSet = state.data.values?.[slot.value_set] || [];
+        const allowedValues = {};
+        valueSet.forEach(valueObj => {
+          allowedValues[valueObj.key] = {
+            label: valueObj.label || valueObj.key
+          };
+        });
+        state.slotIndex[slot.key] = {
+          ...slot,
+          allowedValues
+        };
+      });
+
+      (state.data.templates || []).forEach(template => {
+        state.templateIndex[template.id] = template;
+      });
+
+      (state.data.workflows || []).forEach(workflow => {
+        state.workflowIndex[workflow.id] = workflow;
+      });
     }
 
     function populateToolbar(){
+      elements.workflowSelect.innerHTML = '<option value="">— bitte wählen —</option>';
+      Object.values(state.workflowIndex).forEach(workflow => {
+        const option = document.createElement("option");
+        option.value = workflow.id;
+        option.textContent = workflow.label || workflow.id;
+        elements.workflowSelect.appendChild(option);
+      });
+
       elements.templateSelect.innerHTML = '<option value="">— bitte wählen —</option>';
       Object.values(state.templateIndex).forEach(template => {
         const option = document.createElement("option");
@@ -539,907 +478,401 @@
         elements.templateSelect.appendChild(option);
       });
 
-      elements.instanceSelect.innerHTML = '<option value="">— bitte wählen —</option>';
-      Object.values(state.exampleIndex).forEach(example => {
-        const option = document.createElement("option");
-        option.value = example.id;
-        option.textContent = example.label || example.id;
-        elements.instanceSelect.appendChild(option);
-      });
+      if (state.data.generator?.default_template_id) {
+        elements.templateSelect.value = state.data.generator.default_template_id;
+      }
     }
 
-    function updateTemplateVisibility(){
-      const isTemplateMode = elements.modeSelect.value === "template";
-      elements.templateField.classList.toggle("hidden", !isTemplateMode);
-      elements.templateSelect.disabled = !isTemplateMode;
+    function updateModeButtons(){
+      elements.standardModeBtn.classList.toggle("active", state.uiMode === "standard");
+      elements.expertModeBtn.classList.toggle("active", state.uiMode === "expert");
     }
 
     function getRequiredSlots(){
-      return Object.values(state.slotIndex).filter(meta => meta.required).map(meta => meta.slot);
+      return Array.isArray(state.data?.generator?.required_slots) ? state.data.generator.required_slots : [];
     }
 
-    function getExclusionSlots(){
-      return Object.values(state.slotIndex)
-        .filter(meta => meta.slot.includes("AUSSCHLUESSE") || meta.dimensionKey === "GRENZEN")
-        .map(meta => meta.slot);
+    function getTemplateSlots(){
+      const templateId = elements.templateSelect.value;
+      const template = state.templateIndex[templateId];
+      return template ? (template.slots_used || []) : [];
     }
 
     function isAssigned(slot){
       const value = state.assignments[slot];
-      if (Array.isArray(value)) return value.length > 0;
       return value !== undefined && value !== null && value !== "";
-    }
-
-    function getProgressStats(){
-      const requiredSlots = getRequiredSlots();
-      const setCount = requiredSlots.filter(isAssigned).length;
-      return {
-        total: requiredSlots.length,
-        setCount,
-        percent: requiredSlots.length ? Math.round((setCount / requiredSlots.length) * 100) : 0
-      };
-    }
-
-    function isRequiredComplete(){
-      return getRequiredSlots().every(isAssigned);
-    }
-
-    function getSlotDisplayName(slot){
-      return state.slotIndex[slot]?.subdimensionLabel || slot;
     }
 
     function getValueLabel(slot, value){
       const meta = state.slotIndex[slot];
       if (!meta) return String(value);
-      const entry = meta.allowedValues[value];
-      return entry ? entry.label : humanizeKey(value);
+      const found = meta.allowedValues?.[value];
+      return found ? found.label : humanizeKey(value);
     }
 
-    function getSlotProvenance(slot){
-      const meta = state.slotIndex[slot] || {};
+    function getSlotDisplayName(slot){
+      return state.slotIndex[slot]?.label || slot;
+    }
+
+    function getProgressStats(){
+      const required = getRequiredSlots();
+      const setCount = required.filter(isAssigned).length;
       return {
-        origin: Array.isArray(meta.origin) ? meta.origin : [],
-        evidenceStrength: meta.evidenceStrength || "",
-        autoRecommendationTier: meta.autoRecommendationTier || "",
-        recommendationNotes: meta.recommendationNotes || "",
-        heuristicScope: Array.isArray(meta.heuristicScope) ? meta.heuristicScope : [],
-        confidence: typeof meta.confidence === "number" ? meta.confidence : null
+        total: required.length,
+        setCount,
+        percent: required.length ? Math.round((setCount / required.length) * 100) : 0
       };
     }
 
-    function getOriginDisplayText(origins){
-      return (origins || []).map(origin => ORIGIN_LABELS[origin] || humanizeKey(origin)).join(", ");
-    }
+    function getFilteredSlotsForDimension(dimensionKey){
+      const query = elements.searchInput.value.trim().toLowerCase();
+      const dimension = state.dimensionIndex[dimensionKey];
+      const requiredSlots = new Set(getRequiredSlots());
+      const templateSlots = new Set(getTemplateSlots());
 
-    function getAssignedScopeTokens(){
-      const tokens = [];
-      Object.entries(state.assignments).forEach(([slot, value]) => {
-        tokens.push(slot);
+      return (dimension?.slot_order || []).filter(slot => {
         const meta = state.slotIndex[slot];
-        if (meta?.dimensionKey) tokens.push(meta.dimensionKey);
-        if (Array.isArray(value)) value.forEach(item => tokens.push(item));
-        else if (typeof value === "string") tokens.push(value);
-      });
-      return new Set(tokens.map(normalizeScopeToken).filter(Boolean));
-    }
-
-    function getRefinementPriority(slot){
-      const provenance = getSlotProvenance(slot);
-      if (!provenance.autoRecommendationTier) return 999;
-      const tierPriority = TIER_PRIORITY[provenance.autoRecommendationTier] ?? 9;
-      const confidencePenalty = typeof provenance.confidence === "number" ? Math.max(0, 1 - provenance.confidence) : 0.5;
-      return tierPriority * 100 + confidencePenalty * 10;
-    }
-
-    function addRecommendation(bucket, slot, reason, values = [], score = 1){
-      if (!state.slotIndex[slot] || getRequiredSlots().includes(slot) || getExclusionSlots().includes(slot)) return;
-      bucket[slot] = bucket[slot] || { reasons: [], values: [], score: 0, provenance: getSlotProvenance(slot) };
-      if (reason) bucket[slot].reasons.push(reason);
-      if (values?.length) bucket[slot].values.push(...values);
-      bucket[slot].score += score;
-    }
-
-    function getProvenanceRecommendationReason(slot, matchDetails){
-      const provenance = getSlotProvenance(slot);
-      const parts = [];
-      if (provenance.recommendationNotes) parts.push(provenance.recommendationNotes);
-      else parts.push(`${getSlotDisplayName(slot)} ist in der Provenienzschicht als relevanter Empfehlungsslot markiert.`);
-      if (matchDetails.matches.length) parts.push(`Scope-Treffer: ${matchDetails.matches.map(humanizeKey).join(", ")}.`);
-      else if (matchDetails.global) parts.push("Gilt bibliotheksweit für viele Aufgaben.");
-      const metaBits = [];
-      if (provenance.origin.length) metaBits.push(`Herkunft: ${getOriginDisplayText(provenance.origin)}`);
-      if (provenance.evidenceStrength) metaBits.push(`Evidenz: ${provenance.evidenceStrength}`);
-      if (provenance.autoRecommendationTier) metaBits.push(`Tier: ${provenance.autoRecommendationTier}`);
-      if (typeof provenance.confidence === "number") metaBits.push(`Confidence: ${provenance.confidence.toFixed(2)}`);
-      if (metaBits.length) parts.push(metaBits.join(" · "));
-      return parts.join(" ");
-    }
-
-    function applyProvenanceRecommendations(bucket){
-      const assignedTokens = getAssignedScopeTokens();
-      Object.values(state.slotIndex).forEach(meta => {
-        if (meta.required) return;
-        if (getExclusionSlots().includes(meta.slot)) return;
-        const provenance = getSlotProvenance(meta.slot);
-        if (!provenance.autoRecommendationTier) return;
-        const scopes = provenance.heuristicScope.map(normalizeScopeToken).filter(Boolean);
-        const matches = scopes.filter(scope => scope !== "alle_tasks" && assignedTokens.has(scope));
-        const globalMatch = scopes.includes("alle_tasks");
-        if (!globalMatch && !matches.length) return;
-        const tierScore = TIER_SCORE[provenance.autoRecommendationTier] ?? 20;
-        const evidenceWeight = EVIDENCE_WEIGHTS[provenance.evidenceStrength] ?? 0.45;
-        const confidence = typeof provenance.confidence === "number" ? provenance.confidence : 0.5;
-        const scopeWeight = matches.length ? 1 + Math.min(matches.length, 3) * 0.2 : 0.72;
-        const score = tierScore * evidenceWeight * confidence * scopeWeight;
-        if (score <= 0) return;
-        addRecommendation(bucket, meta.slot, getProvenanceRecommendationReason(meta.slot, { matches, global: globalMatch }), [], score);
-      });
-    }
-
-    function getActiveRecommendationData(){
-      const constraints = state.libraryData?.constraints || [];
-      const bucket = {};
-      if (!isRequiredComplete()) return { recommendedSlots: [], reasons: {}, recommendedValues: {}, provenanceMeta: {} };
-
-      constraints.forEach(constraint => {
-        const cond = constraint.if || {};
-        const current = state.assignments[cond.slot];
-        const matches = current === cond.equals;
-        if (!matches || constraint.type !== "recommendation") return;
-        const base = `${getSlotDisplayName(cond.slot)} ist auf „${getValueLabel(cond.slot, cond.equals)}“ gesetzt.`;
-        (constraint.then?.recommended_slots || []).forEach(slot => {
-          addRecommendation(bucket, slot, `${base} Regelbasierte Empfehlung aus dem Constraint-Modell.`, [], 160);
-        });
-        Object.entries(constraint.then?.recommended_values || {}).forEach(([slot, values]) => {
-          addRecommendation(bucket, slot, `${base} Passende Ausprägungen sind hier oft schneller anschlussfähig.`, values, 180);
-        });
-      });
-
-      applyProvenanceRecommendations(bucket);
-
-      const recommendedSlots = Object.entries(bucket)
-        .sort((a,b) => b[1].score - a[1].score || getRefinementPriority(a[0]) - getRefinementPriority(b[0]) || a[0].localeCompare(b[0]))
-        .map(([slot]) => slot)
-        .filter(slot => state.slotIndex[slot]);
-
-      const reasons = {}, recommendedValues = {}, provenanceMeta = {};
-      recommendedSlots.forEach(slot => {
-        reasons[slot] = unique((bucket[slot]?.reasons || []).filter(Boolean));
-        recommendedValues[slot] = unique(bucket[slot]?.values || []);
-        provenanceMeta[slot] = bucket[slot]?.provenance || getSlotProvenance(slot);
-      });
-
-      return { recommendedSlots, reasons, recommendedValues, provenanceMeta };
-    }
-
-    function getRecommendationState(slot, recommendedValues = {}){
-      if (!isAssigned(slot)) return "missing";
-      const current = state.assignments[slot];
-      const expectedValues = recommendedValues[slot] || [];
-      if (!expectedValues.length) return "set";
-      if (Array.isArray(current)) return current.some(value => expectedValues.includes(value)) ? "expected" : "abweichend";
-      return expectedValues.includes(current) ? "expected" : "abweichend";
-    }
-
-    function getConflictDetails(){
-      const conflicts = [];
-      (state.libraryData?.constraints || []).forEach(constraint => {
-        if (constraint.type !== "incompatibility") return;
-        const cond = constraint.if || {};
-        const targetSlot = constraint.then_not?.slot;
-        const forbiddenValue = constraint.then_not?.contains;
-        const sourceMatches = state.assignments[cond.slot] === cond.equals;
-        const targetAssigned = state.assignments[targetSlot];
-        if (sourceMatches && Array.isArray(targetAssigned) && targetAssigned.includes(forbiddenValue)) {
-          conflicts.push({ sourceSlot: cond.slot, sourceValue: cond.equals, targetSlot, forbiddenValue });
+        if (!meta) return false;
+        if (state.uiMode === "standard" && !requiredSlots.has(slot) && !templateSlots.has(slot)) {
+          return false;
         }
+        const haystack = [
+          dimension?.label,
+          dimension?.description,
+          meta.label,
+          meta.key,
+          ...Object.keys(meta.allowedValues || {}),
+          ...Object.values(meta.allowedValues || {}).map(v => v.label)
+        ].join(" ").toLowerCase();
+        return !query || haystack.includes(query);
       });
-      return conflicts;
     }
 
-    function getFieldStatuses(){
-      const statuses = {};
-      Object.keys(state.slotIndex).forEach(slot => { statuses[slot] = []; });
-
-      getRequiredSlots().forEach(slot => {
-        if (!isAssigned(slot)) statuses[slot].push({ type: "warning", text: "Pflichtangabe fehlt." });
-      });
-
-      const { recommendedSlots, reasons, recommendedValues } = getActiveRecommendationData();
-      recommendedSlots.forEach(slot => {
-        const stateText = getRecommendationState(slot, recommendedValues);
-        if (stateText === "missing") {
-          statuses[slot].push({ type: "info", text: `Als Nächstes sinnvoll: ${(reasons[slot] || ["Für deine aktuelle Auswahl empfohlen."])[0]}` });
-        } else if (stateText === "expected") {
-          statuses[slot].push({ type: "success", text: "Entspricht der aktuellen Erwartungslogik und passt gut zum Rest der Konfiguration." });
-        } else if (stateText === "set") {
-          statuses[slot].push({ type: "success", text: "Ist gesetzt und aktuell gut anschlussfähig." });
-        } else {
-          const labels = (recommendedValues[slot] || []).map(value => getValueLabel(slot, value)).join(", ");
-          statuses[slot].push({ type: "warning", text: labels ? `Gesetzt, aber weniger erwartbar. Typisch passend wären eher: ${labels}.` : "Gesetzt, aber noch nicht ideal auf den erwarteten Pfad abgestimmt." });
-        }
-      });
-
-      getConflictDetails().forEach(conflict => {
-        statuses[conflict.sourceSlot].push({ type: "error", text: `Diese Auswahl kollidiert mit ${getSlotDisplayName(conflict.targetSlot)}.` });
-        statuses[conflict.targetSlot].push({ type: "error", text: `Diese Auswahl kollidiert mit ${getSlotDisplayName(conflict.sourceSlot)}.` });
-      });
-
-      return statuses;
-    }
-
-    function renderFieldCard(slot, options = {}){
+    function renderFieldCard(slot){
       const meta = state.slotIndex[slot];
       if (!meta) return document.createElement("div");
-      const statuses = getFieldStatuses()[slot] || [];
+
       const card = document.createElement("div");
       card.className = "field-card";
-      card.id = options.context === "covered" ? `field-card-covered-${slot}` : `field-card-${slot}`;
-      card.dataset.slot = slot;
-
+      card.id = `field-card-${slot}`;
       if (meta.required) card.classList.add("required");
-      if (options.recommended) card.classList.add("recommended");
-      if (statuses.some(item => item.type === "error")) card.classList.add("conflict");
-      else if (isAssigned(slot)) card.classList.add("complete");
+      if (isAssigned(slot)) card.classList.add("complete");
 
       const head = document.createElement("div");
       head.className = "field-head";
-      const metaWrap = document.createElement("div");
-      metaWrap.className = "field-meta";
-      metaWrap.innerHTML = `<div><strong>${meta.subdimensionLabel}</strong></div><div class="field-slot">${slot}</div>`;
-      const badgeWrap = document.createElement("div");
-      badgeWrap.className = "inline-actions";
-      if (meta.required) badgeWrap.innerHTML += '<span class="badge accent">Pflicht</span>';
-      else if (options.recommended) badgeWrap.innerHTML += '<span class="badge subtle">Empfohlen</span>';
-      else if (options.curated) badgeWrap.innerHTML += '<span class="badge subtle">Häufig genutzt</span>';
-      else badgeWrap.innerHTML += '<span class="badge subtle">Optional</span>';
-      head.appendChild(metaWrap);
-      head.appendChild(badgeWrap);
+      const left = document.createElement("div");
+      left.innerHTML = `<div><strong>${meta.label}</strong></div><div class="field-slot">${slot}</div>`;
+      const right = document.createElement("div");
+      right.className = "badges";
+      if (meta.required) right.innerHTML = '<span class="badge accent">Pflicht</span>';
+      else if (getTemplateSlots().includes(slot)) right.innerHTML = '<span class="badge soft">Template</span>';
+      else right.innerHTML = '<span class="badge">Optional</span>';
+      head.appendChild(left);
+      head.appendChild(right);
       card.appendChild(head);
 
-      if (FIELD_QUESTIONS[slot]) {
-        const question = document.createElement("div");
-        question.className = "field-help";
-        question.textContent = FIELD_QUESTIONS[slot];
-        card.appendChild(question);
-      } else if (options.reason) {
-        const reason = document.createElement("div");
-        reason.className = "field-help";
-        reason.textContent = options.reason;
-        card.appendChild(reason);
-      } else if (meta.dimensionDescription) {
-        const desc = document.createElement("div");
-        desc.className = "field-help";
-        desc.textContent = meta.dimensionDescription;
-        card.appendChild(desc);
+      if (meta.description) {
+        const help = document.createElement("div");
+        help.className = "field-help";
+        help.textContent = meta.description;
+        card.appendChild(help);
       }
 
-      const currentValue = state.assignments[slot];
-      if (meta.multi) {
-        const checkboxGrid = document.createElement("div");
-        checkboxGrid.className = "checkbox-grid";
-        Object.entries(meta.allowedValues).forEach(([valueKey, valueObj]) => {
-          const label = document.createElement("label");
-          label.className = "checkbox-item";
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.value = valueKey;
-          checkbox.checked = Array.isArray(currentValue) && currentValue.includes(valueKey);
-          checkbox.addEventListener("change", () => {
-            const next = Array.isArray(state.assignments[slot]) ? [...state.assignments[slot]] : [];
-            if (checkbox.checked) {
-              if (!next.includes(valueKey)) next.push(valueKey);
-            } else {
-              const idx = next.indexOf(valueKey);
-              if (idx >= 0) next.splice(idx, 1);
-            }
-            if (next.length) state.assignments[slot] = next;
-            else delete state.assignments[slot];
-            updateOutputs();
-          });
-          const content = document.createElement("div");
-          content.className = "checkbox-content";
-          content.innerHTML = `<span>${valueObj.label}</span><small>${valueObj.description || ""}</small>`;
-          label.appendChild(checkbox);
-          label.appendChild(content);
-          checkboxGrid.appendChild(label);
-        });
-        card.appendChild(checkboxGrid);
-      } else {
-        const field = document.createElement("div");
-        field.className = "field";
-        const label = document.createElement("label");
-        label.textContent = meta.required ? "Diese Angabe ist erforderlich" : "Auswahl";
-        field.appendChild(label);
-        const select = document.createElement("select");
-        const emptyOption = document.createElement("option");
-        emptyOption.value = "";
-        emptyOption.textContent = "— bitte wählen —";
-        select.appendChild(emptyOption);
-        Object.entries(meta.allowedValues).forEach(([valueKey, valueObj]) => {
-          const option = document.createElement("option");
-          option.value = valueKey;
-          option.textContent = valueObj.label;
-          select.appendChild(option);
-        });
-        select.value = typeof currentValue === "string" ? currentValue : "";
-        select.addEventListener("change", () => {
-          if (select.value) state.assignments[slot] = select.value;
-          else delete state.assignments[slot];
-          updateOutputs();
-        });
-        field.appendChild(select);
-        if (typeof currentValue === "string" && meta.allowedValues[currentValue]?.description) {
-          const desc = document.createElement("div");
-          desc.className = "field-help";
-          desc.textContent = meta.allowedValues[currentValue].description;
-          field.appendChild(desc);
-        }
-        card.appendChild(field);
-      }
+      const field = document.createElement("div");
+      field.className = "field";
+      const label = document.createElement("label");
+      label.textContent = meta.required ? "Diese Angabe ist erforderlich" : "Auswahl";
+      field.appendChild(label);
 
-      if (statuses.length) {
-        const hintStack = document.createElement("div");
-        hintStack.className = "field-hints";
-        statuses.forEach(item => {
-          const hint = document.createElement("div");
-          hint.className = `notice ${item.type === "info" ? "info" : item.type}`;
-          hint.textContent = item.text;
-          hintStack.appendChild(hint);
-        });
-        card.appendChild(hintStack);
+      const select = document.createElement("select");
+      const empty = document.createElement("option");
+      empty.value = "";
+      empty.textContent = "— bitte wählen —";
+      select.appendChild(empty);
+
+      Object.entries(meta.allowedValues || {}).forEach(([valueKey, valueObj]) => {
+        const option = document.createElement("option");
+        option.value = valueKey;
+        option.textContent = valueObj.label;
+        select.appendChild(option);
+      });
+
+      select.value = isAssigned(slot) ? state.assignments[slot] : "";
+      select.addEventListener("change", () => {
+        if (select.value) state.assignments[slot] = select.value;
+        else delete state.assignments[slot];
+        updateOutputs();
+      });
+
+      field.appendChild(select);
+      if (isAssigned(slot)) {
+        const selectedHint = document.createElement("div");
+        selectedHint.className = "subtle";
+        selectedHint.textContent = `Aktuell: ${getValueLabel(slot, state.assignments[slot])}`;
+        field.appendChild(selectedHint);
       }
+      card.appendChild(field);
 
       return card;
     }
 
     function renderRequiredSection(){
-      const requiredSlots = getRequiredSlots();
       const stats = getProgressStats();
       elements.requiredProgressBadge.textContent = `${stats.setCount} von ${stats.total} gesetzt`;
       elements.requiredProgressFill.style.width = `${stats.percent}%`;
       elements.requiredHint.className = stats.setCount === stats.total ? "notice success" : "notice warning";
       elements.requiredHint.textContent = stats.setCount === stats.total
-        ? "Alle Pflichtangaben sind gesetzt. Jetzt kannst du gezielt verfeinern."
-        : `${stats.setCount} von ${stats.total} Pflichtangaben gesetzt. Ergänze zuerst die fehlenden Angaben.`;
+        ? "Alle Pflichtfelder sind gesetzt."
+        : `${stats.setCount} von ${stats.total} Pflichtfeldern gesetzt.`;
+
       elements.requiredFields.innerHTML = "";
-      requiredSlots.forEach(slot => elements.requiredFields.appendChild(renderFieldCard(slot)));
-    }
-
-    function getCompactStatusMeta(stateText){
-      if (stateText === "expected") return { label: "gut passend", className: "soft" };
-      if (stateText === "set") return { label: "gesetzt", className: "subtle" };
-      return { label: "prüfen", className: "warn" };
-    }
-
-    function renderCompactRecommendationItem(slot, recommendedValues = {}, reasons = []){
-      const stateText = getRecommendationState(slot, recommendedValues);
-      const wrapper = document.createElement("div");
-      wrapper.className = "compact-item";
-      const rawValue = state.assignments[slot];
-      const valueText = Array.isArray(rawValue) ? rawValue.map(item => getValueLabel(slot, item)).join(", ") : getValueLabel(slot, rawValue);
-      const currentStatus = getCompactStatusMeta(stateText);
-      const expectedValues = recommendedValues[slot] || [];
-      const mini = stateText === "expected"
-        ? `${currentStatus.label} · entspricht dem erwarteten Pfad`
-        : stateText === "set"
-          ? `${currentStatus.label} · aktuell anschlussfähig`
-          : expectedValues.length
-            ? `${currentStatus.label} · typischer wäre: ${expectedValues.map(value => getValueLabel(slot, value)).join(", ")}`
-            : `${currentStatus.label} · näher prüfen`;
-
-      const head = document.createElement("div");
-      head.className = "compact-head";
-      const main = document.createElement("div");
-      main.className = "compact-main";
-      main.innerHTML = `<strong>${getSlotDisplayName(slot)}</strong><div class="compact-value">${valueText}</div><div class="compact-mini">${mini}</div>`;
-      const right = document.createElement("div");
-      right.className = "compact-badges";
-      const statusBadge = document.createElement("span");
-      statusBadge.className = `badge ${currentStatus.className}`;
-      statusBadge.textContent = currentStatus.label;
-      const editBtn = document.createElement("button");
-      editBtn.type = "button";
-      editBtn.className = "secondary";
-      editBtn.textContent = state.coveredEditorOpen[slot] ? "Einklappen" : "Bearbeiten";
-      editBtn.addEventListener("click", () => {
-        state.coveredEditorOpen[slot] = !state.coveredEditorOpen[slot];
-        elements.recommendedCoveredDetails.open = true;
-        updateOutputs();
-        requestAnimationFrame(() => {
-          if (state.coveredEditorOpen[slot]) focusField(slot, true);
-        });
+      getRequiredSlots().forEach(slot => {
+        elements.requiredFields.appendChild(renderFieldCard(slot));
       });
-      right.appendChild(statusBadge);
-      right.appendChild(editBtn);
-      head.appendChild(main);
-      head.appendChild(right);
-      wrapper.appendChild(head);
-
-      if (state.coveredEditorOpen[slot]) {
-        const editor = document.createElement("div");
-        editor.className = "inline-editor";
-        editor.appendChild(renderFieldCard(slot, { recommended: true, reason: reasons.join(" "), context: "covered" }));
-        wrapper.appendChild(editor);
-      }
-
-      if (reasons.length) wrapper.title = reasons.join(" ");
-      return wrapper;
     }
 
-    function renderRecommendationSection(){
-      const requiredComplete = isRequiredComplete();
-      const { recommendedSlots, reasons, recommendedValues } = getActiveRecommendationData();
-      elements.recommendedActionable.innerHTML = "";
-      elements.recommendedCovered.innerHTML = "";
-      elements.recommendedCoveredWrap.classList.add("hidden");
-      if (!requiredComplete) {
-        elements.recommendationIntro.className = "notice info";
-        elements.recommendationIntro.textContent = "Sobald die Pflichtangaben vollständig sind, erscheinen hier kontextabhängige Ergänzungen.";
-        return;
-      }
-      if (!recommendedSlots.length) {
-        elements.recommendationIntro.className = "notice success";
-        elements.recommendationIntro.textContent = "Für die aktuelle Konfiguration gibt es noch keine zusätzlichen Empfehlungen aus Regeln oder Heuristiken.";
-        return;
-      }
+    function renderFieldGroups(){
+      elements.fieldGroups.innerHTML = "";
+      Object.keys(state.dimensionIndex).forEach(dimensionKey => {
+        const slots = getFilteredSlotsForDimension(dimensionKey).filter(slot => !getRequiredSlots().includes(slot));
+        if (!slots.length) return;
 
-      const actionableSlots = recommendedSlots.filter(slot => {
-        const stateText = getRecommendationState(slot, recommendedValues);
-        return stateText === "missing" || stateText === "abweichend";
-      });
-      const coveredSlots = recommendedSlots.filter(slot => {
-        const stateText = getRecommendationState(slot, recommendedValues);
-        return stateText === "expected" || stateText === "set";
-      });
-
-      elements.recommendationIntro.className = actionableSlots.length ? "notice info" : "notice success";
-      elements.recommendationIntro.textContent = actionableSlots.length
-        ? "Oben siehst du Empfehlungen mit echtem Handlungsbedarf. Bereits passende Empfehlungen bleiben darunter kompakt sichtbar und per Klick bearbeitbar."
-        : "Alle empfohlenen Felder sind gesetzt. Du kannst sie unten kompakt prüfen und jederzeit wieder als bearbeitbare Karte öffnen.";
-
-      actionableSlots.forEach(slot => {
-        elements.recommendedActionable.appendChild(renderFieldCard(slot, {
-          recommended: true,
-          reason: (reasons[slot] || []).join(" ")
-        }));
-      });
-
-      if (coveredSlots.length) {
-        elements.recommendedCoveredWrap.classList.remove("hidden");
-        elements.recommendedCoveredBadge.textContent = `${coveredSlots.length}`;
-        elements.recommendedCoveredTitle.textContent = actionableSlots.length ? "Bereits passende Empfehlungen" : "Alle aktuell passenden Empfehlungen";
-        elements.recommendedCoveredDetails.open = coveredSlots.length <= 2 && !actionableSlots.length;
-        coveredSlots.forEach(slot => {
-          elements.recommendedCovered.appendChild(renderCompactRecommendationItem(slot, recommendedValues, reasons[slot] || []));
-        });
-      }
-    }
-
-    function getRefinementGroups(recommendedSlots){
-      const requiredSlots = getRequiredSlots();
-      const exclusionSlots = getExclusionSlots();
-      const query = elements.searchInput.value.trim().toLowerCase();
-
-      return state.dimensionOrder.map(dimension => {
-        const slots = dimension.slots.filter(slot => {
-          if (requiredSlots.includes(slot)) return false;
-          if (exclusionSlots.includes(slot)) return false;
-          if (recommendedSlots.includes(slot)) return false;
-          const meta = state.slotIndex[slot];
-          const haystack = [
-            dimension.dimensionLabel,
-            dimension.dimensionDescription,
-            meta.subdimensionLabel,
-            slot,
-            ...Object.keys(meta.allowedValues),
-            ...Object.values(meta.allowedValues).map(v => v.label),
-            ...Object.values(meta.allowedValues).map(v => v.description)
-          ].join(" ").toLowerCase();
-          return !query || haystack.includes(query);
-        });
-        slots.sort((a,b) => getRefinementPriority(a) - getRefinementPriority(b) || a.localeCompare(b));
-        return { ...dimension, slots };
-      }).filter(group => group.slots.length);
-    }
-
-    function renderRefinementSections(){
-      const { recommendedSlots } = getActiveRecommendationData();
-      const groups = getRefinementGroups(recommendedSlots);
-      const requiredComplete = isRequiredComplete();
-      elements.refinementSections.innerHTML = "";
-      if (!groups.length) {
-        const notice = document.createElement("div");
-        notice.className = "notice info";
-        notice.textContent = "Keine weiteren Verfeinerungsfelder gefunden.";
-        elements.refinementSections.appendChild(notice);
-        return;
-      }
-      groups.forEach(group => {
+        const dimension = state.dimensionIndex[dimensionKey];
         const details = document.createElement("details");
         details.className = "disclosure";
-        if (requiredComplete && group.slots.some(isAssigned)) details.open = true;
-        const setCount = group.slots.filter(isAssigned).length;
+        details.open = state.uiMode === "expert" || slots.some(isAssigned);
+
+        const setCount = slots.filter(isAssigned).length;
         const summary = document.createElement("summary");
-        summary.innerHTML = `<div><strong>${group.dimensionLabel}</strong><div class="subtle-text">${group.dimensionDescription || "Weitere Stellschrauben für diese Konfiguration."}</div></div><span class="badge subtle">${setCount ? `${setCount} Auswahl${setCount === 1 ? "" : "en"} gesetzt` : "keine Auswahl"}</span>`;
+        summary.innerHTML = `<div><strong>${dimension.label}</strong><div class="subtle">${dimension.description || ""}</div></div><span class="badge">${setCount ? `${setCount} gesetzt` : "offen"}</span>`;
+
         const body = document.createElement("div");
         body.className = "disclosure-body";
-        if (!requiredComplete) body.classList.add("muted-panel");
-        if (!requiredComplete) {
-          const info = document.createElement("div");
-          info.className = "notice info";
-          info.textContent = "Du kannst diese Felder schon ansehen, sinnvoll werden sie meist erst nach den Pflichtangaben.";
-          body.appendChild(info);
-        }
-        group.slots.forEach(slot => body.appendChild(renderFieldCard(slot, { curated: Boolean(getSlotProvenance(slot).autoRecommendationTier) })));
+        const grid = document.createElement("div");
+        grid.className = "grid auto";
+        slots.forEach(slot => grid.appendChild(renderFieldCard(slot)));
+        body.appendChild(grid);
+
         details.appendChild(summary);
         details.appendChild(body);
-        elements.refinementSections.appendChild(details);
+        elements.fieldGroups.appendChild(details);
       });
     }
 
-    function renderExclusionFields(){
-      const slots = getExclusionSlots();
-      elements.exclusionFields.innerHTML = "";
-      if (!slots.length) {
-        const notice = document.createElement("div");
-        notice.className = "notice info";
-        notice.textContent = "Keine Ausschlussfelder gefunden.";
-        elements.exclusionFields.appendChild(notice);
-        return;
-      }
-      slots.forEach(slot => elements.exclusionFields.appendChild(renderFieldCard(slot)));
-    }
-
-    function getRecommendationWeight(slot, provenanceMeta = null){
-      const provenance = provenanceMeta || getSlotProvenance(slot);
-      const tierWeight = TIER_SCORE[provenance.autoRecommendationTier] ?? 30;
-      const evidenceWeight = EVIDENCE_WEIGHTS[provenance.evidenceStrength] ?? 0.45;
-      const confidenceWeight = typeof provenance.confidence === "number" ? provenance.confidence : 0.5;
-      return tierWeight * evidenceWeight * confidenceWeight;
-    }
-
-    function getOverallLabel(score){
-      if (score >= 85) return "stark";
-      if (score >= 70) return "gut";
-      if (score >= 50) return "solide";
-      return "prüfen";
-    }
-
-    function buildAssessmentInterpretation(metrics){
-      if (!Object.keys(state.assignments).some(slot => isAssigned(slot))) {
-        return "Noch keine belastbare Bewertung: Setze zuerst die Pflichtangaben, damit die Bibliothek Kohärenz und Anschlussfähigkeit einschätzen kann.";
-      }
-      const parts = [];
-      if (metrics.completeness >= 80) parts.push("Die Konfiguration ist weitgehend ausgearbeitet.");
-      else if (metrics.completeness >= 55) parts.push("Die Grundkonfiguration steht, aber einige sinnvolle Ergänzungen fehlen noch.");
-      else parts.push("Die Konfiguration ist noch früh und profitiert vor allem von weiteren Kernentscheidungen.");
-      if (metrics.coherence >= 80) parts.push("Die Auswahl wirkt intern stimmig.");
-      else if (metrics.coherence >= 60) parts.push("Die Auswahl ist im Wesentlichen konsistent, aber noch nicht überall sauber aufeinander abgestimmt.");
-      else parts.push("Die aktuelle Zusammenstellung erzeugt noch merkliche Spannungen oder Konflikte.");
-      if (metrics.heuristicFit >= 80) parts.push("Die heuristische Passung zur Bibliothekslogik ist hoch.");
-      else if (metrics.heuristicFit >= 60) parts.push("Die Bibliothek erkennt einen plausiblen Pfad, aber noch nicht den stärksten Anschlusszustand.");
-      else parts.push("Viele aktuelle Empfehlungen sind noch nicht aufgegriffen oder weichen vom erwarteten Pfad ab.");
-      parts.push(`Eingriffsbedarf aktuell: ${metrics.interventionNeed}.`);
-      return parts.join(" ");
-    }
-
-    function estimateSuggestionDelta(kind, weight = 1){
-      if (kind === "required") return 10;
-      if (kind === "conflict") return 14;
-      if (kind === "recommended-missing") return clampScore(3 + weight / 18);
-      if (kind === "recommended-align") return clampScore(2 + weight / 24);
-      return 3;
-    }
-
-    function buildImprovementSuggestions(assessment){
-      const suggestions = [];
-      const { recommendationData, requiredMissing, conflicts, recommendedValues } = assessment;
-      requiredMissing.forEach(slot => {
-        suggestions.push({ kind: "required", delta: estimateSuggestionDelta("required"), title: `${getSlotDisplayName(slot)} setzen`, detail: "Hebt vor allem die Vollständigkeit an und verbessert die Belastbarkeit der Gesamtbewertung.", targetSlot: slot });
-      });
-      conflicts.forEach(conflict => {
-        suggestions.push({ kind: "conflict", delta: estimateSuggestionDelta("conflict"), title: `Konflikt zwischen ${getSlotDisplayName(conflict.sourceSlot)} und ${getSlotDisplayName(conflict.targetSlot)} auflösen`, detail: `Prüfe ${getSlotDisplayName(conflict.targetSlot)} oder ändere ${getSlotDisplayName(conflict.sourceSlot)}, damit die Kohärenz nicht unnötig gedrückt wird.`, targetSlot: conflict.targetSlot });
-      });
-      recommendationData.recommendedSlots.forEach(slot => {
-        const weight = getRecommendationWeight(slot, recommendationData.provenanceMeta[slot]);
-        const stateText = getRecommendationState(slot, recommendedValues);
-        if (stateText === "missing") {
-          suggestions.push({ kind: "recommended-missing", delta: estimateSuggestionDelta("recommended-missing", weight), title: `${getSlotDisplayName(slot)} ergänzen`, detail: (recommendationData.reasons[slot] || ["Diese Ergänzung passt gut zum aktuellen Pfad."])[0], targetSlot: slot });
-        } else if (stateText === "abweichend") {
-          const expected = (recommendedValues[slot] || []).map(value => getValueLabel(slot, value)).join(", ");
-          suggestions.push({ kind: "recommended-align", delta: estimateSuggestionDelta("recommended-align", weight), title: `${getSlotDisplayName(slot)} an erwarteten Pfad anpassen`, detail: expected ? `Typisch passend wären eher: ${expected}.` : "Die aktuelle Ausprägung weicht vom empfohlenen Pfad ab.", targetSlot: slot });
-        }
-      });
-      suggestions.sort((a,b) => b.delta - a.delta || a.title.localeCompare(b.title));
-      return suggestions.slice(0, 4);
-    }
-
-    function computeAssessmentModel(){
-      const recommendationData = getActiveRecommendationData();
+    function computeAssessment(){
+      const allSlots = Object.keys(state.slotIndex);
+      const assignedSlots = allSlots.filter(isAssigned);
       const requiredSlots = getRequiredSlots();
-      const requiredMissing = requiredSlots.filter(slot => !isAssigned(slot));
-      const conflicts = getConflictDetails();
-      const assignedSlots = Object.keys(state.assignments).filter(slot => isAssigned(slot));
-      const recommendedValues = recommendationData.recommendedValues || {};
-      const activeRecommended = recommendationData.recommendedSlots || [];
-      const optionalAssigned = assignedSlots.filter(slot => !requiredSlots.includes(slot) && !activeRecommended.includes(slot)).length;
+      const templateSlots = getTemplateSlots();
+      const templateCoverage = templateSlots.length ? templateSlots.filter(isAssigned).length / templateSlots.length : 0;
+      const requiredCoverage = requiredSlots.length ? requiredSlots.filter(isAssigned).length / requiredSlots.length : 0;
+      const taxonomyCoverage = allSlots.length ? assignedSlots.length / allSlots.length : 0;
 
-      const requiredRatio = requiredSlots.length ? (requiredSlots.length - requiredMissing.length) / requiredSlots.length : 0;
-      let completeness = requiredRatio * 70;
-      if (activeRecommended.length) {
-        let recTotal = 0, recDone = 0;
-        activeRecommended.forEach(slot => {
-          const weight = getRecommendationWeight(slot, recommendationData.provenanceMeta[slot]);
-          recTotal += weight;
-          if (isAssigned(slot)) recDone += weight;
-        });
-        completeness += recTotal ? (recDone / recTotal) * 25 : 0;
-      } else if (isRequiredComplete()) {
-        completeness += 25;
-      }
-      completeness += Math.min(optionalAssigned, 3) / 3 * 5;
-      completeness = clampScore(completeness);
+      const completeness = clampScore(requiredCoverage * 70 + templateCoverage * 20 + Math.min(10, assignedSlots.length));
+      const templateFit = clampScore(templateCoverage * 100);
+      const taxonomyBreadth = clampScore(taxonomyCoverage * 100);
 
-      let coherence = assignedSlots.length ? 58 : 0;
-      coherence += requiredSlots.filter(slot => isAssigned(slot)).length * 4;
-      activeRecommended.forEach(slot => {
-        const stateText = getRecommendationState(slot, recommendedValues);
-        if (stateText === "expected") coherence += 8;
-        else if (stateText === "set") coherence += 5;
-        else if (stateText === "abweichend") coherence -= 4;
-      });
-      coherence += Math.min(optionalAssigned, 2) * 2;
-      coherence -= conflicts.length * 32;
-      coherence = clampScore(coherence);
-
-      let passTotal = 0, passAchieved = 0;
-      activeRecommended.forEach(slot => {
-        const weight = getRecommendationWeight(slot, recommendationData.provenanceMeta[slot]);
-        passTotal += weight;
-        const stateText = getRecommendationState(slot, recommendedValues);
-        if (stateText === "expected") passAchieved += weight;
-        else if (stateText === "set") passAchieved += weight * 0.82;
-        else if (stateText === "abweichend") passAchieved += weight * 0.4;
-      });
-      let heuristicFit = passTotal ? clampScore((passAchieved / passTotal) * 100) : (isRequiredComplete() ? 100 : 0);
-      heuristicFit = clampScore(heuristicFit - Math.min(20, conflicts.length * 8));
-
-      const overall = clampScore(completeness * 0.25 + coherence * 0.35 + heuristicFit * 0.40);
-      const interventionNeed = conflicts.length || requiredMissing.length ? "hoch" : (overall >= 80 ? "niedrig" : "mittel");
-      const interpretation = buildAssessmentInterpretation({ completeness, coherence, heuristicFit, interventionNeed });
-      const suggestions = buildImprovementSuggestions({ recommendationData, requiredMissing, conflicts, recommendedValues });
-      return { completeness, coherence, heuristicFit, overall, label: getOverallLabel(overall), interventionNeed, interpretation, suggestions, requiredMissing, conflicts, recommendationData, recommendedValues };
-    }
-
-    function focusField(slot, preferCovered = false){
-      let el = null;
-      if (preferCovered) el = document.getElementById(`field-card-covered-${slot}`);
-      if (!el) el = document.getElementById(`field-card-${slot}`);
-      if (!el && state.coveredEditorOpen[slot] !== true) {
-        state.coveredEditorOpen[slot] = true;
-        elements.recommendedCoveredDetails.open = true;
-        updateOutputs();
-        requestAnimationFrame(() => focusField(slot, true));
-        return;
-      }
-      if (!el) return;
-      const disclosure = el.closest("details.disclosure");
-      if (disclosure) disclosure.open = true;
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-      const focusable = el.querySelector("select, input, textarea, button");
-      if (focusable) setTimeout(() => { try { focusable.focus({ preventScroll: true }); } catch(_) { focusable.focus(); } }, 180);
-      el.classList.remove("field-focus");
-      void el.offsetWidth;
-      el.classList.add("field-focus");
-      setTimeout(() => el.classList.remove("field-focus"), 1500);
+      return {
+        completeness,
+        templateFit,
+        taxonomyBreadth,
+        overall: clampScore(completeness * 0.45 + templateFit * 0.30 + taxonomyBreadth * 0.25)
+      };
     }
 
     function renderAssessment(){
-      const model = computeAssessmentModel();
-      elements.overallScore.textContent = model.overall;
-      elements.overallLabel.textContent = `Gesamtscore: ${model.label}`;
-      elements.overallSubline.textContent = `Vollständigkeit ${model.completeness}% · Kohärenz ${model.coherence}% · Heuristische Passung ${model.heuristicFit}%`;
-      elements.assessmentInterpretation.textContent = model.interpretation;
-
+      const model = computeAssessment();
       const metrics = [
-        { title: "Vollständigkeit", value: model.completeness, text: "Pflichtfelder, aktive Empfehlungen und ein kleiner Feinschliff-Bonus." },
-        { title: "Kohärenz", value: model.coherence, text: "Wie stimmig die bisherige Auswahl intern zusammenpasst." },
-        { title: "Heuristische Passung", value: model.heuristicFit, text: "Wie nah die Konfiguration an der aktuellen Bibliothekslogik liegt." }
+        { title: "Vollständigkeit", value: model.completeness, text: "Pflichtkern plus aktuelle Template-Abdeckung." },
+        { title: "Template-Fit", value: model.templateFit, text: "Wie weit die aktuelle Auswahl das gewählte Template abdeckt." },
+        { title: "Taxonomie-Breite", value: model.taxonomyBreadth, text: "Wie viele V3-Slots aktuell gesetzt sind." },
+        { title: "Gesamtscore", value: model.overall, text: "Pragmatischer Generator-Score ohne V2-Heuristikzwang." }
       ];
+
       elements.assessmentMetrics.innerHTML = "";
       metrics.forEach(metric => {
         const item = document.createElement("div");
         item.className = "metric-item";
-        item.innerHTML = `<div class="metric-head"><strong>${metric.title}</strong><span>${metric.value} %</span></div><div class="metric-bar"><div class="metric-fill" style="width:${metric.value}%"></div></div><small>${metric.text}</small>`;
+        item.innerHTML = `<div class="metric-head"><strong>${metric.title}</strong><span>${metric.value} %</span></div><div class="metric-bar"><div class="metric-fill" style="width:${metric.value}%"></div></div><div class="subtle">${metric.text}</div>`;
         elements.assessmentMetrics.appendChild(item);
       });
 
-      elements.scoreSuggestions.innerHTML = "";
-      if (!model.suggestions.length) {
-        const item = document.createElement("div");
-        item.className = "suggestion-item";
-        item.innerHTML = `<strong>Aktuell kein dringender Hebel</strong><small>Die Konfiguration ist bereits gut anschlussfähig. Prüfe nur noch Feinjustierungen nach Bedarf.</small>`;
-        elements.scoreSuggestions.appendChild(item);
+      const missingRequired = getRequiredSlots().filter(slot => !isAssigned(slot));
+      if (!Object.keys(state.assignments).length) {
+        elements.assessmentInterpretation.textContent = "Noch keine belastbare Einordnung: Setze zuerst den Pflichtkern.";
+      } else if (missingRequired.length) {
+        elements.assessmentInterpretation.textContent = `Der Generator ist bereits nutzbar, aber Pflichtfelder fehlen noch: ${missingRequired.map(getSlotDisplayName).join(", ")}.`;
       } else {
-        model.suggestions.forEach((suggestion, idx) => {
-          const item = document.createElement("div");
-          item.className = `suggestion-item${idx === 0 ? " primary" : ""}`;
-          item.innerHTML = `<div class="suggestion-head"><strong>${suggestion.title}</strong><div class="inline-actions">${idx === 0 ? '<span class="badge accent">größter Hebel</span>' : ''}<span class="badge subtle">ca. +${suggestion.delta}</span></div></div><small>${suggestion.detail}</small>`;
-          if (suggestion.targetSlot) {
-            const actions = document.createElement("div");
-            actions.className = "suggestion-actions";
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "jump-btn";
-            btn.textContent = "Zum Feld";
-            btn.addEventListener("click", () => focusField(suggestion.targetSlot));
-            actions.appendChild(btn);
-            item.appendChild(actions);
-          }
-          elements.scoreSuggestions.appendChild(item);
+        elements.assessmentInterpretation.textContent = `Pflichtkern steht. Nächster Hebel ist jetzt vor allem die saubere Template-Abdeckung und gezielte Verfeinerung über zusätzliche V3-Slots.`;
+      }
+
+      const suggestions = [];
+      missingRequired.forEach(slot => {
+        suggestions.push({
+          title: `${getSlotDisplayName(slot)} setzen`,
+          detail: "Hebt den Pflichtkern an und macht den Prompt belastbarer."
+        });
+      });
+
+      getTemplateSlots().forEach(slot => {
+        if (!isAssigned(slot)) {
+          suggestions.push({
+            title: `${getSlotDisplayName(slot)} für Template ergänzen`,
+            detail: `Fehlt aktuell für das gewählte Template.`
+          });
+        }
+      });
+
+      if (!suggestions.length) {
+        suggestions.push({
+          title: "Konfiguration ist aktuell gut anschlussfähig",
+          detail: "Du kannst jetzt verfeinern oder direkt mit dem Prompt arbeiten."
         });
       }
-    }
 
-    function renderSummary(){
-      const fragment = document.createDocumentFragment();
-      const orderedSlots = [...getRequiredSlots(), ...unique([...getActiveRecommendationData().recommendedSlots, ...Object.keys(state.assignments)])];
-      const visibleSlots = unique(orderedSlots).filter(slot => isAssigned(slot));
-      if (!visibleSlots.length) {
-        const item = document.createElement("div");
-        item.className = "summary-item";
-        item.innerHTML = `<strong>Noch keine Auswahl</strong><span>Setze zuerst die Pflichtangaben, danach erscheinen hier die wichtigsten Entscheidungen in Klartext.</span>`;
-        fragment.appendChild(item);
-        return fragment;
-      }
-      visibleSlots.forEach(slot => {
-        const rawValue = state.assignments[slot];
-        const valueText = Array.isArray(rawValue) ? rawValue.map(item => getValueLabel(slot, item)).join(", ") : getValueLabel(slot, rawValue);
-        const item = document.createElement("div");
-        item.className = "summary-item";
-        item.innerHTML = `<strong>${getSlotDisplayName(slot)}</strong><span>${valueText}</span>`;
-        fragment.appendChild(item);
+      elements.suggestions.innerHTML = "";
+      suggestions.slice(0, 5).forEach(item => {
+        const div = document.createElement("div");
+        div.className = "suggestion-item";
+        div.innerHTML = `<strong>${item.title}</strong><div class="subtle">${item.detail}</div>`;
+        elements.suggestions.appendChild(div);
       });
-      return fragment;
-    }
-
-    function validateAssignments(){
-      const notices = [];
-      const assessment = computeAssessmentModel();
-      if (assessment.requiredMissing.length) {
-        notices.push({ type: "warning", text: `Fehlende Pflichtfelder: ${assessment.requiredMissing.map(slot => `${getSlotDisplayName(slot)} (${slot})`).join(", ")}` });
-      }
-      const nextBestFields = assessment.recommendationData.recommendedSlots.filter(slot => getRecommendationState(slot, assessment.recommendedValues) === "missing");
-      const tuneableFields = assessment.recommendationData.recommendedSlots.filter(slot => getRecommendationState(slot, assessment.recommendedValues) === "abweichend");
-      if (nextBestFields.length) {
-        notices.push({ type: "info", text: `Als Nächstes sinnvoll: ${nextBestFields.slice(0, 4).map(getSlotDisplayName).join(", ")}${nextBestFields.length > 4 ? " …" : ""}` });
-      }
-      if (tuneableFields.length) {
-        notices.push({ type: "warning", text: `Bereits gesetzt, aber noch ausbaufähig: ${tuneableFields.slice(0, 3).map(getSlotDisplayName).join(", ")}${tuneableFields.length > 3 ? " …" : ""}` });
-      }
-      assessment.conflicts.forEach(conflict => {
-        notices.push({ type: "error", text: `${getSlotDisplayName(conflict.sourceSlot)} = ${getValueLabel(conflict.sourceSlot, conflict.sourceValue)} ↔ ${getSlotDisplayName(conflict.targetSlot)} enthält ${getValueLabel(conflict.targetSlot, conflict.forbiddenValue)}` });
-      });
-      if (!assessment.requiredMissing.length && !nextBestFields.length && !tuneableFields.length && !assessment.conflicts.length) {
-        notices.push({ type: "success", text: "Konfiguration ist konsistent und aktuell ohne offene Hinweise." });
-      }
-      return notices;
     }
 
     function renderStructuredPrompt(){
-      const lines = ["Erstelle eine Antwort anhand der folgenden Vorgaben:"];
-      state.dimensionOrder.forEach(dimension => {
-        const slotLines = [];
-        dimension.slots.forEach(slot => {
-          if (!(slot in state.assignments)) return;
-          const rawValue = state.assignments[slot];
-          const valueText = Array.isArray(rawValue)
-            ? rawValue.map(item => getValueLabel(slot, item)).join(", ")
-            : getValueLabel(slot, rawValue);
-          slotLines.push(`- ${getSlotDisplayName(slot)}: ${valueText}`);
+      const lines = ["Erstelle eine Antwort anhand der folgenden V3-Prompt-Bausteine:"];
+      Object.keys(state.dimensionIndex).forEach(dimensionKey => {
+        const dimension = state.dimensionIndex[dimensionKey];
+        const entries = (dimension.slot_order || []).filter(isAssigned);
+        if (!entries.length) return;
+        lines.push("");
+        lines.push(`${dimension.label}:`);
+        entries.forEach(slot => {
+          lines.push(`- ${slot}: ${state.assignments[slot]}`);
         });
-        if (slotLines.length) {
-          lines.push("");
-          lines.push(`${dimension.dimensionLabel}:`);
-          lines.push(...slotLines);
-        }
       });
       return lines.join("\n").trim();
     }
 
     function renderTemplatePrompt(){
       const templateId = elements.templateSelect.value;
-      if (!templateId) throw new Error("Im Template-Modus muss ein Template gewählt werden.");
       const template = state.templateIndex[templateId];
-      if (!template) throw new Error(`Unbekanntes Template: ${templateId}`);
-      const missing = (template.slots_used || []).filter(slot => !isAssigned(slot));
-      if (missing.length) throw new Error(`Für Template '${template.label || templateId}' fehlen Werte für: ${missing.join(", ")}`);
+      if (!template) return renderStructuredPrompt();
+
       let text = template.text || "";
       (template.slots_used || []).forEach(slot => {
         const rawValue = state.assignments[slot];
-        const replacement = Array.isArray(rawValue)
-          ? rawValue.map(item => {
-              const label = getValueLabel(slot, item);
-              return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(item);
-            }).join(", ")
-          : (() => {
-              const label = getValueLabel(slot, rawValue);
-              return label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(rawValue);
-            })();
+        if (!rawValue) return;
+        const label = getValueLabel(slot, rawValue);
+        const replacement = label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(rawValue);
         text = text.replace(new RegExp(`\\[${escapeRegExp(slot)}\\]`, "g"), replacement);
       });
-      const unresolved = text.match(/\[[A-Z0-9_]+\]/g);
-      if (unresolved) throw new Error(`Template enthält noch unaufgelöste Platzhalter: ${[...new Set(unresolved)].join(", ")}`);
       return text.trim();
     }
 
     function renderSlotsNotation(){
       const lines = [];
-      state.dimensionOrder.forEach(dimension => {
-        dimension.slots.forEach(slot => {
-          if (!(slot in state.assignments)) return;
-          const rawValue = state.assignments[slot];
-          lines.push(Array.isArray(rawValue) ? `[${slot}:${rawValue.join(",")}]` : `[${slot}:${rawValue}]`);
+      Object.keys(state.dimensionIndex).forEach(dimensionKey => {
+        (state.dimensionIndex[dimensionKey].slot_order || []).forEach(slot => {
+          if (!isAssigned(slot)) return;
+          lines.push(`[${slot}:${state.assignments[slot]}]`);
         });
       });
       return lines.length ? lines.join("\n") : "Noch keine Auswahl.";
     }
 
-    function updateOutputs(){
-      renderRequiredSection();
-      renderRecommendationSection();
-      renderRefinementSections();
-      renderExclusionFields();
-      elements.slotsOutput.textContent = renderSlotsNotation();
+    function renderSummary(){
       elements.summaryOutput.innerHTML = "";
-      elements.summaryOutput.appendChild(renderSummary());
-      renderAssessment();
+      const assigned = Object.keys(state.assignments).filter(isAssigned);
+      if (!assigned.length) {
+        const item = document.createElement("div");
+        item.className = "summary-item";
+        item.innerHTML = `<strong>Noch keine Auswahl</strong><div class="subtle">Setze zuerst die Pflichtfelder, danach erscheint hier die lesbare Zusammenfassung.</div>`;
+        elements.summaryOutput.appendChild(item);
+        return;
+      }
 
-      const notices = validateAssignments();
+      Object.keys(state.dimensionIndex).forEach(dimensionKey => {
+        (state.dimensionIndex[dimensionKey].slot_order || []).forEach(slot => {
+          if (!isAssigned(slot)) return;
+          const item = document.createElement("div");
+          item.className = "summary-item";
+          item.innerHTML = `<strong>${getSlotDisplayName(slot)}</strong><div class="subtle">${getValueLabel(slot, state.assignments[slot])}</div>`;
+          elements.summaryOutput.appendChild(item);
+        });
+      });
+    }
+
+    function renderStatus(){
       elements.statusOutput.innerHTML = "";
-      let prompt = "Noch kein Prompt gerendert.";
-      const hasAssignments = Object.keys(state.assignments).some(slot => isAssigned(slot));
-      try {
-        prompt = elements.modeSelect.value === "template" ? renderTemplatePrompt() : renderStructuredPrompt();
-      } catch (error) {
-        notices.unshift({ type: "error", text: error.message });
+      const items = [];
+      const heuristicsEnabled = Boolean(state.data?.heuristics?.enabled);
+      if (heuristicsEnabled) {
+        items.push({ type: "warning", text: "Heuristik-Layer ist aktiv. Taxonomie bleibt Kern, aber zusätzliche Empfehlungen können eingreifen." });
+      } else {
+        items.push({ type: "success", text: "Heuristik-Layer ist deaktiviert. Die Taxonomie ist die alleinige Wahrheitsquelle." });
       }
-      if (!isRequiredComplete()) {
-        if (hasAssignments) prompt = `Vorläufige Vorschau – noch nicht vollständig. Ergänze zuerst die Pflichtangaben.\n\n${renderStructuredPrompt()}`;
-        else prompt = "Der Prompt ist noch nicht vollständig. Ergänze zuerst die Pflichtangaben.";
+
+      const missingRequired = getRequiredSlots().filter(slot => !isAssigned(slot));
+      if (missingRequired.length) {
+        items.push({ type: "warning", text: `Fehlende Pflichtfelder: ${missingRequired.map(slot => `${getSlotDisplayName(slot)} (${slot})`).join(", ")}` });
       }
-      elements.promptOutput.textContent = prompt;
-      notices.forEach(item => {
+
+      const templateMissing = getTemplateSlots().filter(slot => !isAssigned(slot));
+      if (elements.templateSelect.value && templateMissing.length) {
+        items.push({ type: "info", text: `Für das gewählte Template fehlen noch: ${templateMissing.map(getSlotDisplayName).join(", ")}` });
+      }
+
+      if (!missingRequired.length && !templateMissing.length) {
+        items.push({ type: "success", text: "Konfiguration ist für den aktuellen Generatorpfad vollständig genug." });
+      }
+
+      items.forEach(item => {
         const div = document.createElement("div");
-        div.className = `notice ${item.type === "info" ? "info" : item.type}`;
+        div.className = `notice ${item.type}`;
         div.textContent = item.text;
         elements.statusOutput.appendChild(div);
       });
-      persistAssignments();
     }
 
-    function loadInstance(instanceId){
-      if (!instanceId || !state.exampleIndex[instanceId]) return;
-      state.assignments = JSON.parse(JSON.stringify(state.exampleIndex[instanceId].values || {}));
-      state.coveredEditorOpen = {};
+    function updateOutputs(){
+      renderRequiredSection();
+      renderFieldGroups();
+      renderAssessment();
+      renderSummary();
+      renderStatus();
+      elements.slotsOutput.textContent = renderSlotsNotation();
+
+      const prompt = elements.templateSelect.value ? renderTemplatePrompt() : renderStructuredPrompt();
+      if (!Object.keys(state.assignments).length) {
+        elements.promptOutput.textContent = "Noch kein Prompt gerendert.";
+      } else {
+        elements.promptOutput.textContent = prompt;
+      }
+      persistState();
+    }
+
+    function loadWorkflow(workflowId){
+      const workflow = state.workflowIndex[workflowId];
+      if (!workflow) return;
+      state.assignments = JSON.parse(JSON.stringify(workflow.values || {}));
+      if (workflow.template_id) elements.templateSelect.value = workflow.template_id;
       updateOutputs();
     }
 
     function clearAssignments(){
       state.assignments = {};
-      state.coveredEditorOpen = {};
       updateOutputs();
     }
 
     async function copyText(text, successMessage){
-      try {
+      try{
         await navigator.clipboard.writeText(text);
         const div = document.createElement("div");
         div.className = "notice success";
         div.textContent = successMessage;
         elements.statusOutput.prepend(div);
-      } catch (_) {
+      }catch(_){
         const div = document.createElement("div");
         div.className = "notice error";
         div.textContent = "Kopieren fehlgeschlagen.";
@@ -1447,31 +880,32 @@
       }
     }
 
-    function persistAssignments(){
-      try {
-        localStorage.setItem("prompt-library-ui.assignments", JSON.stringify(state.assignments));
-        localStorage.setItem("prompt-library-ui.mode", elements.modeSelect.value);
-        localStorage.setItem("prompt-library-ui.template", elements.templateSelect.value);
-      } catch (_) {}
+    function persistState(){
+      try{
+        localStorage.setItem("prompt-library-v3.assignments", JSON.stringify(state.assignments));
+        localStorage.setItem("prompt-library-v3.template", elements.templateSelect.value);
+        localStorage.setItem("prompt-library-v3.uiMode", state.uiMode);
+      }catch(_){}
     }
 
-    function restoreAssignments(){
-      try {
-        const rawAssignments = localStorage.getItem("prompt-library-ui.assignments");
-        const rawMode = localStorage.getItem("prompt-library-ui.mode");
-        const rawTemplate = localStorage.getItem("prompt-library-ui.template");
-        if (rawAssignments) state.assignments = JSON.parse(rawAssignments);
-        if (rawMode) elements.modeSelect.value = rawMode;
-        if (rawTemplate) elements.templateSelect.value = rawTemplate;
-      } catch (_) {}
+    function restoreState(){
+      try{
+        const assignments = localStorage.getItem("prompt-library-v3.assignments");
+        const template = localStorage.getItem("prompt-library-v3.template");
+        const uiMode = localStorage.getItem("prompt-library-v3.uiMode");
+        if (assignments) state.assignments = JSON.parse(assignments);
+        if (template && state.templateIndex[template]) elements.templateSelect.value = template;
+        if (uiMode === "expert" || uiMode === "standard") state.uiMode = uiMode;
+      }catch(_){}
     }
 
-    elements.modeSelect.addEventListener("change", () => { updateTemplateVisibility(); updateOutputs(); });
-    elements.templateSelect.addEventListener("change", updateOutputs);
-    elements.searchInput.addEventListener("input", updateOutputs);
-    elements.loadInstanceBtn.addEventListener("click", () => loadInstance(elements.instanceSelect.value));
+    elements.loadWorkflowBtn.addEventListener("click", () => loadWorkflow(elements.workflowSelect.value));
     elements.startEmptyBtn.addEventListener("click", clearAssignments);
     elements.clearBtn.addEventListener("click", clearAssignments);
+    elements.templateSelect.addEventListener("change", updateOutputs);
+    elements.searchInput.addEventListener("input", updateOutputs);
+    elements.standardModeBtn.addEventListener("click", () => { state.uiMode = "standard"; updateModeButtons(); updateOutputs(); });
+    elements.expertModeBtn.addEventListener("click", () => { state.uiMode = "expert"; updateModeButtons(); updateOutputs(); });
     elements.copyPromptBtn.addEventListener("click", () => copyText(elements.promptOutput.textContent, "Prompt in die Zwischenablage kopiert."));
     elements.copySlotsBtn.addEventListener("click", () => copyText(elements.slotsOutput.textContent, "Slots in die Zwischenablage kopiert."));
 
