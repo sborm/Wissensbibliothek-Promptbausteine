@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: json-schema-validate
         name: JSON Schema Validate
-        entry: ajv validate -s schema/library.schema.json -d data/library.json
+        entry: ajv validate --spec=draft2020 -s schema/library.schema.json -d data/library.json
         language: system
         pass_filenames: false
         files: ^(data/library\.json|schema/library\.schema\.json)$
