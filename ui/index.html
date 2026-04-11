@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prompt-Bibliothek V3 UI</title>
+  <title>Prompt-Bibliothek V3</title>
   <style>
     :root{
       --bg:#0b1020;
@@ -28,7 +28,12 @@
         var(--bg);
       min-height:100vh;
     }
-    .container{width:min(1480px,calc(100% - 32px)); margin:24px auto 40px}
+    .container{width:min(1500px,calc(100% - 28px)); margin:20px auto 40px}
+    .hero{display:grid; grid-template-columns:1.1fr .9fr; gap:16px; margin-bottom:16px}
+    .layout{display:grid; grid-template-columns:1.02fr .98fr; gap:16px; align-items:start}
+    .stack,.grid,.field-grid,.notice-stack,.summary-list,.status-list,.suggestion-list,.metric-grid{display:grid; gap:12px}
+    .grid.two{grid-template-columns:1fr 1fr}
+    .grid.auto{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
     .card{
       background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
       border:1px solid var(--border);
@@ -36,14 +41,12 @@
       box-shadow:var(--shadow);
       padding:18px;
     }
-    .hero{display:grid; grid-template-columns:1.2fr .8fr; gap:16px; margin-bottom:16px}
-    .layout{display:grid; grid-template-columns:1.05fr .95fr; gap:16px; align-items:start}
     h1,h2,h3,h4{margin:0 0 10px; line-height:1.15}
-    h1{font-size:clamp(1.9rem,3vw,2.8rem); letter-spacing:-.02em}
-    h2{font-size:1.18rem}
+    h1{font-size:clamp(1.9rem,3vw,2.7rem); letter-spacing:-.02em}
+    h2{font-size:1.15rem}
     h3{font-size:1rem}
     p{margin:0 0 10px; color:var(--muted); line-height:1.5}
-    .pills,.row,.badges{display:flex; gap:10px; flex-wrap:wrap}
+    .pills,.row,.badges,.toolbar-row{display:flex; gap:10px; flex-wrap:wrap}
     .pill,.badge{
       display:inline-flex; align-items:center; gap:8px;
       border:1px solid var(--border);
@@ -53,12 +56,8 @@
       border-radius:999px;
       font-size:.88rem;
     }
-    .badge.accent,.pill.accent{border-color:rgba(122,162,255,.38); background:rgba(122,162,255,.12)}
+    .pill.accent,.badge.accent{border-color:rgba(122,162,255,.38); background:rgba(122,162,255,.12)}
     .badge.soft{border-color:rgba(127,227,161,.26); background:rgba(127,227,161,.09); color:#d6ffe3}
-    .stack,.grid,.field-grid,.notice-stack{display:grid; gap:12px}
-    .grid.two{grid-template-columns:1fr 1fr}
-    .grid.auto{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-    .toolbar{display:grid; gap:12px; margin-bottom:16px}
     .field{display:grid; gap:6px; min-width:0}
     .field label{font-size:.88rem; color:var(--muted)}
     select,input[type="text"],button{font:inherit}
@@ -91,16 +90,18 @@
     .notice.success{color:#d6ffe3; border-color:rgba(127,227,161,.3); background:rgba(127,227,161,.08)}
     .notice.warning{color:#ffe9b6; border-color:rgba(255,207,112,.3); background:rgba(255,207,112,.08)}
     .notice.error{color:#ffd7d7; border-color:rgba(255,123,123,.3); background:rgba(255,123,123,.08)}
-    .field-card{
-      border:1px solid rgba(255,255,255,.08);
+    .field-card,.metric-item,.summary-item,.suggestion-item,.focus-card{
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:14px;
       background:rgba(255,255,255,.02);
-      border-radius:16px;
-      padding:14px;
+      padding:12px;
       display:grid;
-      gap:10px;
+      gap:8px;
     }
     .field-card.required{border-color:rgba(255,207,112,.3); background:rgba(255,207,112,.05)}
     .field-card.complete{border-color:rgba(127,227,161,.25)}
+    .field-card.important,.focus-card{border-color:rgba(122,162,255,.24); background:rgba(122,162,255,.05)}
+    .field-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
     .field-slot{font-size:.82rem; color:#8f9bc0; word-break:break-word}
     .field-help,.subtle{font-size:.88rem; color:var(--muted); line-height:1.45}
     .mode-toggle{
@@ -121,31 +122,23 @@
       background:linear-gradient(90deg,var(--accent),var(--accent-2));
       transition:width .18s ease;
     }
-    .metric-grid{display:grid; gap:10px}
-    .metric-item{
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:14px;
-      background:rgba(255,255,255,.02);
-      padding:12px;
-      display:grid; gap:8px;
-    }
     .metric-head{display:flex; align-items:center; justify-content:space-between; gap:10px}
     .metric-bar{width:100%; height:8px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden}
     .metric-fill{height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--accent-2))}
-    .summary-list,.suggestion-list,.status-list{display:grid; gap:10px}
-    .summary-item,.suggestion-item{
-      border:1px solid rgba(255,255,255,.06);
+    .output-panel pre,.slot-panel pre{
+      margin:0;
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-size:.93rem;
+      line-height:1.58;
+      color:var(--text);
+      background:rgba(255,255,255,.025);
+      border:1px solid var(--border);
       border-radius:14px;
-      background:rgba(255,255,255,.02);
-      padding:12px;
-      display:grid; gap:8px;
+      padding:14px;
+      min-height:220px;
     }
-    .output-panel pre{
-      margin:0; white-space:pre-wrap; word-break:break-word;
-      font-size:.92rem; line-height:1.52; color:var(--text);
-      background:rgba(255,255,255,.025); border:1px solid var(--border);
-      border-radius:14px; padding:14px; min-height:180px;
-    }
+    .slot-panel pre{min-height:140px}
     details.disclosure{
       border:1px solid rgba(255,255,255,.08);
       border-radius:16px;
@@ -153,17 +146,24 @@
       overflow:hidden;
     }
     details.disclosure>summary{
-      list-style:none; cursor:pointer; padding:14px 16px;
-      display:flex; justify-content:space-between; align-items:center; gap:12px; user-select:none;
+      list-style:none;
+      cursor:pointer;
+      padding:14px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      user-select:none;
     }
     details.disclosure>summary::-webkit-details-marker{display:none}
     .disclosure-body{padding:0 16px 16px; border-top:1px solid rgba(255,255,255,.06); display:grid; gap:12px}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-    @media (max-width:1100px){
-      .hero,.layout,.grid.two{grid-template-columns:1fr}
+    .mini-grid{display:grid; gap:10px}
+    .mini-grid.two{grid-template-columns:1fr 1fr}
+    @media (max-width:1120px){
+      .hero,.layout,.grid.two,.mini-grid.two{grid-template-columns:1fr}
     }
     @media (max-width:760px){
-      .container{width:min(100% - 20px,1480px); margin-top:12px}
+      .container{width:min(100% - 20px,1500px); margin-top:12px}
     }
   </style>
 </head>
@@ -187,52 +187,57 @@
       </div>
     </section>
 
-    <section class="card toolbar">
+    <section class="card">
       <div class="section-header">
         <div>
           <h2>Start und Modus</h2>
-          <p>Mit Workflow starten oder leer konfigurieren. Standardmodus reduziert Komplexität, Expertenmodus zeigt die volle V3-Struktur.</p>
+          <p>Mit Workflow starten oder leer konfigurieren. Der Standardmodus zeigt nur den sinnvollen Hauptpfad, der Expertenmodus die volle V3-Struktur.</p>
         </div>
       </div>
 
       <div class="grid two">
         <div class="field">
           <label for="workflowSelect">Workflow</label>
-          <select id="workflowSelect">
-            <option value="">— bitte wählen —</option>
-          </select>
+          <select id="workflowSelect"><option value="">— bitte wählen —</option></select>
         </div>
         <div class="field">
           <label for="templateSelect">Template</label>
-          <select id="templateSelect">
-            <option value="">— bitte wählen —</option>
-          </select>
+          <select id="templateSelect"><option value="">— bitte wählen —</option></select>
         </div>
+      </div>
+
+      <div class="toolbar-row">
+        <button id="loadWorkflowBtn" type="button">Workflow übernehmen</button>
+        <button id="startEmptyBtn" class="secondary" type="button">Leere Konfiguration</button>
+        <button id="clearBtn" class="secondary" type="button">Zurücksetzen</button>
+      </div>
+
+      <div class="toolbar-row">
+        <div class="mode-toggle" role="tablist" aria-label="UI-Modus">
+          <button id="standardModeBtn" type="button" class="active">Standard</button>
+          <button id="expertModeBtn" type="button">Expert</button>
+        </div>
+        <button id="copyPromptBtn" class="secondary" type="button">Prompt kopieren</button>
+        <button id="copySlotsBtn" class="secondary" type="button">Slots kopieren</button>
       </div>
 
       <div class="grid two">
-        <div class="row">
-          <button id="loadWorkflowBtn" type="button">Workflow übernehmen</button>
-          <button id="startEmptyBtn" class="secondary" type="button">Leere Konfiguration</button>
-          <button id="clearBtn" class="secondary" type="button">Zurücksetzen</button>
+        <div class="field">
+          <label for="searchInput">Felder filtern</label>
+          <input id="searchInput" type="text" placeholder="z. B. Ziel, Methode, Qualität" />
         </div>
-        <div class="row">
-          <div class="mode-toggle" role="tablist" aria-label="UI-Modus">
-            <button id="standardModeBtn" type="button" class="active">Standard</button>
-            <button id="expertModeBtn" type="button">Expert</button>
-          </div>
-          <button id="copyPromptBtn" class="secondary" type="button">Prompt kopieren</button>
-          <button id="copySlotsBtn" class="secondary" type="button">Slots kopieren</button>
+        <div class="field">
+          <label for="promptStyleSelect">Prompt-Stil</label>
+          <select id="promptStyleSelect">
+            <option value="natural">Natürlich</option>
+            <option value="directive">Direktiv</option>
+            <option value="structured">Strukturiert</option>
+          </select>
         </div>
-      </div>
-
-      <div class="field">
-        <label for="searchInput">Felder filtern</label>
-        <input id="searchInput" type="text" placeholder="z. B. Ziel, Methode, Qualität" />
       </div>
     </section>
 
-    <div class="layout">
+    <div class="layout" style="margin-top:16px">
       <div class="stack">
         <section class="card">
           <div class="section-header">
@@ -252,8 +257,18 @@
         <section class="card">
           <div class="section-header">
             <div>
+              <h2>Empfohlene Ergänzungen</h2>
+              <p>Im Standardmodus nur die Felder mit dem größten Hebel. Im Expertenmodus bleibt die komplette Taxonomie sichtbar.</p>
+            </div>
+          </div>
+          <div id="recommendedFields" class="field-grid"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-header">
+            <div>
               <h2>Weitere Generator-Felder</h2>
-              <p>Im Standardmodus nur die wichtigsten Zusatzfelder. Im Expertenmodus die komplette V3-Taxonomie.</p>
+              <p>Nur bei Bedarf. Im Expertenmodus volle Sicht auf die restlichen Felder.</p>
             </div>
           </div>
           <div id="fieldGroups" class="stack"></div>
@@ -261,6 +276,37 @@
       </div>
 
       <div class="stack">
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2>Arbeitsfokus</h2>
+              <p>Der schnellste Blick auf Reifegrad, Lücken und den größten nächsten Hebel.</p>
+            </div>
+          </div>
+          <div class="mini-grid two">
+            <div class="focus-card">
+              <strong id="focusHeadline">Noch keine belastbare Konfiguration</strong>
+              <div id="focusBody" class="subtle">Setze zuerst den Pflichtkern, damit ein sinnvoller Generatorpfad entsteht.</div>
+            </div>
+            <div class="focus-card">
+              <strong>Nächster Hebel</strong>
+              <div id="nextLever" class="subtle">Beginne mit Ziel, Aufgabe, Kontext, Zielgruppe, Format und Qualitätsfokus.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2>Aktueller Prompt</h2>
+              <p>Die Ausgabe wird sprachlich geglättet und nicht mehr roh aus Slotwerten zusammengesetzt.</p>
+            </div>
+          </div>
+          <div class="output-panel">
+            <pre id="promptOutput">Noch kein Prompt gerendert.</pre>
+          </div>
+        </section>
+
         <section class="card">
           <div class="section-header">
             <div>
@@ -284,18 +330,6 @@
         <section class="card">
           <div class="section-header">
             <div>
-              <h2>Aktueller Prompt</h2>
-              <p>Sprachlich geglättete Ausgabe auf Basis der aktuellen Auswahl.</p>
-            </div>
-          </div>
-          <div class="output-panel">
-            <pre id="promptOutput">Noch kein Prompt gerendert.</pre>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="section-header">
-            <div>
               <h2>Lesbare Zusammenfassung</h2>
               <p>Alle aktuell gesetzten Slots in Klartext.</p>
             </div>
@@ -307,13 +341,13 @@
           <div class="section-header">
             <div>
               <h2>Status und Prüfung</h2>
-              <p>Nur echte Hinweise: fehlende Pflichtfelder, Template-Lücken und aktiver Heuristik-Layer.</p>
+              <p>Nur echte Hinweise: fehlende Pflichtfelder, Template-Lücken und aktivierter Heuristik-Layer.</p>
             </div>
           </div>
           <div id="statusOutput" class="status-list"></div>
         </section>
 
-        <section class="card">
+        <section class="card slot-panel">
           <details class="disclosure">
             <summary>
               <div>
@@ -323,7 +357,7 @@
               <span class="badge">Expert</span>
             </summary>
             <div class="disclosure-body">
-              <pre id="slotsOutput" class="mono">Noch keine Auswahl.</pre>
+              <pre id="slotsOutput">Noch keine Auswahl.</pre>
             </div>
           </details>
         </section>
@@ -332,17 +366,9 @@
   </div>
 
   <script>
-    const state = {
-      data: null,
-      dimensionIndex: {},
-      slotIndex: {},
-      templateIndex: {},
-      workflowIndex: {},
-      assignments: {},
-      uiMode: "standard"
-    };
-
-    const elements = {
+    const state = { data:null, dimensionIndex:{}, slotIndex:{}, templateIndex:{}, workflowIndex:{}, assignments:{}, uiMode:"standard" };
+    const STANDARD_RECOMMENDED_SLOTS = ["ZIEL_REIFE","AUFGABENSTRUKTUR","PROZESSLOGIK","METHODIK","ERGEBNISFOKUS","PRIORISIERUNG","TIEFENGRAD","TONALITAET","DIREKTHEIT"];
+    const el = {
       repoMeta: document.getElementById("repoMeta"),
       workflowSelect: document.getElementById("workflowSelect"),
       templateSelect: document.getElementById("templateSelect"),
@@ -354,11 +380,16 @@
       standardModeBtn: document.getElementById("standardModeBtn"),
       expertModeBtn: document.getElementById("expertModeBtn"),
       searchInput: document.getElementById("searchInput"),
+      promptStyleSelect: document.getElementById("promptStyleSelect"),
       requiredProgressBadge: document.getElementById("requiredProgressBadge"),
       requiredProgressFill: document.getElementById("requiredProgressFill"),
       requiredHint: document.getElementById("requiredHint"),
       requiredFields: document.getElementById("requiredFields"),
+      recommendedFields: document.getElementById("recommendedFields"),
       fieldGroups: document.getElementById("fieldGroups"),
+      focusHeadline: document.getElementById("focusHeadline"),
+      focusBody: document.getElementById("focusBody"),
+      nextLever: document.getElementById("nextLever"),
       assessmentMetrics: document.getElementById("assessmentMetrics"),
       assessmentInterpretation: document.getElementById("assessmentInterpretation"),
       suggestions: document.getElementById("suggestions"),
@@ -368,180 +399,88 @@
       slotsOutput: document.getElementById("slotsOutput")
     };
 
-    function clampScore(value){ return Math.max(0, Math.min(100, Math.round(value))); }
-    function humanizeKey(value){ return String(value || "").replaceAll("_"," "); }
-    function lowerFirst(text){ return text ? text.charAt(0).toLowerCase() + text.slice(1) : text; }
-    function sentenceCase(text){ return text ? text.charAt(0).toUpperCase() + text.slice(1) : ""; }
-    function sentence(text){
-      const clean = String(text || "").trim();
+    const clampScore = (v) => Math.max(0, Math.min(100, Math.round(v)));
+    const humanizeKey = (v) => String(v || "").replaceAll("_"," ");
+    const lowerFirst = (t) => t ? t.charAt(0).toLowerCase() + t.slice(1) : t;
+    const sentenceCase = (t) => t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
+    const sentence = (t) => {
+      const clean = String(t || "").trim();
       if (!clean) return "";
       return /[.!?]$/.test(clean) ? clean : `${clean}.`;
-    }
-    function joinPhrases(parts){ return parts.filter(Boolean).join(" "); }
-    function articleizedNoun(text){
+    };
+    const joinPhrases = (parts) => parts.filter(Boolean).join(" ");
+    const commaList = (items, joiner="und") => {
+      const clean = items.filter(Boolean);
+      if (!clean.length) return "";
+      if (clean.length === 1) return clean[0];
+      if (clean.length === 2) return `${clean[0]} ${joiner} ${clean[1]}`;
+      return `${clean.slice(0, -1).join(", ")} ${joiner} ${clean.at(-1)}`;
+    };
+    const articleizedNoun = (text) => {
       const value = lowerFirst(text || "");
       if (!value) return "";
       return /e$/i.test(value) ? `eine ${value}` : `einen ${value}`;
-    }
+    };
 
-    function setRepoMetaNotices(items){
-      elements.repoMeta.innerHTML = "";
+    const getAssignedCount = () => Object.keys(state.assignments).filter(isAssigned).length;
+    const setRepoMetaNotices = (items) => {
+      el.repoMeta.innerHTML = "";
       items.forEach(item => {
         const div = document.createElement("div");
         div.className = `notice ${item.type}`;
         div.textContent = item.text;
-        elements.repoMeta.appendChild(div);
+        el.repoMeta.appendChild(div);
       });
-    }
+    };
 
-    function mapTargetGroup(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "ich selbst": "für mich selbst",
-        "team": "für ein Team",
-        "management": "für das Management",
-        "kunden": "für Kundinnen und Kunden",
-        "lernende": "für Lernende",
-        "oeffentlichkeit": "für die Öffentlichkeit"
-      };
-      return map[value] || `für ${lowerFirst(text)}`;
-    }
+    const mapTargetGroup = (text) => ({
+      "ich selbst":"für mich selbst","team":"für ein Team","management":"für das Management","kunden":"für Kundinnen und Kunden","lernende":"für Lernende","oeffentlichkeit":"für die Öffentlichkeit"
+    }[String(text||"").trim().toLowerCase()] || `für ${lowerFirst(text)}`);
 
-    function mapSituation(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "operativ umsetzen": "für die operative Umsetzung",
-        "extern kommunizieren": "für die externe Kommunikation",
-        "entscheiden": "zur Entscheidungsvorbereitung",
-        "abstimmen": "für Abstimmung und Einordnung",
-        "strategie": "für eine strategische Fragestellung",
-        "lernen": "für einen Lernkontext"
-      };
-      return map[value] || `im Kontext ${lowerFirst(text)}`;
-    }
+    const mapSituation = (text) => ({
+      "operativ umsetzen":"für die operative Umsetzung","extern kommunizieren":"für die externe Kommunikation","entscheiden":"zur Entscheidungsvorbereitung","abstimmen":"für Abstimmung und Einordnung","strategie":"für eine strategische Fragestellung","lernen":"für einen Lernkontext"
+    }[String(text||"").trim().toLowerCase()] || `im Kontext ${lowerFirst(text)}`);
 
-    function mapQuality(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "praxisnah": "mit Fokus auf Praxisnähe",
-        "relevant": "mit Fokus auf Relevanz",
-        "differenziert": "mit Fokus auf Differenzierung",
-        "ausgewogen": "mit Fokus auf Ausgewogenheit",
-        "vollstaendig": "mit Fokus auf Vollständigkeit"
-      };
-      return map[value] || `mit Fokus auf ${lowerFirst(text)}`;
-    }
+    const mapQuality = (text) => ({
+      "praxisnah":"Praxisnähe","relevant":"Relevanz","differenziert":"Differenzierung","ausgewogen":"Ausgewogenheit","vollstaendig":"Vollständigkeit"
+    }[String(text||"").trim().toLowerCase()] || sentenceCase(text));
 
-    function mapPriority(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "praktikabilitaet vor theorie": "Praktikabilität vor Theorie",
-        "tiefe vor kuerze": "Tiefe vor Kürze",
-        "kuerze vor tiefe": "Kürze vor Tiefe",
-        "klarheit vor vollstaendigkeit": "Klarheit vor Vollständigkeit"
-      };
-      return map[value] || sentenceCase(text);
-    }
+    const mapPriority = (text) => ({
+      "praktikabilitaet vor theorie":"Praktikabilität vor Theorie","tiefe vor kuerze":"Tiefe vor Kürze","kuerze vor tiefe":"Kürze vor Tiefe","klarheit vor vollstaendigkeit":"Klarheit vor Vollständigkeit"
+    }[String(text||"").trim().toLowerCase()] || sentenceCase(text));
 
-    function mapOutputFocus(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "nur ergebnis": "Gib nur das Ergebnis aus",
-        "ergebnis mit begruendung": "Liefere das Ergebnis mit Begründung",
-        "ergebnis mit alternativen": "Liefere das Ergebnis mit Alternativen",
-        "ergebnis mit naechsten schritten": "Liefere das Ergebnis mit nächsten Schritten"
-      };
-      return map[value] || sentenceCase(text);
-    }
+    const mapOutputFocus = (text) => ({
+      "nur ergebnis":"Gib nur das Ergebnis aus","ergebnis mit begruendung":"Liefere das Ergebnis mit Begründung","ergebnis mit alternativen":"Liefere das Ergebnis mit Alternativen","ergebnis mit naechsten schritten":"Liefere das Ergebnis mit nächsten Schritten"
+    }[String(text||"").trim().toLowerCase()] || sentenceCase(text));
 
-    function mapEvidence(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "keine spekulation": "Vermeide Spekulation",
-        "nur belegte aussagen": "Arbeite nur mit belegten Aussagen",
-        "unsicherheiten offen markieren": "Markiere Unsicherheiten offen",
-        "strikt belegt": "Bleibe strikt belegt"
-      };
-      return map[value] || "";
-    }
+    const mapEvidence = (text) => ({
+      "keine spekulation":"Vermeide Spekulation","nur belegte aussagen":"Arbeite nur mit belegten Aussagen","unsicherheiten offen markieren":"Markiere Unsicherheiten offen","strikt belegt":"Bleibe strikt belegt"
+    }[String(text||"").trim().toLowerCase()] || "");
 
-    function mapTask(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "strukturieren": "Strukturiere die Antwort",
-        "vergleichen": "Vergleiche die relevanten Optionen",
-        "analysieren": "Analysiere die Ausgangslage",
-        "erklaeren": "Erkläre das Thema nachvollziehbar",
-        "zusammenfassen": "Fasse das Wesentliche zusammen",
-        "bewerten": "Bewerte die relevanten Aspekte",
-        "klassifizieren": "Klassifiziere die relevanten Elemente",
-        "extrahieren": "Extrahiere die relevanten Informationen",
-        "pruefen": "Prüfe den Inhalt systematisch",
-        "entwerfen": "Entwirf einen belastbaren Vorschlag",
-        "umformulieren": "Formuliere den Inhalt passend um"
-      };
-      return map[value] || sentenceCase(text);
-    }
+    const mapTask = (text) => ({
+      "strukturieren":"Strukturiere die Antwort klar und nachvollziehbar","vergleichen":"Vergleiche die relevanten Optionen nachvollziehbar","analysieren":"Analysiere die Ausgangslage systematisch","erklaeren":"Erkläre das Thema nachvollziehbar","zusammenfassen":"Fasse das Wesentliche präzise zusammen","bewerten":"Bewerte die relevanten Aspekte systematisch","klassifizieren":"Klassifiziere die relevanten Elemente sauber","extrahieren":"Extrahiere die relevanten Informationen sauber","pruefen":"Prüfe den Inhalt systematisch","entwerfen":"Entwirf einen belastbaren Vorschlag","umformulieren":"Formuliere den Inhalt passend um"
+    }[String(text||"").trim().toLowerCase()] || sentenceCase(text));
 
-    function mapMethod(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "pro und contra": "Nutze eine Pro-und-Contra-Logik",
-        "kriterienmatrix": "Arbeite mit einer Kriterienmatrix",
-        "priorisierungsmatrix": "Arbeite mit einer Priorisierungsmatrix",
-        "risiko-nutzen-abwaegung": "Arbeite mit einer Risiko-Nutzen-Abwägung",
-        "befund-interpretation-empfehlung": "Trenne klar zwischen Befund, Interpretation und Empfehlung"
-      };
-      return map[value] || sentenceCase(text);
-    }
+    const mapMethod = (text) => ({
+      "pro und contra":"Nutze eine Pro-und-Contra-Logik","kriterienmatrix":"Arbeite mit einer Kriterienmatrix","priorisierungsmatrix":"Arbeite mit einer Priorisierungsmatrix","risiko-nutzen-abwaegung":"Arbeite mit einer Risiko-Nutzen-Abwägung","befund-interpretation-empfehlung":"Trenne klar zwischen Befund, Interpretation und Empfehlung"
+    }[String(text||"").trim().toLowerCase()] || sentenceCase(text));
 
-    function mapProcess(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "schrittweise vorgehen": "Gehe schrittweise vor",
-        "zuerst analysieren, dann bewerten": "Analysiere zuerst und bewerte dann",
-        "erst sammeln, dann strukturieren": "Sammle zuerst und strukturiere dann",
-        "erst kriterien, dann vergleichen": "Lege zuerst Kriterien fest und vergleiche dann",
-        "erst optionen, dann empfehlung": "Entwickle zuerst Optionen und gib dann eine Empfehlung",
-        "erst befunde, dann interpretation, dann empfehlung": "Trenne klar zwischen Befunden, Interpretation und Empfehlung"
-      };
-      return map[value] || sentenceCase(text);
-    }
+    const mapProcess = (text) => ({
+      "schrittweise vorgehen":"Gehe schrittweise vor","zuerst analysieren, dann bewerten":"Analysiere zuerst und bewerte dann","erst sammeln, dann strukturieren":"Sammle zuerst und strukturiere dann","erst kriterien, dann vergleichen":"Lege zuerst Kriterien fest und vergleiche dann","erst optionen, dann empfehlung":"Entwickle zuerst Optionen und gib dann eine Empfehlung","erst befunde, dann interpretation, dann empfehlung":"Trenne klar zwischen Befunden, Interpretation und Empfehlung"
+    }[String(text||"").trim().toLowerCase()] || sentenceCase(text));
 
-    function mapInteraction(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "einmalige antwort": "Gib eine geschlossene Antwort",
-        "iteratives verfeinern": "Arbeite iterativ und verfeinernd",
-        "rueckfragen stellen": "Stelle bei kritischen Lücken Rückfragen",
-        "varianten entwickeln": "Entwickle mehrere Varianten"
-      };
-      return map[value] || sentenceCase(text);
-    }
+    const mapInteraction = (text) => ({
+      "einmalige antwort":"Gib eine geschlossene Antwort","iteratives verfeinern":"Arbeite iterativ und verfeinernd","rueckfragen stellen":"Stelle bei kritischen Lücken Rückfragen","varianten entwickeln":"Entwickle mehrere Varianten"
+    }[String(text||"").trim().toLowerCase()] || sentenceCase(text));
 
-    function mapControl(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "frei": "arbeite frei innerhalb der Vorgaben",
-        "eng gefuehrt": "arbeite eng an den Vorgaben entlang",
-        "mit zwischenstaenden": "arbeite mit klaren Zwischenständen"
-      };
-      return map[value] || lowerFirst(text);
-    }
+    const mapControl = (text) => ({
+      "frei":"arbeite frei innerhalb der Vorgaben","eng gefuehrt":"arbeite eng an den Vorgaben entlang","mit zwischenstaenden":"arbeite mit klaren Zwischenständen"
+    }[String(text||"").trim().toLowerCase()] || lowerFirst(text));
 
-    function mapWorkMode(text){
-      return lowerFirst(text);
-    }
-
-    function mapDepth(text){
-      const value = String(text || "").trim().toLowerCase();
-      const map = {
-        "ueberblick": "auf Überblicksniveau",
-        "mittel": "mit mittlerer Tiefe",
-        "tiefenanalyse": "als Tiefenanalyse"
-      };
-      return map[value] || lowerFirst(text);
-    }
+    const mapWorkMode = (text) => lowerFirst(text);
+    const mapDepth = (text) => ({
+      "ueberblick":"auf Überblicksniveau","mittel":"mit mittlerer Tiefe","tiefenanalyse":"als Tiefenanalyse"
+    }[String(text||"").trim().toLowerCase()] || lowerFirst(text));
 
     function mapBoundaryRules(assignments){
       const rules = [];
@@ -550,8 +489,10 @@
       if (assignments.BEISPIELREGEL === "keine_beispiele") rules.push("Verwende keine Beispiele");
       if (assignments.METAREGEL === "keine_meta_erklaerungen") rules.push("Vermeide Meta-Erklärungen");
       if (assignments.REDUNDANZREGEL === "keine_wiederholungen") rules.push("Vermeide Wiederholungen");
-      const evidence = mapEvidence(getValueLabel("EVIDENZREGEL", assignments.EVIDENZREGEL || ""));
-      if (evidence) rules.push(evidence);
+      if (assignments.EVIDENZREGEL) {
+        const evidence = mapEvidence(getValueLabel("EVIDENZREGEL", assignments.EVIDENZREGEL));
+        if (evidence) rules.push(evidence);
+      }
       return rules;
     }
 
@@ -570,7 +511,7 @@
         setRepoMetaNotices([
           { type: "success", text: `V3-Bibliothek geladen: ${data.meta?.project || "Prompt-Bibliothek"}` },
           { type: "info", text: `Version: ${data.meta?.version || "unbekannt"} · Locale: ${data.meta?.locale || "unbekannt"}` },
-          { type: heuristicsEnabled ? "warning" : "success", text: heuristicsEnabled ? "Heuristik-Layer aktiv." : "Heuristik-Layer deaktiviert: Taxonomie ist die Wahrheitsquelle." }
+          { type: heuristicsEnabled ? "warning" : "success", text: heuristicsEnabled ? "Heuristik-Layer aktiv. Taxonomie bleibt Kern, Empfehlungen können aber eingreifen." : "Heuristik-Layer deaktiviert. Die Taxonomie ist die Wahrheitsquelle." }
         ]);
       }catch(error){
         console.error(error);
@@ -578,7 +519,7 @@
           { type: "error", text: `Initialisierung fehlgeschlagen: ${error.message}` },
           { type: "warning", text: "Prüfe ../data/library.json oder den JSON-Aufbau des V3-Modells." }
         ]);
-        elements.promptOutput.textContent = "Fehler beim Laden von ../data/library.json";
+        el.promptOutput.textContent = "Fehler beim Laden von ../data/library.json";
       }
     }
 
@@ -587,64 +528,58 @@
       state.slotIndex = {};
       state.templateIndex = {};
       state.workflowIndex = {};
-
-      (state.data.dimensions || []).forEach(dimension => {
-        state.dimensionIndex[dimension.key] = dimension;
-      });
-
+      (state.data.dimensions || []).forEach(dimension => { state.dimensionIndex[dimension.key] = dimension; });
       (state.data.slots || []).forEach(slot => {
         const valueSet = state.data.values?.[slot.value_set] || [];
         const allowedValues = {};
-        valueSet.forEach(valueObj => {
-          allowedValues[valueObj.key] = { label: valueObj.label || valueObj.key };
-        });
+        valueSet.forEach(valueObj => { allowedValues[valueObj.key] = { label: valueObj.label || valueObj.key }; });
         state.slotIndex[slot.key] = { ...slot, allowedValues };
       });
-
-      (state.data.templates || []).forEach(template => {
-        state.templateIndex[template.id] = template;
-      });
-
-      (state.data.workflows || []).forEach(workflow => {
-        state.workflowIndex[workflow.id] = workflow;
-      });
+      (state.data.templates || []).forEach(template => { state.templateIndex[template.id] = template; });
+      (state.data.workflows || []).forEach(workflow => { state.workflowIndex[workflow.id] = workflow; });
     }
 
     function populateToolbar(){
-      elements.workflowSelect.innerHTML = '<option value="">— bitte wählen —</option>';
+      el.workflowSelect.innerHTML = '<option value="">— bitte wählen —</option>';
       Object.values(state.workflowIndex).forEach(workflow => {
         const option = document.createElement("option");
         option.value = workflow.id;
         option.textContent = workflow.label || workflow.id;
-        elements.workflowSelect.appendChild(option);
+        el.workflowSelect.appendChild(option);
       });
 
-      elements.templateSelect.innerHTML = '<option value="">— bitte wählen —</option>';
+      el.templateSelect.innerHTML = '<option value="">— bitte wählen —</option>';
       Object.values(state.templateIndex).forEach(template => {
         const option = document.createElement("option");
         option.value = template.id;
         option.textContent = template.label || template.id;
-        elements.templateSelect.appendChild(option);
+        el.templateSelect.appendChild(option);
       });
 
-      if (state.data.generator?.default_template_id) {
-        elements.templateSelect.value = state.data.generator.default_template_id;
-      }
+      if (state.data.generator?.default_template_id) el.templateSelect.value = state.data.generator.default_template_id;
     }
 
     function updateModeButtons(){
-      elements.standardModeBtn.classList.toggle("active", state.uiMode === "standard");
-      elements.expertModeBtn.classList.toggle("active", state.uiMode === "expert");
+      el.standardModeBtn.classList.toggle("active", state.uiMode === "standard");
+      el.expertModeBtn.classList.toggle("active", state.uiMode === "expert");
     }
 
-    function getRequiredSlots(){
-      return Array.isArray(state.data?.generator?.required_slots) ? state.data.generator.required_slots : [];
-    }
-
+    function getRequiredSlots(){ return Array.isArray(state.data?.generator?.required_slots) ? state.data.generator.required_slots : []; }
     function getTemplateSlots(){
-      const templateId = elements.templateSelect.value;
+      const templateId = el.templateSelect.value;
       const template = state.templateIndex[templateId];
       return template ? (template.slots_used || []) : [];
+    }
+
+    function getRecommendedSlots(){
+      const required = new Set(getRequiredSlots());
+      const templateSlots = new Set(getTemplateSlots());
+      return STANDARD_RECOMMENDED_SLOTS
+        .filter(slot => state.slotIndex[slot])
+        .filter((slot, index, arr) => arr.indexOf(slot) === index)
+        .filter(slot => !required.has(slot) || templateSlots.has(slot))
+        .filter((slot, index, arr) => arr.indexOf(slot) === index)
+        .filter(slot => !required.has(slot));
     }
 
     function isAssigned(slot){
@@ -659,37 +594,25 @@
       return found ? found.label : humanizeKey(value);
     }
 
-    function getSlotDisplayName(slot){
-      return state.slotIndex[slot]?.label || slot;
-    }
+    function getSlotDisplayName(slot){ return state.slotIndex[slot]?.label || slot; }
 
     function getProgressStats(){
       const required = getRequiredSlots();
       const setCount = required.filter(isAssigned).length;
-      return {
-        total: required.length,
-        setCount,
-        percent: required.length ? Math.round((setCount / required.length) * 100) : 0
-      };
+      return { total: required.length, setCount, percent: required.length ? Math.round((setCount / required.length) * 100) : 0 };
     }
 
     function getFilteredSlotsForDimension(dimensionKey){
-      const query = elements.searchInput.value.trim().toLowerCase();
+      const query = el.searchInput.value.trim().toLowerCase();
       const dimension = state.dimensionIndex[dimensionKey];
       const requiredSlots = new Set(getRequiredSlots());
-      const templateSlots = new Set(getTemplateSlots());
-
+      const recommended = new Set(getRecommendedSlots());
       return (dimension?.slot_order || []).filter(slot => {
         const meta = state.slotIndex[slot];
         if (!meta) return false;
-        if (state.uiMode === "standard" && !requiredSlots.has(slot) && !templateSlots.has(slot)) {
-          return false;
-        }
+        if (state.uiMode === "standard" && (requiredSlots.has(slot) || recommended.has(slot))) return false;
         const haystack = [
-          dimension?.label,
-          dimension?.description,
-          meta.label,
-          meta.key,
+          dimension?.label, dimension?.description, meta.label, meta.key,
           ...Object.keys(meta.allowedValues || {}),
           ...Object.values(meta.allowedValues || {}).map(v => v.label)
         ].join(" ").toLowerCase();
@@ -697,14 +620,14 @@
       });
     }
 
-    function renderFieldCard(slot){
+    function renderFieldCard(slot, important = false){
       const meta = state.slotIndex[slot];
       if (!meta) return document.createElement("div");
-
       const card = document.createElement("div");
       card.className = "field-card";
       if (meta.required) card.classList.add("required");
       if (isAssigned(slot)) card.classList.add("complete");
+      if (important) card.classList.add("important");
 
       const head = document.createElement("div");
       head.className = "field-head";
@@ -713,6 +636,7 @@
       const right = document.createElement("div");
       right.className = "badges";
       if (meta.required) right.innerHTML = '<span class="badge accent">Pflicht</span>';
+      else if (important) right.innerHTML = '<span class="badge soft">Hebel</span>';
       else if (getTemplateSlots().includes(slot)) right.innerHTML = '<span class="badge soft">Template</span>';
       else right.innerHTML = '<span class="badge">Optional</span>';
       head.appendChild(left);
@@ -765,21 +689,32 @@
 
     function renderRequiredSection(){
       const stats = getProgressStats();
-      elements.requiredProgressBadge.textContent = `${stats.setCount} von ${stats.total} gesetzt`;
-      elements.requiredProgressFill.style.width = `${stats.percent}%`;
-      elements.requiredHint.className = stats.setCount === stats.total ? "notice success" : "notice warning";
-      elements.requiredHint.textContent = stats.setCount === stats.total ? "Alle Pflichtfelder sind gesetzt." : `${stats.setCount} von ${stats.total} Pflichtfeldern gesetzt.`;
+      el.requiredProgressBadge.textContent = `${stats.setCount} von ${stats.total} gesetzt`;
+      el.requiredProgressFill.style.width = `${stats.percent}%`;
+      el.requiredHint.className = stats.setCount === stats.total ? "notice success" : "notice warning";
+      el.requiredHint.textContent = stats.setCount === stats.total ? "Alle Pflichtfelder sind gesetzt." : `${stats.setCount} von ${stats.total} Pflichtfeldern gesetzt.`;
+      el.requiredFields.innerHTML = "";
+      getRequiredSlots().forEach(slot => el.requiredFields.appendChild(renderFieldCard(slot)));
+    }
 
-      elements.requiredFields.innerHTML = "";
-      getRequiredSlots().forEach(slot => elements.requiredFields.appendChild(renderFieldCard(slot)));
+    function renderRecommendedSection(){
+      el.recommendedFields.innerHTML = "";
+      const recommended = getRecommendedSlots();
+      if (!recommended.length) {
+        const div = document.createElement("div");
+        div.className = "notice info";
+        div.textContent = state.uiMode === "standard" ? "Im Standardmodus sind aktuell keine weiteren Ergänzungsfelder nötig." : "Im Expertenmodus liegt der Fokus auf der vollständigen Taxonomie.";
+        el.recommendedFields.appendChild(div);
+        return;
+      }
+      recommended.forEach(slot => el.recommendedFields.appendChild(renderFieldCard(slot, true)));
     }
 
     function renderFieldGroups(){
-      elements.fieldGroups.innerHTML = "";
+      el.fieldGroups.innerHTML = "";
       Object.keys(state.dimensionIndex).forEach(dimensionKey => {
-        const slots = getFilteredSlotsForDimension(dimensionKey).filter(slot => !getRequiredSlots().includes(slot));
+        const slots = getFilteredSlotsForDimension(dimensionKey);
         if (!slots.length) return;
-
         const dimension = state.dimensionIndex[dimensionKey];
         const details = document.createElement("details");
         details.className = "disclosure";
@@ -798,7 +733,7 @@
 
         details.appendChild(summary);
         details.appendChild(body);
-        elements.fieldGroups.appendChild(details);
+        el.fieldGroups.appendChild(details);
       });
     }
 
@@ -807,100 +742,91 @@
       const assignedSlots = allSlots.filter(isAssigned);
       const requiredSlots = getRequiredSlots();
       const templateSlots = getTemplateSlots();
-      const templateCoverage = templateSlots.length ? templateSlots.filter(isAssigned).length / templateSlots.length : 0;
       const requiredCoverage = requiredSlots.length ? requiredSlots.filter(isAssigned).length / requiredSlots.length : 0;
-      const taxonomyCoverage = allSlots.length ? assignedSlots.length / allSlots.length : 0;
-
-      const completeness = clampScore(requiredCoverage * 70 + templateCoverage * 20 + Math.min(10, assignedSlots.length));
+      const templateCoverage = templateSlots.length ? templateSlots.filter(isAssigned).length / templateSlots.length : 1;
+      const breadth = allSlots.length ? assignedSlots.length / allSlots.length : 0;
+      const completeness = clampScore(requiredCoverage * 70 + Math.min(assignedSlots.length, 10) * 3);
       const templateFit = clampScore(templateCoverage * 100);
-      const taxonomyBreadth = clampScore(taxonomyCoverage * 100);
-
-      return {
-        completeness,
-        templateFit,
-        taxonomyBreadth,
-        overall: clampScore(completeness * 0.45 + templateFit * 0.30 + taxonomyBreadth * 0.25)
-      };
+      const taxonomyBreadth = clampScore(breadth * 100);
+      const overall = clampScore(completeness * 0.5 + templateFit * 0.3 + taxonomyBreadth * 0.2);
+      return { completeness, templateFit, taxonomyBreadth, overall };
     }
 
     function renderAssessment(){
       const model = computeAssessment();
       const metrics = [
-        { title: "Vollständigkeit", value: model.completeness, text: "Pflichtkern plus aktuelle Template-Abdeckung." },
+        { title: "Vollständigkeit", value: model.completeness, text: "Pflichtkern plus sinnvolle Ergänzungen." },
         { title: "Template-Fit", value: model.templateFit, text: "Wie weit die aktuelle Auswahl das gewählte Template abdeckt." },
-        { title: "Taxonomie-Breite", value: model.taxonomyBreadth, text: "Wie viele V3-Slots aktuell gesetzt sind." },
+        { title: "Taxonomie-Breite", value: model.taxonomyBreadth, text: "Wie viel der V3-Struktur aktuell genutzt wird." },
         { title: "Gesamtscore", value: model.overall, text: "Pragmatischer Generator-Score ohne Heuristikzwang." }
       ];
-
-      elements.assessmentMetrics.innerHTML = "";
+      el.assessmentMetrics.innerHTML = "";
       metrics.forEach(metric => {
         const item = document.createElement("div");
         item.className = "metric-item";
         item.innerHTML = `<div class="metric-head"><strong>${metric.title}</strong><span>${metric.value} %</span></div><div class="metric-bar"><div class="metric-fill" style="width:${metric.value}%"></div></div><div class="subtle">${metric.text}</div>`;
-        elements.assessmentMetrics.appendChild(item);
+        el.assessmentMetrics.appendChild(item);
       });
 
       const missingRequired = getRequiredSlots().filter(slot => !isAssigned(slot));
-      if (!Object.keys(state.assignments).length) {
-        elements.assessmentInterpretation.textContent = "Noch keine belastbare Einordnung: Setze zuerst den Pflichtkern.";
+      const missingTemplate = getTemplateSlots().filter(slot => !isAssigned(slot));
+      if (!getAssignedCount()) {
+        el.assessmentInterpretation.textContent = "Noch keine belastbare Einordnung: Setze zuerst den Pflichtkern.";
       } else if (missingRequired.length) {
-        elements.assessmentInterpretation.textContent = `Der Generator ist bereits nutzbar, aber Pflichtfelder fehlen noch: ${missingRequired.map(getSlotDisplayName).join(", ")}.`;
+        el.assessmentInterpretation.textContent = `Der Generator ist bereits nutzbar, aber Pflichtfelder fehlen noch: ${missingRequired.map(getSlotDisplayName).join(", ")}.`;
+      } else if (missingTemplate.length) {
+        el.assessmentInterpretation.textContent = `Pflichtkern steht. Der nächste Hebel liegt jetzt in der sauberen Template-Abdeckung: ${missingTemplate.map(getSlotDisplayName).join(", ")}.`;
       } else {
-        elements.assessmentInterpretation.textContent = "Pflichtkern steht. Nächster Hebel ist jetzt vor allem die saubere Template-Abdeckung und sprachlich belastbare Prompt-Ausgabe.";
+        el.assessmentInterpretation.textContent = "Pflichtkern und Template stehen. Jetzt geht es vor allem um sprachliche Qualität und gezielte Verfeinerung.";
       }
 
       const suggestions = [];
-      missingRequired.forEach(slot => {
-        suggestions.push({ title: `${getSlotDisplayName(slot)} setzen`, detail: "Hebt den Pflichtkern an und macht den Prompt belastbarer." });
+      missingRequired.forEach(slot => suggestions.push({ title: `${getSlotDisplayName(slot)} setzen`, detail: "Ohne dieses Feld bleibt der Prompt strukturell lückenhaft." }));
+      missingTemplate.forEach(slot => suggestions.push({ title: `${getSlotDisplayName(slot)} ergänzen`, detail: "Hebt die Passung zum gewählten Template." }));
+      getRecommendedSlots().forEach(slot => {
+        if (!isAssigned(slot) && suggestions.length < 5) suggestions.push({ title: `${getSlotDisplayName(slot)} prüfen`, detail: "Kann die Prompt-Qualität im Standardpfad sichtbar erhöhen." });
       });
+      if (!suggestions.length) suggestions.push({ title: "Konfiguration ist aktuell gut anschlussfähig", detail: "Du kannst jetzt direkt mit dem Prompt arbeiten oder im Expertenmodus verfeinern." });
 
-      getTemplateSlots().forEach(slot => {
-        if (!isAssigned(slot)) {
-          suggestions.push({ title: `${getSlotDisplayName(slot)} für Template ergänzen`, detail: "Fehlt aktuell für das gewählte Template." });
-        }
-      });
-
-      if (!suggestions.length) {
-        suggestions.push({ title: "Konfiguration ist aktuell gut anschlussfähig", detail: "Du kannst jetzt verfeinern oder direkt mit dem Prompt arbeiten." });
-      }
-
-      elements.suggestions.innerHTML = "";
+      el.suggestions.innerHTML = "";
       suggestions.slice(0, 5).forEach(item => {
         const div = document.createElement("div");
         div.className = "suggestion-item";
         div.innerHTML = `<strong>${item.title}</strong><div class="subtle">${item.detail}</div>`;
-        elements.suggestions.appendChild(div);
+        el.suggestions.appendChild(div);
       });
     }
 
     function buildNaturalPrompt(){
       const a = state.assignments;
-      if (!Object.keys(a).length) return "Noch kein Prompt gerendert.";
+      if (!getAssignedCount()) return "Noch kein Prompt gerendert.";
 
       const parts = [];
+      const introParts = [];
+      const goal = a.ZIEL_TYP ? lowerFirst(getValueLabel("ZIEL_TYP", a.ZIEL_TYP)) : "";
+      const targetGroup = a.ZIELGRUPPE ? mapTargetGroup(getValueLabel("ZIELGRUPPE", a.ZIELGRUPPE)) : "";
+      const situation = a.SITUATIONSKONTEXT ? mapSituation(getValueLabel("SITUATIONSKONTEXT", a.SITUATIONSKONTEXT)) : "";
+      const maturity = a.ZIEL_REIFE ? lowerFirst(getValueLabel("ZIEL_REIFE", a.ZIEL_REIFE)) : "";
 
-      const intro = [];
-      if (a.ZIEL_TYP) intro.push(`Ziel ist ${lowerFirst(getValueLabel("ZIEL_TYP", a.ZIEL_TYP))}`);
-      if (a.ZIEL_REIFE) intro.push(`das Ergebnis soll ${lowerFirst(getValueLabel("ZIEL_REIFE", a.ZIEL_REIFE))} sein`);
-      if (a.ZIELGRUPPE) intro.push(mapTargetGroup(getValueLabel("ZIELGRUPPE", a.ZIELGRUPPE)));
-      if (a.SITUATIONSKONTEXT) intro.push(mapSituation(getValueLabel("SITUATIONSKONTEXT", a.SITUATIONSKONTEXT)));
-      if (intro.length) parts.push(sentence(joinPhrases(intro)));
+      if (goal && situation) introParts.push(`Ziel ist ${goal} ${situation}`);
+      else if (goal) introParts.push(`Ziel ist ${goal}`);
+      if (targetGroup) introParts.push(targetGroup);
+      if (maturity) introParts.push(`das Ergebnis soll ${maturity} sein`);
+      if (introParts.length) parts.push(sentence(joinPhrases(introParts)));
 
       if (a.AUFGABENTYP) {
         let taskSentence = mapTask(getValueLabel("AUFGABENTYP", a.AUFGABENTYP));
-        if (a.AUFGABENSTRUKTUR) {
-          taskSentence += ` und arbeite ${lowerFirst(getValueLabel("AUFGABENSTRUKTUR", a.AUFGABENSTRUKTUR))}`;
-        }
+        if (a.AUFGABENSTRUKTUR) taskSentence += ` und arbeite ${lowerFirst(getValueLabel("AUFGABENSTRUKTUR", a.AUFGABENSTRUKTUR))}`;
         parts.push(sentence(taskSentence));
       }
 
-      const processLines = [];
-      if (a.PROZESSLOGIK) processLines.push(mapProcess(getValueLabel("PROZESSLOGIK", a.PROZESSLOGIK)));
-      if (a.METHODIK) processLines.push(mapMethod(getValueLabel("METHODIK", a.METHODIK)));
-      if (a.INTERAKTIONSMODUS) processLines.push(mapInteraction(getValueLabel("INTERAKTIONSMODUS", a.INTERAKTIONSMODUS)));
-      if (a.STEUERUNGSGRAD) processLines.push(sentenceCase(mapControl(getValueLabel("STEUERUNGSGRAD", a.STEUERUNGSGRAD))));
-      if (a.ARBEITSMODUS) processLines.push(`Arbeite ${mapWorkMode(getValueLabel("ARBEITSMODUS", a.ARBEITSMODUS))}`);
-      if (processLines.length) parts.push(processLines.map(sentence).join(" "));
+      const processParts = [];
+      if (a.PROZESSLOGIK) processParts.push(mapProcess(getValueLabel("PROZESSLOGIK", a.PROZESSLOGIK)));
+      if (a.METHODIK) processParts.push(mapMethod(getValueLabel("METHODIK", a.METHODIK)));
+      if (a.INTERAKTIONSMODUS) processParts.push(mapInteraction(getValueLabel("INTERAKTIONSMODUS", a.INTERAKTIONSMODUS)));
+      if (a.STEUERUNGSGRAD) processParts.push(sentenceCase(mapControl(getValueLabel("STEUERUNGSGRAD", a.STEUERUNGSGRAD))));
+      if (a.ARBEITSMODUS) processParts.push(`Arbeite ${mapWorkMode(getValueLabel("ARBEITSMODUS", a.ARBEITSMODUS))}`);
+      if (processParts.length) parts.push(processParts.map(sentence).join(" "));
 
       const outputParts = [];
       if (a.FORMAT) outputParts.push(`Liefere das Ergebnis als ${articleizedNoun(getValueLabel("FORMAT", a.FORMAT))}`);
@@ -910,14 +836,14 @@
 
       const qualityParts = [];
       if (a.QUALITAETSFOKUS) qualityParts.push(mapQuality(getValueLabel("QUALITAETSFOKUS", a.QUALITAETSFOKUS)));
-      if (a.PRIORISIERUNG) qualityParts.push(`priorisiere ${lowerFirst(mapPriority(getValueLabel("PRIORISIERUNG", a.PRIORISIERUNG)))}`);
-      if (a.TIEFENGRAD) qualityParts.push(`arbeite ${mapDepth(getValueLabel("TIEFENGRAD", a.TIEFENGRAD))}`);
-      if (qualityParts.length) parts.push(sentence(`Achte besonders auf ${qualityParts.join(", ")}`));
+      if (a.PRIORISIERUNG) qualityParts.push(mapPriority(getValueLabel("PRIORISIERUNG", a.PRIORISIERUNG)));
+      if (a.TIEFENGRAD) qualityParts.push(mapDepth(getValueLabel("TIEFENGRAD", a.TIEFENGRAD)));
+      if (qualityParts.length) parts.push(sentence(`Achte besonders auf ${commaList(qualityParts)}`));
 
       const styleParts = [];
       if (a.TONALITAET) styleParts.push(lowerFirst(getValueLabel("TONALITAET", a.TONALITAET)));
       if (a.DIREKTHEIT) styleParts.push(lowerFirst(getValueLabel("DIREKTHEIT", a.DIREKTHEIT)));
-      if (styleParts.length) parts.push(sentence(`Formuliere ${styleParts.join(" und ")}`));
+      if (styleParts.length) parts.push(sentence(`Formuliere ${commaList(styleParts)}`));
       if (a.ROLLENSTIMME) parts.push(sentence(`Arbeite in der Rolle eines ${lowerFirst(getValueLabel("ROLLENSTIMME", a.ROLLENSTIMME))}`));
 
       if (a.WISSENSNIVEAU || a.RAHMENBEDINGUNG) {
@@ -928,11 +854,49 @@
       }
 
       const boundaryRules = mapBoundaryRules(a);
-      if (boundaryRules.length) {
-        parts.push(boundaryRules.map(sentence).join(" "));
-      }
-
+      if (boundaryRules.length) parts.push(boundaryRules.map(sentence).join(" "));
       return parts.join("\n\n").trim();
+    }
+
+    function buildDirectivePrompt(){
+      const a = state.assignments;
+      if (!getAssignedCount()) return "Noch kein Prompt gerendert.";
+
+      const lines = [];
+      if (a.ZIEL_TYP || a.ZIELGRUPPE || a.SITUATIONSKONTEXT) {
+        const goal = a.ZIEL_TYP ? lowerFirst(getValueLabel("ZIEL_TYP", a.ZIEL_TYP)) : "arbeiten";
+        const group = a.ZIELGRUPPE ? mapTargetGroup(getValueLabel("ZIELGRUPPE", a.ZIELGRUPPE)) : "";
+        const situation = a.SITUATIONSKONTEXT ? mapSituation(getValueLabel("SITUATIONSKONTEXT", a.SITUATIONSKONTEXT)) : "";
+        lines.push(sentence(`Arbeite mit dem Ziel, ${goal} ${group} ${situation}`));
+      }
+      if (a.AUFGABENTYP) lines.push(sentence(mapTask(getValueLabel("AUFGABENTYP", a.AUFGABENTYP))));
+      if (a.PROZESSLOGIK) lines.push(sentence(mapProcess(getValueLabel("PROZESSLOGIK", a.PROZESSLOGIK))));
+      if (a.METHODIK) lines.push(sentence(mapMethod(getValueLabel("METHODIK", a.METHODIK))));
+      if (a.FORMAT) lines.push(sentence(`Gib das Ergebnis als ${articleizedNoun(getValueLabel("FORMAT", a.FORMAT))} aus`));
+      if (a.QUALITAETSFOKUS) lines.push(sentence(`Achte auf ${mapQuality(getValueLabel("QUALITAETSFOKUS", a.QUALITAETSFOKUS))}`));
+      if (a.PRIORISIERUNG) lines.push(sentence(`Priorisiere ${lowerFirst(mapPriority(getValueLabel("PRIORISIERUNG", a.PRIORISIERUNG)))}`));
+      mapBoundaryRules(a).forEach(rule => lines.push(sentence(rule)));
+      return lines.join("\n");
+    }
+
+    function buildStructuredPrompt(){
+      if (!getAssignedCount()) return "Noch kein Prompt gerendert.";
+      const lines = ["Erstelle eine Antwort anhand der folgenden Vorgaben:"];
+      Object.keys(state.dimensionIndex).forEach(dimensionKey => {
+        const entries = (state.dimensionIndex[dimensionKey].slot_order || []).filter(isAssigned);
+        if (!entries.length) return;
+        lines.push("");
+        lines.push(`${state.dimensionIndex[dimensionKey].label}:`);
+        entries.forEach(slot => lines.push(`- ${getSlotDisplayName(slot)}: ${getValueLabel(slot, state.assignments[slot])}`));
+      });
+      return lines.join("\n");
+    }
+
+    function buildPrompt(){
+      const style = el.promptStyleSelect.value;
+      if (style === "directive") return buildDirectivePrompt();
+      if (style === "structured") return buildStructuredPrompt();
+      return buildNaturalPrompt();
     }
 
     function renderSlotsNotation(){
@@ -947,64 +911,92 @@
     }
 
     function renderSummary(){
-      elements.summaryOutput.innerHTML = "";
-      const assigned = Object.keys(state.assignments).filter(isAssigned);
-      if (!assigned.length) {
+      el.summaryOutput.innerHTML = "";
+      if (!getAssignedCount()) {
         const item = document.createElement("div");
         item.className = "summary-item";
         item.innerHTML = `<strong>Noch keine Auswahl</strong><div class="subtle">Setze zuerst die Pflichtfelder, danach erscheint hier die lesbare Zusammenfassung.</div>`;
-        elements.summaryOutput.appendChild(item);
+        el.summaryOutput.appendChild(item);
         return;
       }
-
       Object.keys(state.dimensionIndex).forEach(dimensionKey => {
         (state.dimensionIndex[dimensionKey].slot_order || []).forEach(slot => {
           if (!isAssigned(slot)) return;
           const item = document.createElement("div");
           item.className = "summary-item";
           item.innerHTML = `<strong>${getSlotDisplayName(slot)}</strong><div class="subtle">${getValueLabel(slot, state.assignments[slot])}</div>`;
-          elements.summaryOutput.appendChild(item);
+          el.summaryOutput.appendChild(item);
         });
       });
     }
 
     function renderStatus(){
-      elements.statusOutput.innerHTML = "";
+      el.statusOutput.innerHTML = "";
       const items = [];
       const heuristicsEnabled = Boolean(state.data?.heuristics?.enabled);
       if (heuristicsEnabled) items.push({ type: "warning", text: "Heuristik-Layer ist aktiv. Zusätzliche Empfehlungen können eingreifen." });
       else items.push({ type: "success", text: "Heuristik-Layer ist deaktiviert. Die Taxonomie ist die Wahrheitsquelle." });
 
       const missingRequired = getRequiredSlots().filter(slot => !isAssigned(slot));
-      if (missingRequired.length) {
-        items.push({ type: "warning", text: `Fehlende Pflichtfelder: ${missingRequired.map(slot => `${getSlotDisplayName(slot)} (${slot})`).join(", ")}` });
-      }
+      if (missingRequired.length) items.push({ type: "warning", text: `Fehlende Pflichtfelder: ${missingRequired.map(slot => `${getSlotDisplayName(slot)} (${slot})`).join(", ")}` });
 
       const templateMissing = getTemplateSlots().filter(slot => !isAssigned(slot));
-      if (elements.templateSelect.value && templateMissing.length) {
-        items.push({ type: "info", text: `Für das gewählte Template fehlen noch: ${templateMissing.map(getSlotDisplayName).join(", ")}` });
-      }
+      if (el.templateSelect.value && templateMissing.length) items.push({ type: "info", text: `Für das gewählte Template fehlen noch: ${templateMissing.map(getSlotDisplayName).join(", ")}` });
 
-      if (!missingRequired.length && !templateMissing.length) {
-        items.push({ type: "success", text: "Konfiguration ist für den aktuellen Generatorpfad vollständig genug." });
-      }
+      if (!missingRequired.length && !templateMissing.length) items.push({ type: "success", text: "Konfiguration ist für den aktuellen Generatorpfad vollständig genug." });
 
       items.forEach(item => {
         const div = document.createElement("div");
         div.className = `notice ${item.type}`;
         div.textContent = item.text;
-        elements.statusOutput.appendChild(div);
+        el.statusOutput.appendChild(div);
       });
+    }
+
+    function renderFocus(){
+      const missingRequired = getRequiredSlots().filter(slot => !isAssigned(slot));
+      const missingTemplate = getTemplateSlots().filter(slot => !isAssigned(slot));
+      const missingRecommended = getRecommendedSlots().filter(slot => !isAssigned(slot));
+
+      if (!getAssignedCount()) {
+        el.focusHeadline.textContent = "Noch keine belastbare Konfiguration";
+        el.focusBody.textContent = "Setze zuerst den Pflichtkern, damit ein sinnvoller Generatorpfad entsteht.";
+        el.nextLever.textContent = "Beginne mit Ziel, Aufgabe, Kontext, Zielgruppe, Format und Qualitätsfokus.";
+        return;
+      }
+      if (missingRequired.length) {
+        el.focusHeadline.textContent = "Pflichtkern noch unvollständig";
+        el.focusBody.textContent = `Es fehlen noch ${missingRequired.length} Pflichtfelder. Ohne sie bleibt der Prompt strukturell lückenhaft.`;
+        el.nextLever.textContent = `${getSlotDisplayName(missingRequired[0])} ist jetzt der größte Hebel.`;
+        return;
+      }
+      if (missingTemplate.length) {
+        el.focusHeadline.textContent = "Pflichtkern steht, Template noch offen";
+        el.focusBody.textContent = "Die aktuelle Konfiguration ist bereits nutzbar, aber das gewählte Template ist noch nicht vollständig abgedeckt.";
+        el.nextLever.textContent = `${getSlotDisplayName(missingTemplate[0])} ergänzt jetzt am sinnvollsten.`;
+        return;
+      }
+      if (missingRecommended.length) {
+        el.focusHeadline.textContent = "Konfiguration ist brauchbar";
+        el.focusBody.textContent = "Der Prompt ist bereits nutzbar. Jetzt geht es um bessere Qualität, nicht mehr um Grundfunktion.";
+        el.nextLever.textContent = `${getSlotDisplayName(missingRecommended[0])} kann die Ausgabe jetzt sichtbar verbessern.`;
+        return;
+      }
+      el.focusHeadline.textContent = "Konfiguration ist gut anschlussfähig";
+      el.focusBody.textContent = "Pflichtkern, Template und wichtigste Ergänzungen sind gesetzt. Jetzt ist Feinschliff oder direkte Nutzung sinnvoll.";
+      el.nextLever.textContent = "Du kannst jetzt direkt mit dem Prompt arbeiten oder im Expertenmodus verfeinern.";
     }
 
     function updateOutputs(){
       renderRequiredSection();
+      renderRecommendedSection();
       renderFieldGroups();
       renderAssessment();
       renderSummary();
       renderStatus();
-      elements.slotsOutput.textContent = renderSlotsNotation();
-      elements.promptOutput.textContent = buildNaturalPrompt();
+      renderFocus();
+      el.slotsOutput.textContent = renderSlotsNotation();
+      el.promptOutput.textContent = buildPrompt();
       persistState();
     }
 
@@ -1012,14 +1004,11 @@
       const workflow = state.workflowIndex[workflowId];
       if (!workflow) return;
       state.assignments = JSON.parse(JSON.stringify(workflow.values || {}));
-      if (workflow.template_id) elements.templateSelect.value = workflow.template_id;
+      if (workflow.template_id) el.templateSelect.value = workflow.template_id;
       updateOutputs();
     }
 
-    function clearAssignments(){
-      state.assignments = {};
-      updateOutputs();
-    }
+    function clearAssignments(){ state.assignments = {}; updateOutputs(); }
 
     async function copyText(text, successMessage){
       try{
@@ -1027,20 +1016,21 @@
         const div = document.createElement("div");
         div.className = "notice success";
         div.textContent = successMessage;
-        elements.statusOutput.prepend(div);
+        el.statusOutput.prepend(div);
       }catch(_){
         const div = document.createElement("div");
         div.className = "notice error";
         div.textContent = "Kopieren fehlgeschlagen.";
-        elements.statusOutput.prepend(div);
+        el.statusOutput.prepend(div);
       }
     }
 
     function persistState(){
       try{
         localStorage.setItem("prompt-library-v3.assignments", JSON.stringify(state.assignments));
-        localStorage.setItem("prompt-library-v3.template", elements.templateSelect.value);
+        localStorage.setItem("prompt-library-v3.template", el.templateSelect.value);
         localStorage.setItem("prompt-library-v3.uiMode", state.uiMode);
+        localStorage.setItem("prompt-library-v3.promptStyle", el.promptStyleSelect.value);
       }catch(_){}
     }
 
@@ -1049,21 +1039,24 @@
         const assignments = localStorage.getItem("prompt-library-v3.assignments");
         const template = localStorage.getItem("prompt-library-v3.template");
         const uiMode = localStorage.getItem("prompt-library-v3.uiMode");
+        const promptStyle = localStorage.getItem("prompt-library-v3.promptStyle");
         if (assignments) state.assignments = JSON.parse(assignments);
-        if (template && state.templateIndex[template]) elements.templateSelect.value = template;
+        if (template && state.templateIndex[template]) el.templateSelect.value = template;
         if (uiMode === "expert" || uiMode === "standard") state.uiMode = uiMode;
+        if (["natural","directive","structured"].includes(promptStyle)) el.promptStyleSelect.value = promptStyle;
       }catch(_){}
     }
 
-    elements.loadWorkflowBtn.addEventListener("click", () => loadWorkflow(elements.workflowSelect.value));
-    elements.startEmptyBtn.addEventListener("click", clearAssignments);
-    elements.clearBtn.addEventListener("click", clearAssignments);
-    elements.templateSelect.addEventListener("change", updateOutputs);
-    elements.searchInput.addEventListener("input", updateOutputs);
-    elements.standardModeBtn.addEventListener("click", () => { state.uiMode = "standard"; updateModeButtons(); updateOutputs(); });
-    elements.expertModeBtn.addEventListener("click", () => { state.uiMode = "expert"; updateModeButtons(); updateOutputs(); });
-    elements.copyPromptBtn.addEventListener("click", () => copyText(elements.promptOutput.textContent, "Prompt in die Zwischenablage kopiert."));
-    elements.copySlotsBtn.addEventListener("click", () => copyText(elements.slotsOutput.textContent, "Slots in die Zwischenablage kopiert."));
+    el.loadWorkflowBtn.addEventListener("click", () => loadWorkflow(el.workflowSelect.value));
+    el.startEmptyBtn.addEventListener("click", clearAssignments);
+    el.clearBtn.addEventListener("click", clearAssignments);
+    el.templateSelect.addEventListener("change", updateOutputs);
+    el.searchInput.addEventListener("input", updateOutputs);
+    el.promptStyleSelect.addEventListener("change", updateOutputs);
+    el.standardModeBtn.addEventListener("click", () => { state.uiMode = "standard"; updateModeButtons(); updateOutputs(); });
+    el.expertModeBtn.addEventListener("click", () => { state.uiMode = "expert"; updateModeButtons(); updateOutputs(); });
+    el.copyPromptBtn.addEventListener("click", () => copyText(el.promptOutput.textContent, "Prompt in die Zwischenablage kopiert."));
+    el.copySlotsBtn.addEventListener("click", () => copyText(el.slotsOutput.textContent, "Slots in die Zwischenablage kopiert."));
 
     loadLibrary();
   </script>
