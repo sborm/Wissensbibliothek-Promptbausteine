@@ -14,9 +14,6 @@
       --accent:#7aa2ff;
       --accent-2:#9b8cff;
       --border:#2c3968;
-      --ok:#7fe3a1;
-      --warn:#ffcf70;
-      --danger:#ff7b7b;
       --radius:18px;
       --shadow:0 12px 32px rgba(0,0,0,.28);
     }
@@ -31,7 +28,6 @@
         var(--bg);
       min-height:100vh;
     }
-    code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
     .container{width:min(1480px,calc(100% - 32px)); margin:24px auto 40px}
     .card{
       background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
@@ -47,7 +43,7 @@
     h2{font-size:1.18rem}
     h3{font-size:1rem}
     p{margin:0 0 10px; color:var(--muted); line-height:1.5}
-    .pills,.row,.inline,.badges{display:flex; gap:10px; flex-wrap:wrap}
+    .pills,.row,.badges{display:flex; gap:10px; flex-wrap:wrap}
     .pill,.badge{
       display:inline-flex; align-items:center; gap:8px;
       border:1px solid var(--border);
@@ -59,18 +55,14 @@
     }
     .badge.accent,.pill.accent{border-color:rgba(122,162,255,.38); background:rgba(122,162,255,.12)}
     .badge.soft{border-color:rgba(127,227,161,.26); background:rgba(127,227,161,.09); color:#d6ffe3}
-    .badge.warn{border-color:rgba(255,207,112,.26); background:rgba(255,207,112,.09); color:#ffe9b6}
-    .badge.error{border-color:rgba(255,123,123,.26); background:rgba(255,123,123,.09); color:#ffd7d7}
     .stack,.grid,.field-grid,.notice-stack{display:grid; gap:12px}
     .grid.two{grid-template-columns:1fr 1fr}
     .grid.auto{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
     .toolbar{display:grid; gap:12px; margin-bottom:16px}
     .field{display:grid; gap:6px; min-width:0}
     .field label{font-size:.88rem; color:var(--muted)}
-    select,input[type="text"],textarea,button{
-      font:inherit;
-    }
-    select,input[type="text"],textarea{
+    select,input[type="text"],button{font:inherit}
+    select,input[type="text"]{
       width:100%;
       padding:11px 12px;
       border-radius:12px;
@@ -78,10 +70,6 @@
       background:var(--panel-2);
       color:var(--text);
       outline:none;
-    }
-    select:focus,input[type="text"]:focus,textarea:focus{
-      border-color:var(--accent);
-      box-shadow:0 0 0 3px rgba(122,162,255,.12);
     }
     button{
       border:1px solid var(--border);
@@ -93,7 +81,6 @@
       font-weight:600;
     }
     button.secondary{background:rgba(255,255,255,.03)}
-    button:hover{border-color:var(--accent)}
     .section-header{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px}
     .section-header p{margin:0; font-size:.93rem}
     .notice{
@@ -114,8 +101,6 @@
     }
     .field-card.required{border-color:rgba(255,207,112,.3); background:rgba(255,207,112,.05)}
     .field-card.complete{border-color:rgba(127,227,161,.25)}
-    .field-card.focus{border-color:rgba(122,162,255,.55); box-shadow:0 0 0 3px rgba(122,162,255,.14)}
-    .field-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
     .field-slot{font-size:.82rem; color:#8f9bc0; word-break:break-word}
     .field-help,.subtle{font-size:.88rem; color:var(--muted); line-height:1.45}
     .mode-toggle{
@@ -155,10 +140,9 @@
       padding:12px;
       display:grid; gap:8px;
     }
-    .summary-item strong,.suggestion-item strong{font-size:.95rem}
     .output-panel pre{
       margin:0; white-space:pre-wrap; word-break:break-word;
-      font-size:.92rem; line-height:1.45; color:var(--text);
+      font-size:.92rem; line-height:1.52; color:var(--text);
       background:rgba(255,255,255,.025); border:1px solid var(--border);
       border-radius:14px; padding:14px; min-height:180px;
     }
@@ -174,7 +158,6 @@
     }
     details.disclosure>summary::-webkit-details-marker{display:none}
     .disclosure-body{padding:0 16px 16px; border-top:1px solid rgba(255,255,255,.06); display:grid; gap:12px}
-    .hidden{display:none !important}
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
     @media (max-width:1100px){
       .hero,.layout,.grid.two{grid-template-columns:1fr}
@@ -282,7 +265,7 @@
           <div class="section-header">
             <div>
               <h2>Gesamtbild</h2>
-              <p>Ohne V2-Constraint-Ballast als Standard. Fokus auf Vollständigkeit, Taxonomie-Abdeckung und Prompt-Nutzbarkeit.</p>
+              <p>Fokus auf Vollständigkeit, Template-Abdeckung und praktische Nutzbarkeit.</p>
             </div>
           </div>
           <div class="metric-grid" id="assessmentMetrics"></div>
@@ -302,7 +285,7 @@
           <div class="section-header">
             <div>
               <h2>Aktueller Prompt</h2>
-              <p>Render nach Template oder als strukturierter V3-Prompt.</p>
+              <p>Sprachlich geglättete Ausgabe auf Basis der aktuellen Auswahl.</p>
             </div>
           </div>
           <div class="output-panel">
@@ -324,7 +307,7 @@
           <div class="section-header">
             <div>
               <h2>Status und Prüfung</h2>
-              <p>Nur echte Hinweise: fehlende Pflichtfelder, unbekannte Kombinationen, aktivierter Heuristik-Layer.</p>
+              <p>Nur echte Hinweise: fehlende Pflichtfelder, Template-Lücken und aktiver Heuristik-Layer.</p>
             </div>
           </div>
           <div id="statusOutput" class="status-list"></div>
@@ -385,11 +368,21 @@
       slotsOutput: document.getElementById("slotsOutput")
     };
 
-    function humanizeKey(value){ return String(value || "").replaceAll("_"," "); }
-    function escapeRegExp(value){ return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
-    function unique(arr){ return [...new Set(arr)]; }
     function clampScore(value){ return Math.max(0, Math.min(100, Math.round(value))); }
+    function humanizeKey(value){ return String(value || "").replaceAll("_"," "); }
     function lowerFirst(text){ return text ? text.charAt(0).toLowerCase() + text.slice(1) : text; }
+    function sentenceCase(text){ return text ? text.charAt(0).toUpperCase() + text.slice(1) : ""; }
+    function sentence(text){
+      const clean = String(text || "").trim();
+      if (!clean) return "";
+      return /[.!?]$/.test(clean) ? clean : `${clean}.`;
+    }
+    function joinPhrases(parts){ return parts.filter(Boolean).join(" "); }
+    function articleizedNoun(text){
+      const value = lowerFirst(text || "");
+      if (!value) return "";
+      return /e$/i.test(value) ? `eine ${value}` : `einen ${value}`;
+    }
 
     function setRepoMetaNotices(items){
       elements.repoMeta.innerHTML = "";
@@ -399,6 +392,167 @@
         div.textContent = item.text;
         elements.repoMeta.appendChild(div);
       });
+    }
+
+    function mapTargetGroup(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "ich selbst": "für mich selbst",
+        "team": "für ein Team",
+        "management": "für das Management",
+        "kunden": "für Kundinnen und Kunden",
+        "lernende": "für Lernende",
+        "oeffentlichkeit": "für die Öffentlichkeit"
+      };
+      return map[value] || `für ${lowerFirst(text)}`;
+    }
+
+    function mapSituation(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "operativ umsetzen": "für die operative Umsetzung",
+        "extern kommunizieren": "für die externe Kommunikation",
+        "entscheiden": "zur Entscheidungsvorbereitung",
+        "abstimmen": "für Abstimmung und Einordnung",
+        "strategie": "für eine strategische Fragestellung",
+        "lernen": "für einen Lernkontext"
+      };
+      return map[value] || `im Kontext ${lowerFirst(text)}`;
+    }
+
+    function mapQuality(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "praxisnah": "mit Fokus auf Praxisnähe",
+        "relevant": "mit Fokus auf Relevanz",
+        "differenziert": "mit Fokus auf Differenzierung",
+        "ausgewogen": "mit Fokus auf Ausgewogenheit",
+        "vollstaendig": "mit Fokus auf Vollständigkeit"
+      };
+      return map[value] || `mit Fokus auf ${lowerFirst(text)}`;
+    }
+
+    function mapPriority(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "praktikabilitaet vor theorie": "Praktikabilität vor Theorie",
+        "tiefe vor kuerze": "Tiefe vor Kürze",
+        "kuerze vor tiefe": "Kürze vor Tiefe",
+        "klarheit vor vollstaendigkeit": "Klarheit vor Vollständigkeit"
+      };
+      return map[value] || sentenceCase(text);
+    }
+
+    function mapOutputFocus(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "nur ergebnis": "Gib nur das Ergebnis aus",
+        "ergebnis mit begruendung": "Liefere das Ergebnis mit Begründung",
+        "ergebnis mit alternativen": "Liefere das Ergebnis mit Alternativen",
+        "ergebnis mit naechsten schritten": "Liefere das Ergebnis mit nächsten Schritten"
+      };
+      return map[value] || sentenceCase(text);
+    }
+
+    function mapEvidence(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "keine spekulation": "Vermeide Spekulation",
+        "nur belegte aussagen": "Arbeite nur mit belegten Aussagen",
+        "unsicherheiten offen markieren": "Markiere Unsicherheiten offen",
+        "strikt belegt": "Bleibe strikt belegt"
+      };
+      return map[value] || "";
+    }
+
+    function mapTask(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "strukturieren": "Strukturiere die Antwort",
+        "vergleichen": "Vergleiche die relevanten Optionen",
+        "analysieren": "Analysiere die Ausgangslage",
+        "erklaeren": "Erkläre das Thema nachvollziehbar",
+        "zusammenfassen": "Fasse das Wesentliche zusammen",
+        "bewerten": "Bewerte die relevanten Aspekte",
+        "klassifizieren": "Klassifiziere die relevanten Elemente",
+        "extrahieren": "Extrahiere die relevanten Informationen",
+        "pruefen": "Prüfe den Inhalt systematisch",
+        "entwerfen": "Entwirf einen belastbaren Vorschlag",
+        "umformulieren": "Formuliere den Inhalt passend um"
+      };
+      return map[value] || sentenceCase(text);
+    }
+
+    function mapMethod(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "pro und contra": "Nutze eine Pro-und-Contra-Logik",
+        "kriterienmatrix": "Arbeite mit einer Kriterienmatrix",
+        "priorisierungsmatrix": "Arbeite mit einer Priorisierungsmatrix",
+        "risiko-nutzen-abwaegung": "Arbeite mit einer Risiko-Nutzen-Abwägung",
+        "befund-interpretation-empfehlung": "Trenne klar zwischen Befund, Interpretation und Empfehlung"
+      };
+      return map[value] || sentenceCase(text);
+    }
+
+    function mapProcess(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "schrittweise vorgehen": "Gehe schrittweise vor",
+        "zuerst analysieren, dann bewerten": "Analysiere zuerst und bewerte dann",
+        "erst sammeln, dann strukturieren": "Sammle zuerst und strukturiere dann",
+        "erst kriterien, dann vergleichen": "Lege zuerst Kriterien fest und vergleiche dann",
+        "erst optionen, dann empfehlung": "Entwickle zuerst Optionen und gib dann eine Empfehlung",
+        "erst befunde, dann interpretation, dann empfehlung": "Trenne klar zwischen Befunden, Interpretation und Empfehlung"
+      };
+      return map[value] || sentenceCase(text);
+    }
+
+    function mapInteraction(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "einmalige antwort": "Gib eine geschlossene Antwort",
+        "iteratives verfeinern": "Arbeite iterativ und verfeinernd",
+        "rueckfragen stellen": "Stelle bei kritischen Lücken Rückfragen",
+        "varianten entwickeln": "Entwickle mehrere Varianten"
+      };
+      return map[value] || sentenceCase(text);
+    }
+
+    function mapControl(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "frei": "arbeite frei innerhalb der Vorgaben",
+        "eng gefuehrt": "arbeite eng an den Vorgaben entlang",
+        "mit zwischenstaenden": "arbeite mit klaren Zwischenständen"
+      };
+      return map[value] || lowerFirst(text);
+    }
+
+    function mapWorkMode(text){
+      return lowerFirst(text);
+    }
+
+    function mapDepth(text){
+      const value = String(text || "").trim().toLowerCase();
+      const map = {
+        "ueberblick": "auf Überblicksniveau",
+        "mittel": "mit mittlerer Tiefe",
+        "tiefenanalyse": "als Tiefenanalyse"
+      };
+      return map[value] || lowerFirst(text);
+    }
+
+    function mapBoundaryRules(assignments){
+      const rules = [];
+      if (assignments.TABELLENREGEL === "keine_tabellen") rules.push("Verwende keine Tabellen");
+      if (assignments.LISTENREGEL === "keine_listen") rules.push("Verwende keine Listen");
+      if (assignments.BEISPIELREGEL === "keine_beispiele") rules.push("Verwende keine Beispiele");
+      if (assignments.METAREGEL === "keine_meta_erklaerungen") rules.push("Vermeide Meta-Erklärungen");
+      if (assignments.REDUNDANZREGEL === "keine_wiederholungen") rules.push("Vermeide Wiederholungen");
+      const evidence = mapEvidence(getValueLabel("EVIDENZREGEL", assignments.EVIDENZREGEL || ""));
+      if (evidence) rules.push(evidence);
+      return rules;
     }
 
     async function loadLibrary(){
@@ -442,14 +596,9 @@
         const valueSet = state.data.values?.[slot.value_set] || [];
         const allowedValues = {};
         valueSet.forEach(valueObj => {
-          allowedValues[valueObj.key] = {
-            label: valueObj.label || valueObj.key
-          };
+          allowedValues[valueObj.key] = { label: valueObj.label || valueObj.key };
         });
-        state.slotIndex[slot.key] = {
-          ...slot,
-          allowedValues
-        };
+        state.slotIndex[slot.key] = { ...slot, allowedValues };
       });
 
       (state.data.templates || []).forEach(template => {
@@ -554,7 +703,6 @@
 
       const card = document.createElement("div");
       card.className = "field-card";
-      card.id = `field-card-${slot}`;
       if (meta.required) card.classList.add("required");
       if (isAssigned(slot)) card.classList.add("complete");
 
@@ -612,7 +760,6 @@
         field.appendChild(selectedHint);
       }
       card.appendChild(field);
-
       return card;
     }
 
@@ -621,14 +768,10 @@
       elements.requiredProgressBadge.textContent = `${stats.setCount} von ${stats.total} gesetzt`;
       elements.requiredProgressFill.style.width = `${stats.percent}%`;
       elements.requiredHint.className = stats.setCount === stats.total ? "notice success" : "notice warning";
-      elements.requiredHint.textContent = stats.setCount === stats.total
-        ? "Alle Pflichtfelder sind gesetzt."
-        : `${stats.setCount} von ${stats.total} Pflichtfeldern gesetzt.`;
+      elements.requiredHint.textContent = stats.setCount === stats.total ? "Alle Pflichtfelder sind gesetzt." : `${stats.setCount} von ${stats.total} Pflichtfeldern gesetzt.`;
 
       elements.requiredFields.innerHTML = "";
-      getRequiredSlots().forEach(slot => {
-        elements.requiredFields.appendChild(renderFieldCard(slot));
-      });
+      getRequiredSlots().forEach(slot => elements.requiredFields.appendChild(renderFieldCard(slot)));
     }
 
     function renderFieldGroups(){
@@ -686,7 +829,7 @@
         { title: "Vollständigkeit", value: model.completeness, text: "Pflichtkern plus aktuelle Template-Abdeckung." },
         { title: "Template-Fit", value: model.templateFit, text: "Wie weit die aktuelle Auswahl das gewählte Template abdeckt." },
         { title: "Taxonomie-Breite", value: model.taxonomyBreadth, text: "Wie viele V3-Slots aktuell gesetzt sind." },
-        { title: "Gesamtscore", value: model.overall, text: "Pragmatischer Generator-Score ohne V2-Heuristikzwang." }
+        { title: "Gesamtscore", value: model.overall, text: "Pragmatischer Generator-Score ohne Heuristikzwang." }
       ];
 
       elements.assessmentMetrics.innerHTML = "";
@@ -703,31 +846,22 @@
       } else if (missingRequired.length) {
         elements.assessmentInterpretation.textContent = `Der Generator ist bereits nutzbar, aber Pflichtfelder fehlen noch: ${missingRequired.map(getSlotDisplayName).join(", ")}.`;
       } else {
-        elements.assessmentInterpretation.textContent = `Pflichtkern steht. Nächster Hebel ist jetzt vor allem die saubere Template-Abdeckung und gezielte Verfeinerung über zusätzliche V3-Slots.`;
+        elements.assessmentInterpretation.textContent = "Pflichtkern steht. Nächster Hebel ist jetzt vor allem die saubere Template-Abdeckung und sprachlich belastbare Prompt-Ausgabe.";
       }
 
       const suggestions = [];
       missingRequired.forEach(slot => {
-        suggestions.push({
-          title: `${getSlotDisplayName(slot)} setzen`,
-          detail: "Hebt den Pflichtkern an und macht den Prompt belastbarer."
-        });
+        suggestions.push({ title: `${getSlotDisplayName(slot)} setzen`, detail: "Hebt den Pflichtkern an und macht den Prompt belastbarer." });
       });
 
       getTemplateSlots().forEach(slot => {
         if (!isAssigned(slot)) {
-          suggestions.push({
-            title: `${getSlotDisplayName(slot)} für Template ergänzen`,
-            detail: `Fehlt aktuell für das gewählte Template.`
-          });
+          suggestions.push({ title: `${getSlotDisplayName(slot)} für Template ergänzen`, detail: "Fehlt aktuell für das gewählte Template." });
         }
       });
 
       if (!suggestions.length) {
-        suggestions.push({
-          title: "Konfiguration ist aktuell gut anschlussfähig",
-          detail: "Du kannst jetzt verfeinern oder direkt mit dem Prompt arbeiten."
-        });
+        suggestions.push({ title: "Konfiguration ist aktuell gut anschlussfähig", detail: "Du kannst jetzt verfeinern oder direkt mit dem Prompt arbeiten." });
       }
 
       elements.suggestions.innerHTML = "";
@@ -739,35 +873,66 @@
       });
     }
 
-    function renderStructuredPrompt(){
-      const lines = ["Erstelle eine Antwort anhand der folgenden V3-Prompt-Bausteine:"];
-      Object.keys(state.dimensionIndex).forEach(dimensionKey => {
-        const dimension = state.dimensionIndex[dimensionKey];
-        const entries = (dimension.slot_order || []).filter(isAssigned);
-        if (!entries.length) return;
-        lines.push("");
-        lines.push(`${dimension.label}:`);
-        entries.forEach(slot => {
-          lines.push(`- ${slot}: ${state.assignments[slot]}`);
-        });
-      });
-      return lines.join("\n").trim();
-    }
+    function buildNaturalPrompt(){
+      const a = state.assignments;
+      if (!Object.keys(a).length) return "Noch kein Prompt gerendert.";
 
-    function renderTemplatePrompt(){
-      const templateId = elements.templateSelect.value;
-      const template = state.templateIndex[templateId];
-      if (!template) return renderStructuredPrompt();
+      const parts = [];
 
-      let text = template.text || "";
-      (template.slots_used || []).forEach(slot => {
-        const rawValue = state.assignments[slot];
-        if (!rawValue) return;
-        const label = getValueLabel(slot, rawValue);
-        const replacement = label && /^[A-ZÄÖÜ]/.test(label) ? lowerFirst(label) : humanizeKey(rawValue);
-        text = text.replace(new RegExp(`\\[${escapeRegExp(slot)}\\]`, "g"), replacement);
-      });
-      return text.trim();
+      const intro = [];
+      if (a.ZIEL_TYP) intro.push(`Ziel ist ${lowerFirst(getValueLabel("ZIEL_TYP", a.ZIEL_TYP))}`);
+      if (a.ZIEL_REIFE) intro.push(`das Ergebnis soll ${lowerFirst(getValueLabel("ZIEL_REIFE", a.ZIEL_REIFE))} sein`);
+      if (a.ZIELGRUPPE) intro.push(mapTargetGroup(getValueLabel("ZIELGRUPPE", a.ZIELGRUPPE)));
+      if (a.SITUATIONSKONTEXT) intro.push(mapSituation(getValueLabel("SITUATIONSKONTEXT", a.SITUATIONSKONTEXT)));
+      if (intro.length) parts.push(sentence(joinPhrases(intro)));
+
+      if (a.AUFGABENTYP) {
+        let taskSentence = mapTask(getValueLabel("AUFGABENTYP", a.AUFGABENTYP));
+        if (a.AUFGABENSTRUKTUR) {
+          taskSentence += ` und arbeite ${lowerFirst(getValueLabel("AUFGABENSTRUKTUR", a.AUFGABENSTRUKTUR))}`;
+        }
+        parts.push(sentence(taskSentence));
+      }
+
+      const processLines = [];
+      if (a.PROZESSLOGIK) processLines.push(mapProcess(getValueLabel("PROZESSLOGIK", a.PROZESSLOGIK)));
+      if (a.METHODIK) processLines.push(mapMethod(getValueLabel("METHODIK", a.METHODIK)));
+      if (a.INTERAKTIONSMODUS) processLines.push(mapInteraction(getValueLabel("INTERAKTIONSMODUS", a.INTERAKTIONSMODUS)));
+      if (a.STEUERUNGSGRAD) processLines.push(sentenceCase(mapControl(getValueLabel("STEUERUNGSGRAD", a.STEUERUNGSGRAD))));
+      if (a.ARBEITSMODUS) processLines.push(`Arbeite ${mapWorkMode(getValueLabel("ARBEITSMODUS", a.ARBEITSMODUS))}`);
+      if (processLines.length) parts.push(processLines.map(sentence).join(" "));
+
+      const outputParts = [];
+      if (a.FORMAT) outputParts.push(`Liefere das Ergebnis als ${articleizedNoun(getValueLabel("FORMAT", a.FORMAT))}`);
+      if (a.UMFANG) outputParts.push(`im Umfang ${lowerFirst(getValueLabel("UMFANG", a.UMFANG))}`);
+      if (a.ERGEBNISFOKUS) outputParts.push(lowerFirst(mapOutputFocus(getValueLabel("ERGEBNISFOKUS", a.ERGEBNISFOKUS))));
+      if (outputParts.length) parts.push(sentence(joinPhrases(outputParts)));
+
+      const qualityParts = [];
+      if (a.QUALITAETSFOKUS) qualityParts.push(mapQuality(getValueLabel("QUALITAETSFOKUS", a.QUALITAETSFOKUS)));
+      if (a.PRIORISIERUNG) qualityParts.push(`priorisiere ${lowerFirst(mapPriority(getValueLabel("PRIORISIERUNG", a.PRIORISIERUNG)))}`);
+      if (a.TIEFENGRAD) qualityParts.push(`arbeite ${mapDepth(getValueLabel("TIEFENGRAD", a.TIEFENGRAD))}`);
+      if (qualityParts.length) parts.push(sentence(`Achte besonders auf ${qualityParts.join(", ")}`));
+
+      const styleParts = [];
+      if (a.TONALITAET) styleParts.push(lowerFirst(getValueLabel("TONALITAET", a.TONALITAET)));
+      if (a.DIREKTHEIT) styleParts.push(lowerFirst(getValueLabel("DIREKTHEIT", a.DIREKTHEIT)));
+      if (styleParts.length) parts.push(sentence(`Formuliere ${styleParts.join(" und ")}`));
+      if (a.ROLLENSTIMME) parts.push(sentence(`Arbeite in der Rolle eines ${lowerFirst(getValueLabel("ROLLENSTIMME", a.ROLLENSTIMME))}`));
+
+      if (a.WISSENSNIVEAU || a.RAHMENBEDINGUNG) {
+        const contextAddons = [];
+        if (a.WISSENSNIVEAU) contextAddons.push(`richte die Antwort auf ${lowerFirst(getValueLabel("WISSENSNIVEAU", a.WISSENSNIVEAU))} aus`);
+        if (a.RAHMENBEDINGUNG) contextAddons.push(`berücksichtige ${lowerFirst(getValueLabel("RAHMENBEDINGUNG", a.RAHMENBEDINGUNG))}`);
+        parts.push(sentence(sentenceCase(contextAddons.join(" und "))));
+      }
+
+      const boundaryRules = mapBoundaryRules(a);
+      if (boundaryRules.length) {
+        parts.push(boundaryRules.map(sentence).join(" "));
+      }
+
+      return parts.join("\n\n").trim();
     }
 
     function renderSlotsNotation(){
@@ -807,11 +972,8 @@
       elements.statusOutput.innerHTML = "";
       const items = [];
       const heuristicsEnabled = Boolean(state.data?.heuristics?.enabled);
-      if (heuristicsEnabled) {
-        items.push({ type: "warning", text: "Heuristik-Layer ist aktiv. Taxonomie bleibt Kern, aber zusätzliche Empfehlungen können eingreifen." });
-      } else {
-        items.push({ type: "success", text: "Heuristik-Layer ist deaktiviert. Die Taxonomie ist die alleinige Wahrheitsquelle." });
-      }
+      if (heuristicsEnabled) items.push({ type: "warning", text: "Heuristik-Layer ist aktiv. Zusätzliche Empfehlungen können eingreifen." });
+      else items.push({ type: "success", text: "Heuristik-Layer ist deaktiviert. Die Taxonomie ist die Wahrheitsquelle." });
 
       const missingRequired = getRequiredSlots().filter(slot => !isAssigned(slot));
       if (missingRequired.length) {
@@ -842,13 +1004,7 @@
       renderSummary();
       renderStatus();
       elements.slotsOutput.textContent = renderSlotsNotation();
-
-      const prompt = elements.templateSelect.value ? renderTemplatePrompt() : renderStructuredPrompt();
-      if (!Object.keys(state.assignments).length) {
-        elements.promptOutput.textContent = "Noch kein Prompt gerendert.";
-      } else {
-        elements.promptOutput.textContent = prompt;
-      }
+      elements.promptOutput.textContent = buildNaturalPrompt();
       persistState();
     }
 
